@@ -19,6 +19,15 @@ namespace INTEX4_6.Controllers
         }
 
 
-        //[HttpGet]
+        [HttpGet("titles")]
+        public IActionResult GetTitles()
+        {
+            var titles = _context.Movies
+                .Select(m =>  m.Title )
+                .ToList();
+            return Ok(titles);
+
+
+        }
     }
 }
