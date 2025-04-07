@@ -1,13 +1,9 @@
-<<<<<<< HEAD
-using INTEX4_6.Data;
-using Microsoft.EntityFrameworkCore;
-=======
+
 using System.Security.Claims;
 using INTEX4_6.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using INTEX4_6.Services;
->>>>>>> b9a832d995ee8bda44858dc4f1e04f68113d02cc
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,11 +14,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-<<<<<<< HEAD
+
 builder.Services.AddDbContext<MovieDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
 
-=======
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
 
@@ -51,7 +46,7 @@ builder.Services.AddCors(options =>
                 .AllowAnyHeader();
         });
 });
->>>>>>> b9a832d995ee8bda44858dc4f1e04f68113d02cc
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
