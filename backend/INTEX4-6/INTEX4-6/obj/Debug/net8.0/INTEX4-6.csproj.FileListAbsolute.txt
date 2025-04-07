@@ -1,8 +1,0 @@
-C:\Users\tessa\source\repos\INTEX4-6\backend\INTEX4-6\INTEX4-6\obj\Debug\net8.0\INTEX4-6.csproj.AssemblyReference.cache
-C:\Users\tessa\source\repos\INTEX4-6\backend\INTEX4-6\INTEX4-6\obj\Debug\net8.0\INTEX4-6.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\tessa\source\repos\INTEX4-6\backend\INTEX4-6\INTEX4-6\obj\Debug\net8.0\INTEX4-6.AssemblyInfoInputs.cache
-C:\Users\tessa\source\repos\INTEX4-6\backend\INTEX4-6\INTEX4-6\obj\Debug\net8.0\INTEX4-6.AssemblyInfo.cs
-C:\Users\tessa\source\repos\INTEX4-6\backend\INTEX4-6\INTEX4-6\obj\Debug\net8.0\INTEX4-6.csproj.CoreCompileInputs.cache
-C:\Users\tessa\source\repos\INTEX4-6\backend\INTEX4-6\INTEX4-6\obj\Debug\net8.0\INTEX4-6.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\tessa\source\repos\INTEX4-6\backend\INTEX4-6\INTEX4-6\obj\Debug\net8.0\INTEX4-6.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\tessa\source\repos\INTEX4-6\backend\INTEX4-6\INTEX4-6\obj\Debug\net8.0\INTEX4-6.sourcelink.json

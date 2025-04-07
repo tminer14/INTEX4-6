@@ -1,0 +1,38 @@
+﻿# .NET build artifacts
+**/bin/
+**/obj/
+*.dll
+*.pdb
+*.exe
+*.cache
+*.log
+*.tmp
+
+# Visual Studio settings
+.vs/
+*.user
+*.suo
+
+# macOS system files
+.DS_Store
+
+# Node modules and related
+node_modules/
+package-lock.json
+package.json
+
+# VS Code settings
+.vscode/
+
+# Build outputs (frontend or backend)
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+
+# IDE stuff
+.idea/
