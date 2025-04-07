@@ -1,3 +1,4 @@
+
 ﻿using System.Security.Claims;
 using System.Text;
 using INTEX4_6.Data;
@@ -47,7 +48,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Database Context
+builder.Services.AddDbContext<MovieDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
 
@@ -106,11 +109,13 @@ builder.Services.AddCors(options =>
         });
 });
 
+
 // Email Sender (NoOp version)
 builder.Services.AddSingleton(typeof(IEmailSender<>), typeof(NoOpEmailSender<>));
 
 // Custom ClaimsPrincipalFactory (to inject roles into claims)
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, CustomUserClaimsPrincipalFactory>();
+
 
 var app = builder.Build();
 
