@@ -3,6 +3,7 @@ using INTEX4_6.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using INTEX4_6.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +19,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddIdentityApiEndpoints<IdentityUser>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+//builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+//    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -41,6 +46,9 @@ builder.Services.AddCors(options =>
                 .AllowAnyHeader();
         });
 });
+
+builder.Services.AddSingleton(typeof(IEmailSender<>), typeof(NoOpEmailSender<>));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
