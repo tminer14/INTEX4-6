@@ -17,8 +17,8 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/movieinfo/:id" element={<MovieInfoPage />} />
           {/*  expects an id */}
-          <Route path="/movies" element={<MovieListPage/>} />
-          <Route path="/privacy" element={<PrivacyPage/>}/>
+          <Route path="/movies" element={<MovieListPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
       </Router>
     </>
