@@ -92,7 +92,7 @@
   flex-shrink: 0;
   height: 41px;
   background: transparent;
-  color: white;
+  color: #333333; /* Dark gray text */
   padding: 0 10px;
 }
 
