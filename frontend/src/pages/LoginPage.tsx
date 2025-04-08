@@ -21,7 +21,7 @@ function LoginPage() {
     }
 
     // Redirect to homepage or wherever you want
-    navigate("/");
+    navigate("/dashboard");
   };
 
   return (

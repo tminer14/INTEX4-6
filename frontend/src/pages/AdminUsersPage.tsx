@@ -1,114 +1,9 @@
 import React from "react";
-import { AdminMovieTable } from "../components/AdminMovieTable";
 import "../styles/AdminPanelPage.css";
 import { useNavigate } from "react-router-dom";
 
-const AdminPanelPage: React.FC = () => {
-  // Sample movie data - in a real application, this would come from an API
-  const movies = [
-    {
-      id: 1,
-      type: "Series",
-      title: "Yo Gabba Gabba",
-      director: "Swagmasters",
-      cast: "All of us, another person, another person",
-      country: "United States",
-      year: 2020,
-      rating: "4.5/5",
-      duration: "132 minutes",
-      description:
-        "Here's a basic description lol watch this movie if you want to know more",
-      genre: "Action/ Adventure",
-    },
-    {
-      id: 2,
-      type: "Movie",
-      title: "Yee Haw Town",
-      director: "Swagmasters",
-      cast: "All of us, another person, another person",
-      country: "United States",
-      year: 2020,
-      rating: "4.5/5",
-      duration: "132 minutes",
-      description:
-        "Here's a basic description lol watch this movie if you want to know more",
-      genre: "Action/ Adventure",
-    },
-    {
-      id: 3,
-      type: "Series",
-      title: "Yo Gabba Gabba",
-      director: "Swagmasters",
-      cast: "All of us, another person, another person",
-      country: "United States",
-      year: 2020,
-      rating: "4.5/5",
-      duration: "132 minutes",
-      description:
-        "Here's a basic description lol watch this movie if you want to know more",
-      genre: "Action/ Adventure",
-    },
-    {
-      id: 4,
-      type: "Series",
-      title: "Yo Gabba Gabba",
-      director: "Swagmasters",
-      cast: "All of us, another person, another person",
-      country: "United States",
-      year: 2020,
-      rating: "4.5/5",
-      duration: "132 minutes",
-      description:
-        "Here's a basic description lol watch this movie if you want to know more",
-      genre: "Action/ Adventure",
-    },
-    {
-      id: 5,
-      type: "Series",
-      title: "Yo Gabba Gabba",
-      director: "Swagmasters",
-      cast: "All of us, another person, another person",
-      country: "United States",
-      year: 2020,
-      rating: "4.5/5",
-      duration: "132 minutes",
-      description:
-        "Here's a basic description lol watch this movie if you want to know more",
-      genre: "Action/ Adventure",
-    },
-    {
-      id: 5,
-      type: "Series",
-      title: "Yo Gabba Gabba",
-      director: "Swagmasters",
-      cast: "All of us, another person, another person",
-      country: "United States",
-      year: 2020,
-      rating: "4.5/5",
-      duration: "132 minutes",
-      description:
-        "Here's a basic description lol watch this movie if you want to know more",
-      genre: "Action/ Adventure",
-    },
-  ];
-
+const AdminUsersPage: React.FC = () => {
   const Navigate = useNavigate();
-
-  const handleAddMovie = () => {
-    // Implementation for adding a new movie
-    console.log("Add new movie clicked");
-  };
-
-  const handleEditMovie = (id: number) => {
-    // Implementation for editing a movie
-    console.log(`Edit movie with id ${id}`);
-  };
-
-  const handleDeleteMovie = (id: number) => {
-    // Implementation for deleting a movie
-    console.log(`Delete movie with id ${id}`);
-  };
-
   const handleSignOut = () => {
     // Implementation for signing out
     console.log("Sign out clicked");
@@ -177,24 +72,68 @@ const AdminPanelPage: React.FC = () => {
         </div>
         <div className="header-actions">
           <div className="language-selector">Language</div>
-          <button className="sign-out-button" onClick={() => Navigate("/")}>
+          <button className="sign-out-button" onClick={handleSignOut}>
             Sign Out
           </button>
         </div>
       </header>
       <main className="admin-content">
-        <h1 className="page-title">Movies</h1>
-        <button className="add-movie-button" onClick={handleAddMovie}>
-          Add new movie
-        </button>
-        <AdminMovieTable
-          movies={movies}
-          onEdit={handleEditMovie}
-          onDelete={handleDeleteMovie}
-        />
+        <h1 className="page-title">Users</h1>
+        <button className="add-movie-button">Add new user</button>
+        <div className="movie-table-container">
+          <div className="movie-table">
+            <div className="table-header">
+              <div className="header-id">ID</div>
+              <div className="header-name">Name</div>
+              <div className="header-email">Email</div>
+              <div className="header-role">Role</div>
+              <div className="header-status">Status</div>
+              <div className="header-action">Action</div>
+            </div>
+            <div className="table-row">
+              <div className="cell-id">1</div>
+              <div className="cell-name">John Doe</div>
+              <div className="cell-email">john.doe@example.com</div>
+              <div className="cell-role">Admin</div>
+              <div className="cell-status">Active</div>
+              <div className="cell-action">
+                <div className="action-buttons">
+                  <button className="edit-button">Edit</button>
+                  <button className="delete-button">Delete</button>
+                </div>
+              </div>
+            </div>
+            <div className="table-row">
+              <div className="cell-id">2</div>
+              <div className="cell-name">Jane Smith</div>
+              <div className="cell-email">jane.smith@example.com</div>
+              <div className="cell-role">User</div>
+              <div className="cell-status">Active</div>
+              <div className="cell-action">
+                <div className="action-buttons">
+                  <button className="edit-button">Edit</button>
+                  <button className="delete-button">Delete</button>
+                </div>
+              </div>
+            </div>
+            <div className="table-row">
+              <div className="cell-id">3</div>
+              <div className="cell-name">Bob Johnson</div>
+              <div className="cell-email">bob.johnson@example.com</div>
+              <div className="cell-role">User</div>
+              <div className="cell-status">Inactive</div>
+              <div className="cell-action">
+                <div className="action-buttons">
+                  <button className="edit-button">Edit</button>
+                  <button className="delete-button">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   );
 };
 
-export default AdminPanelPage;
+export default AdminUsersPage;

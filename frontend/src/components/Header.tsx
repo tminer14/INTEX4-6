@@ -12,14 +12,8 @@ function Header() {
           <img src={logo} alt="Logo" className="logo" />
         </Link>
         <div className="header-actions">
-          <div className="language-selector">
-            <span>Language</span>
-          </div>
           <Link to="/login" className="sign-in-button">
             <span>Sign in</span>
-          </Link>
-          <Link to="/dashboard" className="sign-in-button">
-            <span>Dashboard</span>
           </Link>
         </div>
       </div>
