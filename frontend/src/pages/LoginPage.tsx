@@ -1,27 +1,54 @@
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import "../styles/LoginPage.css";
-import Cookies from "js-cookie"; // NEW: import js-cookie
+import Cookies from "js-cookie";
+import { useState } from "react";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleBackClick = () => {
     navigate(-1);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login submitted");
 
-    // NEW: Set initial points if not already set
-    if (!Cookies.get("userPoints")) {
-      Cookies.set("userPoints", "100", { expires: 7 }); // Start with 100 points, expires in 7 days
-      console.log("Points cookie set to 100");
+    try {
+      // 🔥 Send real login request to backend
+      const response = await axios.post(
+        "https://localhost:7026/api/account/login",
+        {
+          email,
+          password,
+        }
+      );
+
+      const { token } = response.data;
+
+      // Save token
+      localStorage.setItem("authToken", token);
+
+      // Set points cookie if not already set
+      if (!Cookies.get("userPoints")) {
+        Cookies.set("userPoints", "100", { expires: 7 });
+      }
+
+      toast.success("Login successful!");
+      navigate("/dashboard");
+    } catch (error: any) {
+      console.error("Login failed:", error);
+
+      if (error.response && error.response.status === 401) {
+        toast.error("Invalid email or password. Please try again.");
+      } else {
+        toast.error("Login failed. Please try again.");
+      }
     }
-
-    // Redirect to homepage or wherever you want
-    navigate("/dashboard");
   };
 
   return (
@@ -43,9 +70,10 @@ function LoginPage() {
                 strokeWidth="4"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-              ></path>
+              />
             </svg>
           </div>
+
           <div className="login-content">
             <h1 className="login-title">Welcome Back!</h1>
             <p className="login-subtitle">
@@ -59,6 +87,8 @@ function LoginPage() {
                   type="email"
                   id="email"
                   className="form-input"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
@@ -69,6 +99,8 @@ function LoginPage() {
                   type="password"
                   id="password"
                   className="form-input"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </div>
