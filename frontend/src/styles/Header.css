@@ -1,0 +1,84 @@
+.header {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background-color: #022b3b;
+  box-sizing: border-box;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1280px;
+  height: 110px;
+  padding-left: 34px;
+  padding-right: 34px;
+  box-sizing: border-box;
+}
+
+.logo-link {
+  display: block;
+}
+
+.logo {
+  width: 264px;
+  height: 100px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.language-selector {
+  color: #fff;
+  font-family:
+    Inter,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.sign-in-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #022b3b;
+  font-family:
+    Inter,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  font-size: 14px;
+  width: 159px;
+  height: 44px;
+  background-color: #f7f7ff;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .logo {
+    width: 180px;
+    height: 47px;
+  }
+
+  .header-container {
+    height: 90px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .sign-in-button {
+    width: 120px;
+    height: 40px;
+  }
+}
