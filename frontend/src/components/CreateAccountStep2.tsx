@@ -49,13 +49,13 @@ function CreateAccountStep2() {
             xmlns="http://www.w3.org/2000/svg"
             className="dots"
           >
-            <circle cx="17.5" cy="17.5" r="17.5" fill="#87B5BA"></circle>
+            <circle cx="17.5" cy="17.5" r="17.5" fill="#227780"></circle>
             <circle cx="753.5" cy="17.5" r="17.5" fill="#87B5BA"></circle>
             <circle
               cx="196.5"
               cy="17.5"
               r="16"
-              fill="#227780"
+              fill="#87B5BA"
               stroke="#237881"
               strokeWidth="3"
             ></circle>

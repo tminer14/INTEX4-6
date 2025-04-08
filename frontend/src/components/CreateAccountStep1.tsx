@@ -11,9 +11,7 @@ function CreateAccountStep1() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
     console.log("Account creation form submitted");
-    // Navigate to next step
     navigate("/signup/step2");
   };
 
@@ -36,7 +34,7 @@ function CreateAccountStep1() {
               strokeWidth="4"
               strokeLinecap="round"
               strokeLinejoin="round"
-            ></path>
+            />
           </svg>
         </div>
 
@@ -56,11 +54,11 @@ function CreateAccountStep1() {
               fill="#87B5BA"
               stroke="#237881"
               strokeWidth="3"
-            ></circle>
-            <circle cx="753.5" cy="17.5" r="17.5" fill="#87B5BA"></circle>
-            <circle cx="196.5" cy="17.5" r="17.5" fill="#87B5BA"></circle>
-            <circle cx="375.5" cy="17.5" r="17.5" fill="#87B5BA"></circle>
-            <circle cx="564.5" cy="17.5" r="17.5" fill="#87B5BA"></circle>
+            />
+            <circle cx="196.5" cy="17.5" r="17.5" fill="#87B5BA" />
+            <circle cx="375.5" cy="17.5" r="17.5" fill="#87B5BA" />
+            <circle cx="564.5" cy="17.5" r="17.5" fill="#87B5BA" />
+            <circle cx="753.5" cy="17.5" r="17.5" fill="#87B5BA" />
           </svg>
         </div>
 
@@ -69,18 +67,21 @@ function CreateAccountStep1() {
 
           <form onSubmit={handleSubmit}>
             <div className="form-fields">
-              <div className="form-group">
-                <label htmlFor="fullName" className="form-label">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="fullName"
-                  className="form-input"
-                  required
-                />
+              <div className="form-row center-row">
+                <div className="form-group">
+                  <label htmlFor="fullName" className="form-label">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    id="fullName"
+                    className="form-input"
+                    required
+                  />
+                </div>
               </div>
 
+              {/* Row 2: Email & Phone */}
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="email" className="form-label">
@@ -93,7 +94,6 @@ function CreateAccountStep1() {
                     required
                   />
                 </div>
-
                 <div className="form-group">
                   <label htmlFor="phone" className="form-label">
                     Phone Number
@@ -107,28 +107,30 @@ function CreateAccountStep1() {
                 </div>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="password" className="form-label">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  className="form-input"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="confirmPassword" className="form-label">
-                  Confirm Password
-                </label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  className="form-input"
-                  required
-                />
+              {/* Row 3: Password & Confirm Password */}
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="password" className="form-label">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    className="form-input"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="confirmPassword" className="form-label">
+                    Confirm Password
+                  </label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    className="form-input"
+                    required
+                  />
+                </div>
               </div>
             </div>
 

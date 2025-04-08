@@ -7,35 +7,135 @@ import logo from "../assets/Logo.png";
 // Mock data for movie sections
 // In a real application, these would come from an API
 const recentMovies = [
-  { id: 1, title: "Movie 1", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/9f0363ff8b6cee50aa6e91f5437a97a9fc2a74d8" },
-  { id: 2, title: "Movie 2", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/4827782184bbf1e045ad26ab5e2c99d8f260933a" },
-  { id: 3, title: "Movie 3", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/1d0a8f2514b7c9dcdd51a2e19190cf9c9df70585" },
-  { id: 4, title: "Movie 4", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/fc7e0eaa9aeb747977ef609b719d3e8046710ae6" },
-  { id: 5, title: "Movie 5", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/d157979a3e040dc28e58dd1e5335d67f9be1eba9" },
+  {
+    id: 1,
+    title: "Movie 1",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/9f0363ff8b6cee50aa6e91f5437a97a9fc2a74d8",
+  },
+  {
+    id: 2,
+    title: "Movie 2",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/4827782184bbf1e045ad26ab5e2c99d8f260933a",
+  },
+  {
+    id: 3,
+    title: "Movie 3",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/1d0a8f2514b7c9dcdd51a2e19190cf9c9df70585",
+  },
+  {
+    id: 4,
+    title: "Movie 4",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/fc7e0eaa9aeb747977ef609b719d3e8046710ae6",
+  },
+  {
+    id: 5,
+    title: "Movie 5",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/d157979a3e040dc28e58dd1e5335d67f9be1eba9",
+  },
 ];
 
 const recommendedMovies = [
-  { id: 6, title: "Movie 6", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/7be42b850dfa85e8d439909d49fc3501452e2f96" },
-  { id: 7, title: "Movie 7", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/0f2d10e769112ec4c36112703e391a3ea2a9061e" },
-  { id: 8, title: "Movie 8", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/ae8fe7c994d3f44f629a090f9427c30e2b42dc42" },
-  { id: 9, title: "Movie 9", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/562a75e53b81bcaf6e6c88f721f6b3bc970daf9b" },
-  { id: 10, title: "Movie 10", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/1453465946b91d021d463710dffce2838b6c0635" },
+  {
+    id: 6,
+    title: "Movie 6",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/7be42b850dfa85e8d439909d49fc3501452e2f96",
+  },
+  {
+    id: 7,
+    title: "Movie 7",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/0f2d10e769112ec4c36112703e391a3ea2a9061e",
+  },
+  {
+    id: 8,
+    title: "Movie 8",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/ae8fe7c994d3f44f629a090f9427c30e2b42dc42",
+  },
+  {
+    id: 9,
+    title: "Movie 9",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/562a75e53b81bcaf6e6c88f721f6b3bc970daf9b",
+  },
+  {
+    id: 10,
+    title: "Movie 10",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/1453465946b91d021d463710dffce2838b6c0635",
+  },
 ];
 
 const similarMovies = [
-  { id: 11, title: "Movie 11", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/5d3bffcabb1cdcfa545d955d58f2f0a9920bda70" },
-  { id: 12, title: "Movie 12", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/c0b2d21b2321b77c0577070590528a5e6d18ab91" },
-  { id: 13, title: "Movie 13", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/b4c27a6c345e876d1da20d13f40b2cd83c5dd14e" },
-  { id: 14, title: "Movie 14", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/9f4dd6dd15ac54ce0b4912e0d61e0c92905c89f5" },
-  { id: 15, title: "Movie 15", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/1453465946b91d021d463710dffce2838b6c0635" },
+  {
+    id: 11,
+    title: "Movie 11",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/5d3bffcabb1cdcfa545d955d58f2f0a9920bda70",
+  },
+  {
+    id: 12,
+    title: "Movie 12",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/c0b2d21b2321b77c0577070590528a5e6d18ab91",
+  },
+  {
+    id: 13,
+    title: "Movie 13",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/b4c27a6c345e876d1da20d13f40b2cd83c5dd14e",
+  },
+  {
+    id: 14,
+    title: "Movie 14",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/9f4dd6dd15ac54ce0b4912e0d61e0c92905c89f5",
+  },
+  {
+    id: 15,
+    title: "Movie 15",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/1453465946b91d021d463710dffce2838b6c0635",
+  },
 ];
 
 const highlyRatedMovies = [
-  { id: 16, title: "Movie 16", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/5d3bffcabb1cdcfa545d955d58f2f0a9920bda70" },
-  { id: 17, title: "Movie 17", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/c0b2d21b2321b77c0577070590528a5e6d18ab91" },
-  { id: 18, title: "Movie 18", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/b4c27a6c345e876d1da20d13f40b2cd83c5dd14e" },
-  { id: 19, title: "Movie 19", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/9f4dd6dd15ac54ce0b4912e0d61e0c92905c89f5" },
-  { id: 20, title: "Movie 20", imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/1453465946b91d021d463710dffce2838b6c0635" },
+  {
+    id: 16,
+    title: "Movie 16",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/5d3bffcabb1cdcfa545d955d58f2f0a9920bda70",
+  },
+  {
+    id: 17,
+    title: "Movie 17",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/c0b2d21b2321b77c0577070590528a5e6d18ab91",
+  },
+  {
+    id: 18,
+    title: "Movie 18",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/b4c27a6c345e876d1da20d13f40b2cd83c5dd14e",
+  },
+  {
+    id: 19,
+    title: "Movie 19",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/9f4dd6dd15ac54ce0b4912e0d61e0c92905c89f5",
+  },
+  {
+    id: 20,
+    title: "Movie 20",
+    imageUrl:
+      "https://cdn.builder.io/api/v1/image/assets/TEMP/1453465946b91d021d463710dffce2838b6c0635",
+  },
 ];
 
 function UserDashboardPage() {
@@ -50,7 +150,7 @@ function UserDashboardPage() {
             <div className="language-selector">
               <span>Language</span>
             </div>
-            <Link to="/login" className="sign-out-button">
+            <Link to="/" className="sign-out-button">
               <span>Sign Out</span>
             </Link>
           </div>
