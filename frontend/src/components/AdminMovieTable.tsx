@@ -12,13 +12,18 @@ export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
   onDelete,
 }) => {
   const [movies, setMovies] = useState<Movie[]>([]);
-  useEffect(() => {
-    fetchMovies()
-      .then(setMovies)
-      .catch((error) => {
-        console.error("Error fetching movies:", error);
-      });
-  }, []);
+ useEffect(() => {
+   fetchMovies()
+     .then((data) => {
+       console.log("Fetched data:", data);
+       setMovies(data.movies); // ✅ only the actual array!
+     })
+     .catch((error) => {
+       console.error("Error fetching movies:", error);
+     });
+ }, []);
+
+
 
   return (
     <div className="movie-table-container">

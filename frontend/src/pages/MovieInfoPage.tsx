@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 const mockMovie: Movie = {
   title: "Name of Movie",
   type: "Movie",
-  genre: "Action",
+  genre: ["Action"],
   description: "Intex is real y'all",
   director: "Kermit the Frog",
   cast: "Emma Helquist, Payton Hatch, Addison Smith, Tessa Miner",

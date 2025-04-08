@@ -69,6 +69,31 @@ namespace INTEX4_6.Controllers
             return Ok(new { token });
         }
 
+        [Authorize(Roles = "Administrator")]
+        [HttpGet("users")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = _userManager.Users.ToList();
+
+            var userList = new List<object>();
+
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userList.Add(new
+                {
+                    Id = user.Id,
+                    Name = user.UserName,  // you can extend this if you added a separate Name field
+                    Email = user.Email,
+                    Role = roles.FirstOrDefault() ?? "User", // Default role
+                    Status = user.LockoutEnabled ? "Inactive" : "Active"
+                });
+            }
+
+            return Ok(userList);
+        }
+
+
         private async Task<string> GenerateJwtToken(IdentityUser user)
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
