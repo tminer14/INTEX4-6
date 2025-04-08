@@ -34,6 +34,7 @@ function App() {
         <Route path="/signup/step3" element={<CreateAccountStep3 />} />
         <Route path="/signup/step4" element={<CreateAccountStep4 />} />
         <Route path="/signup/step5" element={<CreateAccountStep5 />} />
+        <Route path="/movieinfo/id" element={<MovieInfoPage />} />
       </Routes>
       <Footer />
     </div>
