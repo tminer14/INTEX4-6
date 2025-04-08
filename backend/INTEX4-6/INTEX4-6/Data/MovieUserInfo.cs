@@ -8,14 +8,9 @@ namespace INTEX4_6.Data
     public class MovieUserInfo
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("user_id")]
         public int UserId { get; set; }
-
-        [Required]
-        public string IdentityUserId { get; set; }
-
-        [ForeignKey("IdentityUserId")]
-        public IdentityUser IdentityUser { get; set; }
 
         [Column("name")]
         public string Name { get; set; }
