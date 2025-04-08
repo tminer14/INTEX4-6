@@ -9,7 +9,7 @@ const AdminDashboardPage: React.FC = () => {
   const handleSignOut = () => {
     // Implementation for signing out
     console.log("Sign out clicked");
-    navigate("/login");
+    navigate("/");
   };
 
   const navigateToMovies = () => {
@@ -77,7 +77,6 @@ const AdminDashboardPage: React.FC = () => {
               ></path>
             </svg>
           </div>
-          <img src={logo} alt="" className="logo-icon" />
         </div>
         <div className="header-actions">
           <div className="language-selector">Language</div>

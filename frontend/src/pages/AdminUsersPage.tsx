@@ -1,10 +1,13 @@
 import React from "react";
 import "../styles/AdminPanelPage.css";
+import { useNavigate } from "react-router-dom";
 
 const AdminUsersPage: React.FC = () => {
+  const Navigate = useNavigate();
   const handleSignOut = () => {
     // Implementation for signing out
     console.log("Sign out clicked");
+    Navigate("/");
   };
 
   return (

@@ -34,7 +34,7 @@ function HomePage() {
                 className="email-input"
               />
               <button
-                onClick={() => navigate("/signup")}
+                onClick={() => navigate("/signup/step1")}
                 className="get-started-button"
               >
                 Get Started
