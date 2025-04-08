@@ -12,9 +12,6 @@ namespace INTEX4_6.Controllers
     {
         private MovieDbContext _context;
 
-
-
-
         public MoviesController(MovieDbContext temp)
         {
             _context = temp;
@@ -86,5 +83,71 @@ namespace INTEX4_6.Controllers
 
             return genres;
         }
+
+
+        // Route to pass the top-rated movies into our user dashboard 
+        [HttpGet("top-rated")]
+        public IActionResult GetTopRatedMovies()
+        {
+            var topMovies = _context.TopOverallRecs
+                .OrderByDescending(m => m.AvgRating)
+                .ThenByDescending(m => m.NumRatings)
+                .Take(10)
+                .ToList();
+
+            return Ok(topMovies);
+        }
+
+        // to view the details of each movie! 
+        [HttpGet("details/{id}")]
+        public IActionResult GetMovieDetails(string id)
+        {
+            var movie = _context.Movies.FirstOrDefault(m => m.ShowId == id);
+
+            if (movie == null)
+            {
+                return NotFound(new { message = $"Movie with ID {id} not found." });
+            }
+
+            return Ok(movie);
+        }
+
+        [HttpGet("userBasedRecommendations/{id}")]
+        public IActionResult GetUserBasedRecommendations(string id)
+        {
+            if (!int.TryParse(id, out int userId))
+            {
+                return BadRequest(new { message = "Invalid user ID format." });
+            }
+
+            var recommendations = _context.UserBasedRecs
+                .Where(r => r.user_id == userId)
+                .Where(r => r.recommendation_type == "top_picks")
+                .Join(
+                    _context.Movies,
+                    rec => rec.title,
+                    movie => movie.Title,
+                    (rec, movie) => new
+                    {
+                        movie.ShowId,
+                        movie.Title,
+                        movie.Director,
+                        movie.Cast,
+                        movie.Country,
+                        movie.ReleaseYear,
+                        movie.Rating,
+                        movie.Duration,
+                        movie.Description,
+                        rec.rank,
+                        rec.recommendation_type
+                    }
+                )
+                .OrderBy(r => r.rank)
+                .ToList();
+
+            return Ok(recommendations);
+        }
+
+
     }
 }
