@@ -22,8 +22,6 @@ function Footer() {
 
       const rolesArray = Array.isArray(roles) ? roles : [roles]; // handle single or multiple roles
       isAdmin = rolesArray.includes("Administrator");
-
-      console.log("Decoded token:", decodedToken);
     } catch (error) {
       console.error("Failed to decode token:", error);
     }
