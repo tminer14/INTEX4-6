@@ -39,20 +39,20 @@ function MovieInfoPage() {
     toast.success(`You've earned 10 points! Total: ${newPoints}`); // ✅
   };
 
-  useEffect(() => {
-    axios
-      .get(`https://localhost:7026/Movies/details/${id}`, {
-        withCredentials: true,
-      })
+useEffect(() => {
+  axios
+    .get(`https://localhost:7026/Movies/details/${title}`, {
+      withCredentials: true,
+    })
+    .then((res) => {
+      setMovie(res.data);
+      addPoints();
+    })
+    .catch((err) => {
+      console.error("Failed to fetch movie details", err);
+    });
+}, [title]);
 
-      .then((res) => {
-        setMovie(res.data);
-        addPoints();
-      })
-      .catch((err) => {
-        console.error("Failed to fetch movie details", err);
-      });
-  }, [title]);
 
 
   const handleBack = () => {
