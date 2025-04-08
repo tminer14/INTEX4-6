@@ -1,0 +1,137 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 200px);
+  padding: 40px 20px;
+  background-color: #022b3b;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 878px;
+  position: relative;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  padding: 40px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.back-button {
+  position: absolute;
+  left: 28px;
+  top: 21px;
+  cursor: pointer;
+}
+
+.login-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 45px;
+}
+
+.login-title {
+  font-family: "Inter", sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.login-subtitle {
+  font-family: "Inter", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #000;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 18px;
+  width: 100%;
+  max-width: 214px;
+}
+
+.form-group label {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+}
+
+.form-input {
+  width: 100%;
+  height: 49px;
+  border-radius: 10px;
+  background-color: #bed5ea;
+  padding: 0 15px;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  outline: 2px solid #fc7853;
+}
+
+.login-help {
+  margin-bottom: 30px;
+  margin-top: 10px;
+}
+
+.help-link {
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #000;
+  text-decoration: underline;
+}
+
+.sign-in-btn {
+  font-family: "Inter", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #f5f5f5;
+  width: 257px;
+  height: 58px;
+  border-radius: 10px;
+  background-color: #fc7853;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.sign-in-btn:hover {
+  background-color: #e56a48;
+}
+
+@media (max-width: 768px) {
+  .login-card {
+    max-width: 100%;
+  }
+
+  .login-title {
+    font-size: 32px;
+  }
+
+  .login-subtitle {
+    font-size: 18px;
+    margin-bottom: 40px;
+  }
+
+  .sign-in-btn {
+    width: 220px;
+  }
+}

@@ -1,0 +1,124 @@
+.home-container {
+  width: 100%;
+  padding-left: 47px;
+  padding-right: 47px;
+  box-sizing: border-box;
+  background-color: #022b3b;
+}
+
+.home-content {
+  display: flex;
+  width: 100%;
+  padding-top: 66px;
+  padding-bottom: 106px;
+  flex-direction: column;
+  overflow: hidden;
+  align-items: center;
+}
+
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  position: relative;
+  min-height: 373px;
+  width: 100%;
+  max-width: 1178px;
+  padding-left: 80px;
+  padding-right: 80px;
+  padding-top: 84px;
+  padding-bottom: 31px;
+  overflow: hidden;
+  align-items: center;
+  font-family:
+    Inter,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  color: rgba(2, 43, 59, 1);
+  font-weight: 700;
+  text-align: center;
+}
+
+.hero-background {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-content {
+  position: relative;
+  display: flex;
+  width: 816px;
+  max-width: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-title {
+  font-size: 48px;
+  align-self: stretch;
+}
+
+.hero-subtitle {
+  font-size: 15px;
+  margin-top: 39px;
+}
+
+.cta-container {
+  display: flex;
+  margin-top: 25px;
+  width: 507px;
+  max-width: 100%;
+  align-items: stretch;
+  gap: 20px;
+  font-size: 20px;
+  color: rgba(247, 247, 255, 1);
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.email-input {
+  border-radius: 10px;
+  border: 1px solid rgba(252, 120, 83, 1);
+  display: flex;
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 237px;
+  flex-shrink: 0;
+  height: 41px;
+  background: transparent;
+  color: #333333; /* Dark gray text */
+  padding: 0 10px;
+}
+
+.get-started-button {
+  border-radius: 10px;
+  padding: 18px 62px;
+  background-color: rgba(252, 120, 83, 1);
+  border: none;
+  cursor: pointer;
+  color: rgba(247, 247, 255, 1);
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.pricing-info {
+  color: #fff;
+  text-align: center;
+  font-family:
+    Inter,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  width: 100%;
+  height: 120px;
+  padding-top: 48px;
+}
