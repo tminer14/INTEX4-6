@@ -33,11 +33,30 @@ namespace INTEX4_6.Controllers
         }
 
         [HttpGet("withGenres")]
-        public IActionResult GetAllMoviesWithGenres()
+        public IActionResult GetAllMoviesWithGenres(int pageSize=25, int pageNum = 1)
         {
+            if (pageNum <=0 || pageSize <=0)
+            {
+                return BadRequest("Page number and page size must be greater than 0.");
+            }
+
+            var query = _context.Movies.AsQueryable();
+
+            query = query.OrderBy(m => m.Title);
+
+
+            var totalMovies = query.Count();
+
+            var pagedMovies = query 
+                .Skip((pageNum - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+
+
             var movies = _context.Movies.Take(100).ToList();
 
-            var result = movies.Select(m => new MovieDto
+            var result = pagedMovies.Select(m => new MovieDto
             {
 
                 ShowId = m.ShowId,
@@ -55,7 +74,13 @@ namespace INTEX4_6.Controllers
 
             }).ToList();
 
-            return Ok(result);
+            var pageResult = new
+            {
+                TotalMovies = totalMovies,
+                Movies= result
+            };
+
+            return Ok(pageResult);
         }
 
         //pulling genres from booleans
