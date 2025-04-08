@@ -1,19 +1,68 @@
 import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import "../styles/CreateAccountPage.css";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 
-function CreateAccountStep1() {
+interface CreateAccountStep1Props {
+  formData: any;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
+  nextStep: () => void;
+}
+
+function CreateAccountStep1({
+  formData,
+  setFormData,
+  nextStep,
+}: CreateAccountStep1Props) {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
-    navigate(-1);
+    navigate("/");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Account creation form submitted");
-    navigate("/signup/step2");
+
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match. Please try again.", {
+        duration: 3000,
+      });
+      return;
+    }
+
+    try {
+      const response = await toast.promise(
+        axios.post("/api/account/register", {
+          email: formData.email,
+          password: formData.password,
+        }),
+        {
+          loading: "Creating your account...",
+          success: "🎉 Account created successfully!",
+          error: (err) => {
+            console.error("Registration error:", err);
+            if (err.response?.data?.[0]?.description) {
+              return `🚫 ${err.response.data[0].description}`;
+            } else if (typeof err.response?.data === "string") {
+              return `🚫 ${err.response.data}`;
+            } else {
+              return "🚫 Registration failed. Please try again.";
+            }
+          },
+        }
+      );
+
+      // 🌟 Success! Save token and move to Step 2
+      localStorage.setItem("token", response.data.token);
+
+      nextStep();
+    } catch (error) {
+      console.error("Unexpected registration error:", error);
+      // toast.promise already shows an error message
+    }
   };
+
 
   return (
     <div className="create-account-container">
@@ -76,6 +125,10 @@ function CreateAccountStep1() {
                     type="text"
                     id="fullName"
                     className="form-input"
+                    value={formData.fullName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fullName: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -91,6 +144,10 @@ function CreateAccountStep1() {
                     type="email"
                     id="email"
                     className="form-input"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -102,6 +159,10 @@ function CreateAccountStep1() {
                     type="tel"
                     id="phone"
                     className="form-input"
+                    value={formData.phone}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -117,6 +178,10 @@ function CreateAccountStep1() {
                     type="password"
                     id="password"
                     className="form-input"
+                    value={formData.password}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -128,6 +193,13 @@ function CreateAccountStep1() {
                     type="password"
                     id="confirmPassword"
                     className="form-input"
+                    value={formData.confirmPassword}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        confirmPassword: e.target.value,
+                      })
+                    }
                     required
                   />
                 </div>

@@ -1,41 +1,71 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 import Header from "./Header";
 import "../styles/CreateAccountPage.css";
 
-function CreateAccountStep5() {
-  const navigate = useNavigate();
-  // In a real application, this would come from context or state management
-  // For this example, we're using a mock value
-  const [firstName, setFirstName] = useState("John");
+interface CreateAccountStep5Props {
+  formData: any;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
+  handleSubmit: () => Promise<void>;
+  prevStep: () => void;
+}
 
-  const handleLoginClick = () => {
-    navigate("/login");
+function CreateAccountStep5({
+  formData,
+  setFormData,
+}: CreateAccountStep5Props) {
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleSubmitFinal = async () => {
+    setLoading(true);
+    try {
+      const payload = {
+        Name: formData.fullName,
+        Email: formData.email,
+        Phone: formData.phone,
+        Password: formData.password,
+        Age: formData.age,
+        Gender: formData.gender,
+        City: formData.address.city,
+        State: formData.address.state,
+        Zip: formData.address.zip,
+        Netflix: formData.streamingServices?.includes("Netflix") || false,
+        AmazonPrime:
+          formData.streamingServices?.includes("Amazon Prime") || false,
+        DisneyPlus:
+          formData.streamingServices?.includes("Disney Plus") || false,
+        ParamountPlus:
+          formData.streamingServices?.includes("Paramount Plus") || false,
+        Max: formData.streamingServices?.includes("Max") || false,
+        Hulu: formData.streamingServices?.includes("Hulu") || false,
+        AppleTV: formData.streamingServices?.includes("Apple TV") || false,
+        Peacock: formData.streamingServices?.includes("Peacock") || false,
+      };
+
+      await toast.promise(axios.post("/api/tessaaccount/register", payload), {
+        loading: "Creating your account...",
+        success: "Account created successfully! 🎉",
+        error: "Account creation failed. 🚫 Please try again.",
+      });
+
+      navigate("/login");
+    } catch (error) {
+      console.error("Error during final account creation:", error);
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   return (
     <div className="create-account-container">
       <Header />
       <div className="create-account-content">
-        <div className="back-button" style={{ visibility: "hidden" }}>
-          {/* Hidden back button to maintain layout consistency */}
-          <svg
-            width="48"
-            height="48"
-            viewBox="0 0 48 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="back-arrow"
-          >
-            <path
-              d="M38 24H10M10 24L24 38M10 24L24 10"
-              stroke="#F5F5F5"
-              strokeWidth="4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            ></path>
-          </svg>
-        </div>
+        <div className="back-button" style={{ visibility: "hidden" }}></div>
 
         <div className="progress-indicator">
           <svg
@@ -80,13 +110,19 @@ function CreateAccountStep5() {
             </svg>
           </div>
 
-          <h1 className="welcome-title">Welcome to the club, {firstName}!</h1>
+          <h1 className="welcome-title">
+            Welcome to the club, {formData.fullName.split(" ")[0]}!
+          </h1>
           <p className="welcome-subtitle">
-            Login to find your new favorite film
+            One last step — click below to finish setting up your account.
           </p>
 
-          <button className="login-button" onClick={handleLoginClick}>
-            Login
+          <button
+            className="login-button"
+            onClick={handleSubmitFinal}
+            disabled={loading}
+          >
+            {loading ? <div className="spinner"></div> : "Finish Account Setup"}
           </button>
         </div>
       </div>

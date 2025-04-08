@@ -2,7 +2,19 @@ import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import "../styles/CreateAccountPage.css";
 
-function CreateAccountStep2() {
+interface CreateAccountStep2Props {
+  formData: any;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
+  nextStep: () => void;
+  prevStep: () => void;
+}
+
+function CreateAccountStep2({
+  formData,
+  setFormData,
+  nextStep,
+  prevStep,
+}: CreateAccountStep2Props) {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
@@ -11,17 +23,17 @@ function CreateAccountStep2() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log("Account creation step 2 form submitted");
-    // Navigate to next step
-    navigate("/signup/step3");
+
+    // Optional: you can add basic validation here if needed
+
+    nextStep(); // Move to Step 3
   };
 
   return (
     <div className="create-account-container">
       <Header />
       <div className="create-account-content">
-        <div className="back-button" onClick={handleBackClick}>
+        <div onClick={prevStep} className="back-button">
           <svg
             width="48"
             height="48"
@@ -74,7 +86,16 @@ function CreateAccountStep2() {
                   <label htmlFor="age" className="form-label">
                     Age
                   </label>
-                  <input type="text" id="age" className="form-input" required />
+                  <input
+                    type="text"
+                    id="age"
+                    className="form-input"
+                    value={formData.age || ""}
+                    onChange={(e) =>
+                      setFormData({ ...formData, age: e.target.value })
+                    }
+                    required
+                  />
                 </div>
 
                 <div className="form-group">
@@ -85,6 +106,10 @@ function CreateAccountStep2() {
                     type="text"
                     id="gender"
                     className="form-input"
+                    value={formData.gender || ""}
+                    onChange={(e) =>
+                      setFormData({ ...formData, gender: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -92,13 +117,23 @@ function CreateAccountStep2() {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="streetAddress" className="form-label">
+                  <label htmlFor="street" className="form-label">
                     Street Address
                   </label>
                   <input
                     type="text"
-                    id="streetAddress"
+                    id="street"
                     className="form-input"
+                    value={formData.address?.street || ""}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        address: {
+                          ...formData.address,
+                          street: e.target.value,
+                        },
+                      })
+                    }
                     required
                   />
                 </div>
@@ -111,6 +146,13 @@ function CreateAccountStep2() {
                     type="text"
                     id="city"
                     className="form-input"
+                    value={formData.address?.city || ""}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        address: { ...formData.address, city: e.target.value },
+                      })
+                    }
                     required
                   />
                 </div>
@@ -125,6 +167,13 @@ function CreateAccountStep2() {
                     type="text"
                     id="state"
                     className="form-input"
+                    value={formData.address?.state || ""}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        address: { ...formData.address, state: e.target.value },
+                      })
+                    }
                     required
                   />
                 </div>
@@ -133,7 +182,19 @@ function CreateAccountStep2() {
                   <label htmlFor="zip" className="form-label">
                     Zip
                   </label>
-                  <input type="text" id="zip" className="form-input" required />
+                  <input
+                    type="text"
+                    id="zip"
+                    className="form-input"
+                    value={formData.address?.zip || ""}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        address: { ...formData.address, zip: e.target.value },
+                      })
+                    }
+                    required
+                  />
                 </div>
               </div>
             </div>
