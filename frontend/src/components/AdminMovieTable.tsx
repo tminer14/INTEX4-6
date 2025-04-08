@@ -8,20 +8,17 @@ interface AdminMovieTableProps {
 }
 
 export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
-
   onEdit,
   onDelete,
 }) => {
- const [movies, setMovies] = useState<Movie[]>([]);
- useEffect(() => {
-  fetchMovies()
-  .then(setMovies)
-  .catch((error) => {
-    console.error("Error fetching movies:", error);
-  });
- }, [])
-
-
+  const [movies, setMovies] = useState<Movie[]>([]);
+  useEffect(() => {
+    fetchMovies()
+      .then(setMovies)
+      .catch((error) => {
+        console.error("Error fetching movies:", error);
+      });
+  }, []);
 
   return (
     <div className="movie-table-container">
@@ -52,8 +49,8 @@ export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
             <div className="cell-year">{movie.releaseYear}</div>
             <div className="cell-rating">{movie.rating}</div>
             <div className="cell-duration">{movie.duration}</div>
-            <div className="cell-description">{movie.description}</div>
-            <div className="cell-genre">{movie.genre}</div>
+            <div className="cell-description"> {movie.description}</div>
+            <div className="cell-genre">{movie.genre.join(", ")}</div>
             <div className="cell-action">
               <div className="action-buttons">
                 <button

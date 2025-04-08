@@ -30,11 +30,30 @@ namespace INTEX4_6.Controllers
         }
 
         [HttpGet("withGenres")]
-        public IActionResult GetAllMoviesWithGenres()
+        public IActionResult GetAllMoviesWithGenres(int pageSize=25, int pageNum = 1)
         {
+            if (pageNum <=0 || pageSize <=0)
+            {
+                return BadRequest("Page number and page size must be greater than 0.");
+            }
+
+            var query = _context.Movies.AsQueryable();
+
+            query = query.OrderBy(m => m.Title);
+
+
+            var totalMovies = query.Count();
+
+            var pagedMovies = query 
+                .Skip((pageNum - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+
+
             var movies = _context.Movies.Take(100).ToList();
 
-            var result = movies.Select(m => new MovieDto
+            var result = pagedMovies.Select(m => new MovieDto
             {
 
                 ShowId = m.ShowId,
@@ -47,12 +66,18 @@ namespace INTEX4_6.Controllers
                 Rating = m.Rating,
                 Duration = m.Duration,
                 Description = m.Description,
-                Genre = string.Join(", ", GetGenresFromBooleans(m))
+                Genre = GetGenresFromBooleans(m)
 
 
             }).ToList();
 
-            return Ok(result);
+            var pageResult = new
+            {
+                TotalMovies = totalMovies,
+                Movies= result
+            };
+
+            return Ok(pageResult);
         }
 
         //pulling genres from booleans
@@ -99,14 +124,14 @@ namespace INTEX4_6.Controllers
         }
 
         // to view the details of each movie! 
-        [HttpGet("details/{id}")]
-        public IActionResult GetMovieDetails(string id)
+        [HttpGet("details/{title}")]
+        public IActionResult GetMovieDetails(string title)
         {
-            var movie = _context.Movies.FirstOrDefault(m => m.ShowId == id);
+            var movie = _context.Movies.FirstOrDefault(m => m.Title == title);
 
             if (movie == null)
             {
-                return NotFound(new { message = $"Movie with ID {id} not found." });
+                return NotFound(new { message = $"Movie with ID {title} not found." });
             }
 
             return Ok(movie);
@@ -146,6 +171,17 @@ namespace INTEX4_6.Controllers
                 .ToList();
 
             return Ok(recommendations);
+        }
+
+        [HttpGet("recentMovies")]
+        public IActionResult GetRecentMovies()
+        {
+            var recentMovies = _context.Movies
+                .OrderByDescending(m => m.ReleaseYear)
+                .Take(20)
+                .ToList();
+
+            return Ok(recentMovies);
         }
 
 
