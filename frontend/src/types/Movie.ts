@@ -7,4 +7,8 @@ export interface Movie {
   genre?: string[];
   type?: string;
   description?: string;
+  director?: string;
+  cast?: string;
+  duration?: string;
+  country?: string;
 }
