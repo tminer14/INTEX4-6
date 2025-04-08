@@ -4,9 +4,9 @@ import MovieListPage from "./pages/MovieListPage";
 import MovieInfoPage from "./pages/MovieInfoPage";
 import LoginPage from "./pages/LoginPage";
 import PrivacyPage from "./pages/PrivacyPage";
-import CreateAccountPage from "./pages/CreateAccountPage";
 import Footer from "./components/Footer";
 import "./App.css";
+import CreateAccountStep1 from "./components/CreateAccountStep1";
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
         <Route path="/movie/:id" element={<MovieInfoPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
-        <Route path="/signup" element={<CreateAccountPage />} />
+        <Route path="/signup" element={<CreateAccountStep1 />} />
       </Routes>
       <Footer />
     </div>

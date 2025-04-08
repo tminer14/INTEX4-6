@@ -1,0 +1,123 @@
+.create-account-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #022b3b;
+  width: 100%;
+}
+
+.create-account-content {
+  position: relative;
+  padding: 25px 50px;
+}
+
+.back-button {
+  position: absolute;
+  left: 50px;
+  top: 25px;
+  cursor: pointer;
+}
+
+.back-arrow {
+  width: 48px;
+  height: 48px;
+}
+
+.progress-indicator {
+  display: flex;
+  justify-content: center;
+  margin-top: 23px;
+}
+
+.dots {
+  width: 100%;
+  max-width: 771px;
+  height: 35px;
+}
+
+.form-container {
+  max-width: 520px;
+  margin: 60px auto 0;
+  text-align: center;
+}
+
+.form-title {
+  color: #f5f5f5;
+  font-family: "Inter", sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 38px;
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 21px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  text-align: left;
+  width: 100%;
+}
+
+.form-label {
+  color: #f5f5f5;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+}
+
+.form-input {
+  height: 53px;
+  border: none;
+  border-radius: 10px;
+  padding: 0 15px;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  background-color: #d6e6e8;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.next-button {
+  width: 248px;
+  height: 61px;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-family: "Inter", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 35px;
+  background-color: #fc7853;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.next-button:hover {
+  background-color: #e56a48;
+}
+
+@media (max-width: 768px) {
+  .create-account-content {
+    padding: 25px 20px;
+  }
+
+  .back-button {
+    left: 20px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 21px;
+  }
+}
