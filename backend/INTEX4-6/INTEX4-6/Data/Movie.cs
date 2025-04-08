@@ -12,127 +12,127 @@ namespace INTEX4_6.Data
         public string ShowId { get; set; }
 
         [Column("type")]
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         [Column("title")]
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         [Column("director")]
-        public string Director { get; set; }
+        public string? Director { get; set; }
 
         [Column("cast")]
-        public string Cast { get; set; }
+        public string? Cast { get; set; }
 
         [Column("country")]
-        public string Country { get; set; }
+        public string? Country { get; set; }
 
         [Column("release_year")]
-        public string ReleaseYear { get; set; }
+        public string? ReleaseYear { get; set; }
 
         [Column("rating")]
-        public string Rating { get; set; }
+        public string? Rating { get; set; }
 
         [Column("duration")]
-        public string Duration { get; set; }
+        public string? Duration { get; set; }
 
         [Column("description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         // Genre flags (Capitalized column names)
         [Column("Action")]
-        public bool Action { get; set; }
+        public bool? Action { get; set; }
 
         [Column("Adventure")]
-        public bool Adventure { get; set; }
+        public bool? Adventure { get; set; }
 
         [Column("Anime Series International TV Shows")]
-        public bool AnimeSeriesInternationalTvShows { get; set; }
+        public bool? AnimeSeriesInternationalTvShows { get; set; }
 
-        [Column("British TV Shows Docuseries International")]
-        public bool BritishTvShowsDocuseriesInternational { get; set; }
+        [Column("British TV Shows Docuseries International TV Shows")]
+        public bool? BritishTvShowsDocuseriesInternationalTvShows { get; set; }
 
         [Column("Children")]
-        public bool Children { get; set; }
+        public bool? Children { get; set; }
 
         [Column("Comedies")]
-        public bool Comedies { get; set; }
+        public bool? Comedies { get; set; }
 
         [Column("Comedies Dramas International Movies")]
-        public bool ComediesDramasInternationalMovies { get; set; }
+        public bool? ComediesDramasInternationalMovies { get; set; }
 
         [Column("Comedies International Movies")]
-        public bool ComediesInternationalMovies { get; set; }
+        public bool? ComediesInternationalMovies { get; set; }
 
         [Column("Comedies Romantic Movies")]
-        public bool ComediesRomanticMovies { get; set; }
+        public bool? ComediesRomanticMovies { get; set; }
 
         [Column("Crime TV Shows Docuseries")]
-        public bool CrimeTvShowsDocuseries { get; set; }
+        public bool? CrimeTvShowsDocuseries { get; set; }
 
         [Column("Documentaries")]
-        public bool Documentaries { get; set; }
+        public bool? Documentaries { get; set; }
 
         [Column("Documentaries International Movies")]
-        public bool DocumentariesInternationalMovies { get; set; }
+        public bool? DocumentariesInternationalMovies { get; set; }
 
         [Column("Docuseries")]
-        public bool Docuseries { get; set; }
+        public bool? Docuseries { get; set; }
 
         [Column("Dramas")]
-        public bool Dramas { get; set; }
+        public bool? Dramas { get; set; }
 
         [Column("Dramas International Movies")]
-        public bool DramasInternationalMovies { get; set; }
+        public bool? DramasInternationalMovies { get; set; }
 
         [Column("Dramas Romantic Movies")]
-        public bool DramasRomanticMovies { get; set; }
+        public bool? DramasRomanticMovies { get; set; }
 
         [Column("Family Movies")]
-        public bool FamilyMovies { get; set; }
+        public bool? FamilyMovies { get; set; }
 
         [Column("Fantasy")]
-        public bool Fantasy { get; set; }
+        public bool? Fantasy { get; set; }
 
         [Column("Horror Movies")]
-        public bool HorrorMovies { get; set; }
+        public bool? HorrorMovies { get; set; }
 
         [Column("International Movies Thrillers")]
-        public bool InternationalMoviesThrillers { get; set; }
+        public bool? InternationalMoviesThrillers { get; set; }
 
-        [Column("International TV Shows Romantic TV")]
-        public bool InternationalTvShowsRomanticTv { get; set; }
+        [Column("International TV Shows Romantic TV Shows TV Dramas")]
+        public bool? InternationalTvShowsRomanticTvShowsTvDramas { get; set; }
 
         [Column("Kids' TV")]
-        public bool KidsTv { get; set; }
+        public bool? KidsTv { get; set; }
 
         [Column("Language TV Shows")]
-        public bool LanguageTvShows { get; set; }
+        public bool? LanguageTvShows { get; set; }
 
         [Column("Musicals")]
-        public bool Musicals { get; set; }
+        public bool? Musicals { get; set; }
 
         [Column("Nature TV")]
-        public bool NatureTv { get; set; }
+        public bool? NatureTv { get; set; }
 
         [Column("Reality TV")]
-        public bool RealityTv { get; set; }
+        public bool? RealityTv { get; set; }
 
         [Column("Spirituality")]
-        public bool Spirituality { get; set; }
+        public bool? Spirituality { get; set; }
 
         [Column("TV Action")]
-        public bool TvAction { get; set; }
+        public bool? TvAction { get; set; }
 
         [Column("TV Comedies")]
-        public bool TvComedies { get; set; }
+        public bool? TvComedies { get; set; }
 
         [Column("TV Dramas")]
-        public bool TvDramas { get; set; }
+        public bool? TvDramas { get; set; }
 
         [Column("Talk Shows TV Comedies")]
-        public bool TalkShowsTvComedies { get; set; }
+        public bool? TalkShowsTvComedies { get; set; }
 
         [Column("Thrillers")]
-        public bool Thrillers { get; set; }
+        public bool? Thrillers { get; set; }
     }
 }
