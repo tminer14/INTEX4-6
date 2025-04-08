@@ -10,6 +10,7 @@ function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // 🆕 Track loading state
 
   const handleBackClick = () => {
     navigate(-1);
@@ -17,9 +18,9 @@ function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true); // 🆕 Start loading
 
     try {
-      // 🔥 Send real login request to backend
       const response = await axios.post(
         "https://localhost:7026/api/account/login",
         {
@@ -29,11 +30,8 @@ function LoginPage() {
       );
 
       const { token } = response.data;
-
-      // Save token
       localStorage.setItem("authToken", token);
 
-      // Set points cookie if not already set
       if (!Cookies.get("userPoints")) {
         Cookies.set("userPoints", "100", { expires: 7 });
       }
@@ -48,6 +46,8 @@ function LoginPage() {
       } else {
         toast.error("Login failed. Please try again.");
       }
+    } finally {
+      setIsLoading(false); // 🆕 Stop loading no matter what
     }
   };
 
@@ -90,6 +90,7 @@ function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  disabled={isLoading} // 🆕 Disable input while loading
                 />
               </div>
 
@@ -102,6 +103,7 @@ function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  disabled={isLoading} // 🆕 Disable input while loading
                 />
               </div>
 
@@ -111,8 +113,13 @@ function LoginPage() {
                 </a>
               </div>
 
-              <button type="submit" className="sign-in-btn">
-                Sign In
+              <button
+                type="submit"
+                className="sign-in-btn"
+                disabled={isLoading} // 🆕 Disable button while loading
+              >
+                {isLoading ? "Signing you in..." : "Sign In"}{" "}
+                {/* 🆕 Spinner text */}
               </button>
             </form>
           </div>
