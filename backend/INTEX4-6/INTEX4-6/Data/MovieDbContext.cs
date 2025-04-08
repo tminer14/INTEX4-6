@@ -9,5 +9,6 @@ namespace INTEX4_6.Data
         {
         }
     public DbSet<Movie> Movies { get; set; }
+    public DbSet<MovieUserInfo> MovieUsers { get; set; }
     }
 }
