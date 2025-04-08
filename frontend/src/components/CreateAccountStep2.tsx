@@ -13,8 +13,8 @@ function CreateAccountStep2() {
     e.preventDefault();
     // Handle form submission logic here
     console.log("Account creation step 2 form submitted");
-    // Navigate to next step or dashboard
-    // navigate("/signup/step3");
+    // Navigate to next step
+    navigate("/signup/step3");
   };
 
   return (
