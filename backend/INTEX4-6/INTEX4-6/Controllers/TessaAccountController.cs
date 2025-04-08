@@ -7,12 +7,12 @@ namespace INTEX4_6.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class TessaAccountController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly MovieDbContext _movieDbContext;
 
-        public AccountController(UserManager<IdentityUser> userManager, MovieDbContext movieDbContext)
+        public TessaAccountController(UserManager<IdentityUser> userManager, MovieDbContext movieDbContext)
         {
             _userManager = userManager;
             _movieDbContext = movieDbContext;
@@ -34,7 +34,7 @@ namespace INTEX4_6.Controllers
                 PhoneNumber = dto.Phone
             };
 
-            var result = await _userManager.CreateAsync(identityUser, dto.password);
+            var result = await _userManager.CreateAsync(identityUser, dto.Password);
             if (!result.Succeeded)
             {
                 return BadRequest(result.Errors);
