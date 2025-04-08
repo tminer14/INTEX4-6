@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import "../styles/CreateAccountPage.css";
 
-function CreateAccountStep1() {
+function CreateAccountStep2() {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
@@ -12,9 +12,9 @@ function CreateAccountStep1() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission logic here
-    console.log("Account creation form submitted");
-    // Navigate to next step
-    navigate("/signup/step2");
+    console.log("Account creation step 2 form submitted");
+    // Navigate to next step or dashboard
+    // navigate("/signup/step3");
   };
 
   return (
@@ -49,16 +49,16 @@ function CreateAccountStep1() {
             xmlns="http://www.w3.org/2000/svg"
             className="dots"
           >
+            <circle cx="17.5" cy="17.5" r="17.5" fill="#87B5BA"></circle>
+            <circle cx="753.5" cy="17.5" r="17.5" fill="#87B5BA"></circle>
             <circle
-              cx="17.5"
+              cx="196.5"
               cy="17.5"
               r="16"
-              fill="#87B5BA"
+              fill="#227780"
               stroke="#237881"
               strokeWidth="3"
             ></circle>
-            <circle cx="753.5" cy="17.5" r="17.5" fill="#87B5BA"></circle>
-            <circle cx="196.5" cy="17.5" r="17.5" fill="#87B5BA"></circle>
             <circle cx="375.5" cy="17.5" r="17.5" fill="#87B5BA"></circle>
             <circle cx="564.5" cy="17.5" r="17.5" fill="#87B5BA"></circle>
           </svg>
@@ -69,66 +69,72 @@ function CreateAccountStep1() {
 
           <form onSubmit={handleSubmit}>
             <div className="form-fields">
-              <div className="form-group">
-                <label htmlFor="fullName" className="form-label">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="fullName"
-                  className="form-input"
-                  required
-                />
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="age" className="form-label">
+                    Age
+                  </label>
+                  <input type="text" id="age" className="form-input" required />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="gender" className="form-label">
+                    Gender
+                  </label>
+                  <input
+                    type="text"
+                    id="gender"
+                    className="form-input"
+                    required
+                  />
+                </div>
               </div>
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="email" className="form-label">
-                    Email
+                  <label htmlFor="streetAddress" className="form-label">
+                    Street Address
                   </label>
                   <input
-                    type="email"
-                    id="email"
+                    type="text"
+                    id="streetAddress"
                     className="form-input"
                     required
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="phone" className="form-label">
-                    Phone Number
+                  <label htmlFor="city" className="form-label">
+                    City
                   </label>
                   <input
-                    type="tel"
-                    id="phone"
+                    type="text"
+                    id="city"
                     className="form-input"
                     required
                   />
                 </div>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="password" className="form-label">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  className="form-input"
-                  required
-                />
-              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="state" className="form-label">
+                    State
+                  </label>
+                  <input
+                    type="text"
+                    id="state"
+                    className="form-input"
+                    required
+                  />
+                </div>
 
-              <div className="form-group">
-                <label htmlFor="confirmPassword" className="form-label">
-                  Confirm Password
-                </label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  className="form-input"
-                  required
-                />
+                <div className="form-group">
+                  <label htmlFor="zip" className="form-label">
+                    Zip
+                  </label>
+                  <input type="text" id="zip" className="form-input" required />
+                </div>
               </div>
             </div>
 
@@ -142,4 +148,4 @@ function CreateAccountStep1() {
   );
 }
 
-export default CreateAccountStep1;
+export default CreateAccountStep2;
