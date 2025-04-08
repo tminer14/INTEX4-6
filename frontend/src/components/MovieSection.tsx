@@ -14,7 +14,7 @@ function MovieSection({ title, movies }: MovieSectionProps) {
       <div className="movie-cards-container">
         {movies.map((movie) => (
           <Link
-            to={`/movie/${movie.title}`}
+            to={`/movies/details/${encodeURIComponent(movie.title)}`}
             key={movie.title}
             className="movie-card-link"
           >
