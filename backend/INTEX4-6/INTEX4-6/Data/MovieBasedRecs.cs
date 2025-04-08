@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace INTEX4_6.Data;
 
-[Table("UBasedRec")]
-public class UserBasedRecs
+[Table("MBasedRec")]
+public class MovieBasedRecs
 {
     [Key]
-    public string show_id { get; set; }
+    public string title { get; set; }
     public int user_id { get; set; }
     public string recommendation_type { get; set; }
-    public string title { get; set; }
+    public string show_id { get; set; }
     public int rank { get; set; }
 }

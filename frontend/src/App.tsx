@@ -1,4 +1,3 @@
-
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import HomePage from "./pages/HomePage";
@@ -20,7 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/movies" element={<MovieListPage />} />
-        <Route path="/movie/:id" element={<MovieInfoPage />} />
+        <Route path="/movie/:title" element={<MovieInfoPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<UserDashboardPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />

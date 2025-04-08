@@ -184,6 +184,37 @@ namespace INTEX4_6.Controllers
             return Ok(recentMovies);
         }
 
+        [HttpGet("movieBasedRecommendations/{title}")]
+        public IActionResult GetMovieBasedRecommendations(string title)
+        {
+
+            var recommendations = _context.MovieBasedRecs
+                .Where(rec => rec.title == title)
+                .Join(
+                    _context.Movies,
+                    rec => rec.title,
+                    movie => movie.Title,
+                    (rec, movie) => new
+                    {
+                        ShowId = movie.ShowId,
+                        Title = movie.Title,
+                        Director = movie.Director,
+                        Cast = movie.Cast,
+                        Country = movie.Country,
+                        ReleaseYear = movie.ReleaseYear,
+                        Rating = movie.Rating,
+                        Duration = movie.Duration,
+                        Description = movie.Description,
+                        RecRank = rec.rank,
+                        RecType = rec.recommendation_type
+                    }
+                )
+                .OrderBy(x => x.RecRank)
+                .ToList();
+
+
+            return Ok(recommendations);
+        }
 
     }
 }

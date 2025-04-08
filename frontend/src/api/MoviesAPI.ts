@@ -1,7 +1,6 @@
 import { Movie } from "../types/Movie";
 
-
-const API_URL = "https://localhost:7026";
+const API_URL = "https://localhost:5130";
 
 export async function fetchMovies(): Promise<Movie[]> {
   const response = await fetch(`${API_URL}/Movies/withGenres`);
