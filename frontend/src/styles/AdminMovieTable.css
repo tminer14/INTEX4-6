@@ -1,0 +1,170 @@
+/* Container for the entire table */
+.movie-table-container {
+  width: 100%;
+  overflow-x: auto;
+  padding: 1rem;
+}
+
+/* The whole table layout */
+.movie-table {
+  display: flex;
+  flex-direction: column;
+  min-width: 1200px;
+  background-color: #ffffff;
+  border-radius: 10px;
+}
+
+/* Header and row styles */
+.table-header,
+.table-row {
+  display: flex;
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid #ddd;
+  align-items: flex-start;
+}
+
+.table-header {
+  font-weight: bold;
+  background-color: #f5f5f5;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.table-row:hover {
+  background-color: #f9f9f9;
+}
+
+/* Column-specific widths */
+.header-id,
+.cell-id {
+  width: 60px;
+}
+.header-type,
+.cell-type {
+  width: 90px;
+}
+.header-title,
+.cell-title {
+  width: 150px;
+}
+.header-director,
+.cell-director {
+  width: 140px;
+}
+
+.cell-cast {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.cell-cast {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.cell-cast:hover {
+  white-space: normal;
+  overflow: visible;
+  background-color: #f5f5f5;
+  z-index: 10;
+  padding: 0.5rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.header-country,
+.cell-country {
+  width: 120px;
+}
+.header-year,
+.cell-year {
+  width: 60px;
+}
+.header-rating,
+.cell-rating {
+  width: 80px;
+}
+.header-duration,
+.cell-duration {
+  width: 100px;
+}
+
+.header-description,
+.cell-description {
+  width: 220px;
+  position: relative;
+}
+
+.cell-description {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.cell-description:hover {
+  white-space: normal;
+  overflow: visible;
+  background-color: #f5f5f5;
+  z-index: 10;
+  padding: 0.5rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.header-genre,
+.cell-genre {
+  width: 160px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.header-action,
+.cell-action {
+  width: 120px;
+}
+
+/* Action button layout */
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Buttons */
+.edit-button,
+.delete-button {
+  padding: 0.3rem 0.6rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.edit-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.delete-button {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Genre tag styling (if rendering genres as a list of strings) */
+.genre-tag {
+  display: inline-block;
+  background-color: #e0f2f1;
+  color: #00695c;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+}

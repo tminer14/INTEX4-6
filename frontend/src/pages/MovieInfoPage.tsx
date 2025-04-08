@@ -17,9 +17,10 @@ const mockMovie: Movie = {
   cast: "Emma Helquist, Payton Hatch, Addison Smith, Tessa Miner",
   releaseYear: 2025,
   duration: "128 minutes",
-  country: "United States",
+  country: "United States"
   rating: "4.5",
   showId: "",
+
 };
 
 function MovieInfoPage() {
