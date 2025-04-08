@@ -41,7 +41,10 @@ function MovieInfoPage() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5130/Movies/details/${title}`)
+      .get(`https://localhost:7026/Movies/details/${id}`, {
+        withCredentials: true,
+      })
+
       .then((res) => {
         setMovie(res.data);
         addPoints();
@@ -50,6 +53,7 @@ function MovieInfoPage() {
         console.error("Failed to fetch movie details", err);
       });
   }, [title]);
+
 
   const handleBack = () => {
     navigate(-1);
