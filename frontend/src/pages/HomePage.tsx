@@ -3,8 +3,12 @@ import HomeBackground from "../assets/Home Background.png";
 import FeaturedMovies from "../components/FeaturedMovies";
 import InputDesign from "../components/InputDesign";
 import "../styles/HomePage.css";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
+  // Add navigation
+  const navigate = useNavigate();
+
   return (
     <div className="home-container">
       <Header />
@@ -29,7 +33,12 @@ function HomePage() {
                 placeholder="Enter your email"
                 className="email-input"
               />
-              <button className="get-started-button">Get Started</button>
+              <button
+                onClick={() => navigate("/signup")}
+                className="get-started-button"
+              >
+                Get Started
+              </button>
             </div>
           </div>
           <div className="pricing-info">
