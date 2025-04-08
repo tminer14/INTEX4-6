@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import "../styles/LoginPage.css";
+import Cookies from "js-cookie"; // NEW: import js-cookie
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -11,8 +12,16 @@ function LoginPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
     console.log("Login submitted");
+
+    // NEW: Set initial points if not already set
+    if (!Cookies.get("userPoints")) {
+      Cookies.set("userPoints", "100", { expires: 7 }); // Start with 100 points, expires in 7 days
+      console.log("Points cookie set to 100");
+    }
+
+    // Redirect to homepage or wherever you want
+    navigate("/");
   };
 
   return (
