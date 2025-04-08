@@ -1,0 +1,68 @@
+.filter-options {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  justify-content: center;
+  margin-bottom: 90px;
+}
+
+.filter-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 32px;
+}
+
+.filter-button {
+  color: #fff;
+  font-family: "Inter", sans-serif;
+  font-size: 24px;
+  border-radius: 10px;
+  padding: 3px 56px;
+  background-color: #fc7853;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.filter-button:hover {
+  background-color: #e56a48;
+}
+
+@media (max-width: 1024px) {
+  .filter-options {
+    margin-bottom: 70px;
+  }
+
+  .filter-button {
+    font-size: 20px;
+    padding: 3px 40px;
+  }
+
+  .filter-buttons {
+    gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .filter-options {
+    flex-direction: column;
+    margin-bottom: 50px;
+  }
+
+  .filter-buttons {
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .filter-button {
+    width: 100%;
+    font-size: 18px;
+    padding: 8px 0;
+  }
+}
