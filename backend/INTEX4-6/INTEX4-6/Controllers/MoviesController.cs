@@ -124,14 +124,14 @@ namespace INTEX4_6.Controllers
         }
 
         // to view the details of each movie! 
-        [HttpGet("details/{id}")]
-        public IActionResult GetMovieDetails(string id)
+        [HttpGet("details/{title}")]
+        public IActionResult GetMovieDetails(string title)
         {
-            var movie = _context.Movies.FirstOrDefault(m => m.ShowId == id);
+            var movie = _context.Movies.FirstOrDefault(m => m.Title == title);
 
             if (movie == null)
             {
-                return NotFound(new { message = $"Movie with ID {id} not found." });
+                return NotFound(new { message = $"Movie with ID {title} not found." });
             }
 
             return Ok(movie);
@@ -171,6 +171,17 @@ namespace INTEX4_6.Controllers
                 .ToList();
 
             return Ok(recommendations);
+        }
+
+        [HttpGet("recentMovies")]
+        public IActionResult GetRecentMovies()
+        {
+            var recentMovies = _context.Movies
+                .OrderByDescending(m => m.ReleaseYear)
+                .Take(20)
+                .ToList();
+
+            return Ok(recentMovies);
         }
 
 

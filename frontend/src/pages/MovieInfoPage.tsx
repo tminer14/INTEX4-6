@@ -24,7 +24,7 @@ const mockMovie: Movie = {
 };
 
 function MovieInfoPage() {
-  const { id } = useParams<{ id: string }>();
+  const { title } = useParams<{ title: string }>();
   const navigate = useNavigate();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [userRating, setUserRating] = useState<number>(0);
@@ -41,7 +41,7 @@ function MovieInfoPage() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5130/Movies/details/${id}`)
+      .get(`http://localhost:5130/Movies/details/${title}`)
       .then((res) => {
         setMovie(res.data);
         addPoints();
@@ -49,7 +49,7 @@ function MovieInfoPage() {
       .catch((err) => {
         console.error("Failed to fetch movie details", err);
       });
-  }, [id]);
+  }, [title]);
 
   const handleBack = () => {
     navigate(-1);
@@ -107,11 +107,7 @@ function MovieInfoPage() {
               </svg>
             </div>
             <div className="movie-poster">
-              <img
-                src={movie.imageUrl}
-                alt={movie.title}
-                className="poster-image"
-              />
+              <img alt={movie.title} className="poster-image" />
             </div>
             <div className="play-button">
               <svg
@@ -150,7 +146,7 @@ function MovieInfoPage() {
 
               <div className="info-row">
                 <span className="info-label">Genre:</span>
-                <span className="info-value">{movie.genre?.join("/ ")}</span>
+                <span className="info-value">{movie.genre}</span>
               </div>
 
               <div className="info-row">
@@ -170,7 +166,7 @@ function MovieInfoPage() {
 
               <div className="info-row">
                 <span className="info-label">Year:</span>
-                <span className="info-value">{movie.year}</span>
+                <span className="info-value">{movie.releaseYear}</span>
               </div>
 
               <div className="info-row">

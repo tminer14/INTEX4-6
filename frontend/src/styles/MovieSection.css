@@ -45,8 +45,8 @@
 }
 
 .movie-card {
-  width: 214px;
-  height: 125px;
+  width: 165px;
+  height: 250px !important;
   border-radius: 10px;
   object-fit: cover;
 }
@@ -54,7 +54,7 @@
 @media (max-width: 1024px) {
   .movie-card {
     width: 180px;
-    height: 105px;
+    height: 200px !important;
   }
 }
 
@@ -70,7 +70,7 @@
 
   .movie-card {
     width: 150px;
-    height: 88px;
+    height: 200px;
   }
 }
 
