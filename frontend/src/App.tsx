@@ -7,6 +7,7 @@ import PrivacyPage from "./pages/PrivacyPage";
 import Footer from "./components/Footer";
 import "./App.css";
 import CreateAccountStep1 from "./components/CreateAccountStep1";
+import CreateAccountStep2 from "./components/CreateAccountStep2";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/signup" element={<CreateAccountStep1 />} />
+        <Route path="/signup/step2" element={<CreateAccountStep2 />} />
       </Routes>
       <Footer />
     </div>
