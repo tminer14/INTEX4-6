@@ -1,6 +1,7 @@
 import React from "react";
 import { AdminMovieTable } from "../components/AdminMovieTable";
 import "../styles/AdminPanelPage.css";
+import { useNavigate } from "react-router-dom";
 
 const AdminPanelPage: React.FC = () => {
   // Sample movie data - in a real application, this would come from an API
@@ -91,6 +92,8 @@ const AdminPanelPage: React.FC = () => {
     },
   ];
 
+  const Navigate = useNavigate();
+
   const handleAddMovie = () => {
     // Implementation for adding a new movie
     console.log("Add new movie clicked");
@@ -109,6 +112,7 @@ const AdminPanelPage: React.FC = () => {
   const handleSignOut = () => {
     // Implementation for signing out
     console.log("Sign out clicked");
+    Navigate("/");
   };
 
   return (
@@ -165,11 +169,15 @@ const AdminPanelPage: React.FC = () => {
               ></path>
             </svg>
           </div>
-          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/48acbec41f51b3a0cb299ff7a8c91f8fc3735c4e?placeholderIfAbsent=true" alt="" className="logo-icon" />
+          <img
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/48acbec41f51b3a0cb299ff7a8c91f8fc3735c4e?placeholderIfAbsent=true"
+            alt=""
+            className="logo-icon"
+          />
         </div>
         <div className="header-actions">
           <div className="language-selector">Language</div>
-          <button className="sign-out-button" onClick={handleSignOut}>
+          <button className="sign-out-button" onClick={() => Navigate("/")}>
             Sign Out
           </button>
         </div>
