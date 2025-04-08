@@ -16,6 +16,6 @@ namespace INTEX4_6.Data
         public string Rating { get; set; }
         public string Duration { get; set; }
         public string Description { get; set; }
-        public string Genre { get; set; }
+        public List<string> Genre { get; set; }
     }
 }

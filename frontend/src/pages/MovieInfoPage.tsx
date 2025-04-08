@@ -7,7 +7,7 @@ import { Movie } from "../types/Movie";
 
 // Mock data for a single movie - in a real app, this would come from an API
 const mockMovie: Movie = {
-  id: 1,
+  showId: 1,
   title: "Name of Movie",
   imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/placeholder-movie",
   type: "Movie",
@@ -18,7 +18,7 @@ const mockMovie: Movie = {
   year: 2025,
   duration: "128 minutes",
   country: "United States",
-  rating: 4.5,
+
 };
 
 function MovieInfoPage() {

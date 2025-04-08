@@ -50,7 +50,7 @@ namespace INTEX4_6.Controllers
                 Rating = m.Rating,
                 Duration = m.Duration,
                 Description = m.Description,
-                Genre = string.Join(", ", GetGenresFromBooleans(m))
+                Genre = GetGenresFromBooleans(m)
 
 
             }).ToList();
