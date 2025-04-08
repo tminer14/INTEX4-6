@@ -1,19 +1,62 @@
 import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import "../styles/CreateAccountPage.css";
+import { toast } from "react-hot-toast";
 
-function CreateAccountStep1() {
+interface CreateAccountStep1Props {
+  formData: any;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
+  nextStep: () => void;
+}
+
+function CreateAccountStep1({
+  formData,
+  setFormData,
+  nextStep,
+}: CreateAccountStep1Props) {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
-    navigate(-1);
+    navigate("/");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Account creation form submitted");
-    navigate("/signup/step2");
+
+    const password = formData.password;
+
+    // Password Strength Validation
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters long.");
+      return;
+    }
+    if (!/[A-Z]/.test(password)) {
+      toast.error("Password must contain at least one uppercase letter.");
+      return;
+    }
+    if (!/[a-z]/.test(password)) {
+      toast.error("Password must contain at least one lowercase letter.");
+      return;
+    }
+    if (!/[^A-Za-z0-9]/.test(password)) {
+      toast.error(
+        "Password must contain at least one special character (!@#$%^&*)."
+      );
+      return;
+    }
+
+    // Confirm password match
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match. Please try again.");
+      return;
+    }
+
+    // If everything is good, move to next step
+    nextStep();
   };
+
+
+
 
   return (
     <div className="create-account-container">
@@ -76,6 +119,10 @@ function CreateAccountStep1() {
                     type="text"
                     id="fullName"
                     className="form-input"
+                    value={formData.fullName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fullName: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -91,6 +138,10 @@ function CreateAccountStep1() {
                     type="email"
                     id="email"
                     className="form-input"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -102,6 +153,10 @@ function CreateAccountStep1() {
                     type="tel"
                     id="phone"
                     className="form-input"
+                    value={formData.phone}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -117,6 +172,10 @@ function CreateAccountStep1() {
                     type="password"
                     id="password"
                     className="form-input"
+                    value={formData.password}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -128,6 +187,13 @@ function CreateAccountStep1() {
                     type="password"
                     id="confirmPassword"
                     className="form-input"
+                    value={formData.confirmPassword}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        confirmPassword: e.target.value,
+                      })
+                    }
                     required
                   />
                 </div>

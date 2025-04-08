@@ -12,6 +12,7 @@ import AdminUsersPage from "./pages/AdminUsersPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import Footer from "./components/Footer";
 import CreateAccountWizard from "./components/CreateAccountWizard";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
         <Route path="/movies" element={<MovieListPage />} />
         <Route path="/movie/:id" element={<MovieInfoPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/dashboard" element={<UserDashboardPage />} />
+        <Route path="/dashboard" element={<AdminDashboardPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/admin" element={<AdminDashboardPage />} />
         <Route path="/admin/movies" element={<AdminMoviesPage />} />
@@ -31,6 +32,18 @@ function App() {
         <Route path="/signup/*" element={<CreateAccountWizard />} />
       </Routes>
       <Footer />
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          error: {
+            icon: "⚠️",
+          },
+          success: {
+            icon: "",
+          },
+        }}
+      />
     </div>
   );
 }

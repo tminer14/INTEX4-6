@@ -19,6 +19,7 @@ function CreateAccountWizard() {
     email: "",
     phone: "",
     password: "",
+    confirmPassword: "",
     gender: "",
     age: "",
     address: {
@@ -27,72 +28,44 @@ function CreateAccountWizard() {
       state: "",
       zip: "",
     },
+    streamingServices: [] as string[],
   });
 
   const nextStep = () => setStep((prev) => prev + 1);
   const prevStep = () => setStep((prev) => prev - 1);
 
   const handleFinalSubmit = async () => {
-    const { email, password } = formData;
-
-    if (!email || !password) {
-      toast.error("🚫 Email and password are required.");
-      return;
-    }
+    const payload = {
+      Name: formData.fullName,
+      Email: formData.email,
+      Phone: formData.phone,
+      Password: formData.password,
+      Age: formData.age,
+      Gender: formData.gender,
+      City: formData.address.city,
+      State: formData.address.state,
+      Zip: formData.address.zip,
+      Netflix: formData.streamingServices?.includes("Netflix") || false,
+      AmazonPrime:
+        formData.streamingServices?.includes("Amazon Prime") || false,
+      DisneyPlus: formData.streamingServices?.includes("Disney Plus") || false,
+      ParamountPlus:
+        formData.streamingServices?.includes("Paramount Plus") || false,
+      Max: formData.streamingServices?.includes("Max") || false,
+      Hulu: formData.streamingServices?.includes("Hulu") || false,
+      AppleTV: formData.streamingServices?.includes("Apple TV") || false,
+      Peacock: formData.streamingServices?.includes("Peacock") || false,
+    };
 
     try {
-      const result = await toast.promise(
-        axios.post("/api/account/register", { email, password }),
-        {
-          loading: "✨ Creating your account...",
-          success: "🎉 Account created successfully!",
-          error: (err) => {
-            console.error("Registration error:", err);
-            if (err.response) {
-              if (
-                err.response.data &&
-                Array.isArray(err.response.data) &&
-                err.response.data[0]?.description
-              ) {
-                return `🚫 ${err.response.data[0].description}`;
-              } else if (typeof err.response.data === "string") {
-                return `🚫 ${err.response.data}`;
-              } else {
-                return "🚫 Registration failed. Please try again.";
-              }
-            } else {
-              return "🚫 Network error. Please try again.";
-            }
-          },
-        },
-        {
-          success: {
-            duration: 4000,
-            icon: "🔥",
-          },
-          error: {
-            duration: 5000,
-            icon: "❗",
-          },
-          loading: {
-            duration: Infinity, // Loading stays until finished
-          },
-        }
-      );
-
-      // 🌟 SUCCESS CASE - "result" contains the Axios response
-      localStorage.setItem("token", result.data.token);
-
-      toast.success("🚀 You are now logged in! Redirecting...", {
-        duration: 3000,
+      await toast.promise(axios.post("/api/tessaaccount/register", payload), {
+        loading: "✨ Creating your account...",
+        success: "🎉 Account created successfully!",
+        error: "🚫 Account creation failed. Please try again.",
       });
-
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 3000);
+      navigate("/login");
     } catch (error) {
-      console.error("Unexpected error outside toast.promise:", error);
-      // No manual toast needed because toast.promise already showed the error
+      console.error("Unexpected error during final submit:", error);
     }
   };
 
@@ -127,6 +100,7 @@ function CreateAccountWizard() {
           setFormData={setFormData}
           nextStep={nextStep}
           prevStep={prevStep}
+          setStep={setStep} // <-- PASS THIS
         />
       )}
       {step === 5 && (

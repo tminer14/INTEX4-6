@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import FilterOptions from "../components/FilterOptions";
 import MovieSection from "../components/MovieSection";
 import "../styles/UserDashboard.css";
 import logo from "../assets/Logo.png";
 
-// Mock data for movie sections
-// In a real application, these would come from an API
 const recentMovies = [
   {
     id: 1,
@@ -36,39 +36,6 @@ const recentMovies = [
     title: "Movie 5",
     imageUrl:
       "https://cdn.builder.io/api/v1/image/assets/TEMP/d157979a3e040dc28e58dd1e5335d67f9be1eba9",
-  },
-];
-
-const recommendedMovies = [
-  {
-    id: 6,
-    title: "Movie 6",
-    imageUrl:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/7be42b850dfa85e8d439909d49fc3501452e2f96",
-  },
-  {
-    id: 7,
-    title: "Movie 7",
-    imageUrl:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/0f2d10e769112ec4c36112703e391a3ea2a9061e",
-  },
-  {
-    id: 8,
-    title: "Movie 8",
-    imageUrl:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/ae8fe7c994d3f44f629a090f9427c30e2b42dc42",
-  },
-  {
-    id: 9,
-    title: "Movie 9",
-    imageUrl:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/562a75e53b81bcaf6e6c88f721f6b3bc970daf9b",
-  },
-  {
-    id: 10,
-    title: "Movie 10",
-    imageUrl:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/1453465946b91d021d463710dffce2838b6c0635",
   },
 ];
 
@@ -105,40 +72,60 @@ const similarMovies = [
   },
 ];
 
-const highlyRatedMovies = [
-  {
-    id: 16,
-    title: "Movie 16",
-    imageUrl:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/5d3bffcabb1cdcfa545d955d58f2f0a9920bda70",
-  },
-  {
-    id: 17,
-    title: "Movie 17",
-    imageUrl:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/c0b2d21b2321b77c0577070590528a5e6d18ab91",
-  },
-  {
-    id: 18,
-    title: "Movie 18",
-    imageUrl:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/b4c27a6c345e876d1da20d13f40b2cd83c5dd14e",
-  },
-  {
-    id: 19,
-    title: "Movie 19",
-    imageUrl:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/9f4dd6dd15ac54ce0b4912e0d61e0c92905c89f5",
-  },
-  {
-    id: 20,
-    title: "Movie 20",
-    imageUrl:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/1453465946b91d021d463710dffce2838b6c0635",
-  },
-];
-
 function UserDashboardPage() {
+  const [highlyRatedMovies, setHighlyRatedMovies] = useState([]);
+  const [recommendedMovies, setRecommendedMovies] = useState([]);
+
+  useEffect(() => {
+    const userId = 73; // 👈 Replace with actual user ID (from auth/session/etc.)
+
+    axios
+      .get(`http://localhost:5130/Movies/userBasedRecommendations/${userId}`)
+      .then((res) => {
+        const formatted = res.data.map(
+          (movie: { title: string; showId: string }, index: number) => {
+            const cleanTitle = movie.title.replace(/[:']/g, "");
+            return {
+              id: index,
+              title: movie.title,
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
+                cleanTitle
+              )}.jpg`,
+            };
+          }
+        );
+        setRecommendedMovies(formatted);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch recommended movies", err);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5130/Movies/top-rated")
+      .then((res) => {
+        const formatted = res.data.map(
+          (movie: { title: string }, index: number) => {
+            // Remove ':' and `'` from the title
+            const cleanTitle = movie.title.replace(/[:']/g, "");
+            return {
+              id: index,
+              title: movie.title,
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
+                cleanTitle
+              )}.jpg`,
+            };
+          }
+        );
+
+        setHighlyRatedMovies(formatted);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch top-rated movies", err);
+      });
+  }, []);
+
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">

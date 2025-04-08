@@ -1,38 +1,53 @@
-import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import "../styles/CreateAccountPage.css";
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 
-function CreateAccountStep3() {
-  const navigate = useNavigate();
-  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+interface CreateAccountStep3Props {
+  formData: any;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
+  nextStep: () => void;
+  prevStep: () => void;
+}
 
-  const handleBackClick = () => {
-    navigate(-1);
-  };
+function CreateAccountStep3({
+  formData,
+  setFormData,
+  nextStep,
+  prevStep,
+}: CreateAccountStep3Props) {
+  const [selectedServices, setSelectedServices] = useState<string[]>(
+    formData.streamingServices || []
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log("Account creation step 3 form submitted");
-    console.log("Selected streaming services:", selectedServices);
-    // Navigate to next step
-    navigate("/signup/step4");
+
+    if (selectedServices.length === 0) {
+      // Optional: you can warn the user to select at least one service
+      toast.error("Please select at least one streaming service.");
+      return;
+    }
+
+    nextStep(); // Move to Step 4
   };
 
+
   const toggleService = (service: string) => {
-    setSelectedServices((prev) =>
-      prev.includes(service)
-        ? prev.filter((s) => s !== service)
-        : [...prev, service],
-    );
+    const updatedServices = selectedServices.includes(service)
+      ? selectedServices.filter((s) => s !== service)
+      : [...selectedServices, service];
+
+    setSelectedServices(updatedServices);
+    setFormData({ ...formData, streamingServices: updatedServices });
   };
+
 
   return (
     <div className="create-account-container">
       <Header />
       <div className="create-account-content">
-        <div className="back-button" onClick={handleBackClick}>
+        <div onClick={prevStep} className="back-button">
           <svg
             width="48"
             height="48"

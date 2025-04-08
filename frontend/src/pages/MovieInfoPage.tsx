@@ -4,20 +4,22 @@ import Cookies from "js-cookie";
 import "../styles/MovieInfoPage.css";
 import logo from "../assets/Logo.png";
 import { Movie } from "../types/Movie";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 // Mock data for a single movie - in a real app, this would come from an API
 const mockMovie: Movie = {
-  showId: 1,
   title: "Name of Movie",
-  imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/placeholder-movie",
   type: "Movie",
-  genre: ["Action", "Adventure"],
+  genre: "Action",
   description: "Intex is real y'all",
   director: "Kermit the Frog",
   cast: "Emma Helquist, Payton Hatch, Addison Smith, Tessa Miner",
-  year: 2025,
+  releaseYear: 2025,
   duration: "128 minutes",
-  country: "United States",
+  country: "United States"
+  rating: "4.5",
+  showId: "",
 
 };
 
@@ -37,14 +39,16 @@ function MovieInfoPage() {
     toast.success(`You've earned 10 points! Total: ${newPoints}`); // ✅
   };
 
-  // In a real app, fetch movie data from an API
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setMovie(mockMovie);
-      // Auto-add points when movie loads
-      addPoints();
-    }, 300);
+    axios
+      .get(`http://localhost:5130/Movies/details/${id}`)
+      .then((res) => {
+        setMovie(res.data);
+        addPoints();
+      })
+      .catch((err) => {
+        console.error("Failed to fetch movie details", err);
+      });
   }, [id]);
 
   const handleBack = () => {

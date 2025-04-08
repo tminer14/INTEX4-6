@@ -37,13 +37,14 @@ namespace INTEX4_6.Controllers
             var result = await _userManager.CreateAsync(identityUser, dto.Password);
             if (!result.Succeeded)
             {
-                return BadRequest(result.Errors);
+                var errors = result.Errors.Select(e => e.Description).ToList();
+                return BadRequest(errors);
             }
+
 
             // Save to custom MovieUserInfo table
             var movieUser = new MovieUserInfo
             {
-                IdentityUserId = identityUser.Id,
                 Name = dto.Name,
                 Phone = dto.Phone,
                 Email = dto.Email,

@@ -1,51 +1,33 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import Header from "./Header";
 import "../styles/CreateAccountPage.css";
 
-function CreateAccountStep4() {
-  const navigate = useNavigate();
-  // In a real application, this data would come from a context, redux store, or passed via props
-  // For this example, we're using mock data
-  const [userData] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com",
-    phone: "(555) 123-4567",
-    age: "28",
-    gender: "Male",
-    streetAddress: "123 Main Street",
-    city: "New York",
-    state: "NY",
-    zip: "10001",
-    otherServices: ["Netflix", "Hulu", "Amazon Prime"],
-  });
+interface CreateAccountStep4Props {
+  formData: any;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
+  nextStep: () => void;
+  prevStep: () => void;
+  setStep: (step: number) => void; // <-- ADD THIS
+}
 
-  const handleBackClick = () => {
-    navigate(-1);
-  };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    console.log("Account creation finalized");
-    // Navigate to final success step
-    navigate("/signup/step5");
-  };
+function CreateAccountStep4({
+  formData,
+  nextStep,
+  prevStep,
+  setStep,
+}: CreateAccountStep4Props) {
+  const firstName = formData.fullName?.split(" ")[0] || "";
+  const lastName = formData.fullName?.split(" ")[1] || "";
 
   const handleEdit = (field: string) => {
-    // Logic to navigate to the appropriate step for editing
-    console.log(`Edit ${field}`);
-
-    // Basic routing logic based on field type
     if (["firstName", "lastName", "email", "phone"].includes(field)) {
-      navigate("/signup/step1");
+      setStep(1);
     } else if (
-      ["age", "gender", "streetAddress", "city", "state", "zip"].includes(field)
+      ["age", "gender", "street", "city", "state", "zip"].includes(field)
     ) {
-      navigate("/signup/step2");
+      setStep(2);
     } else if (field === "otherServices") {
-      navigate("/signup/step3");
+      setStep(3);
     }
   };
 
@@ -53,7 +35,7 @@ function CreateAccountStep4() {
     <div className="create-account-container">
       <Header />
       <div className="create-account-content">
-        <div className="back-button" onClick={handleBackClick}>
+        <div onClick={prevStep} className="back-button">
           <svg
             width="48"
             height="48"
@@ -105,226 +87,92 @@ function CreateAccountStep4() {
           <div className="review-grid">
             <div className="review-item">
               <div className="review-label">First Name:</div>
-              <div className="review-value">{userData.firstName}</div>
+              <div className="review-value">{firstName}</div>
               <div
                 className="edit-icon"
                 onClick={() => handleEdit("firstName")}
               >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2.5 14.375V17.5H5.625L14.8417 8.28333L11.7167 5.15833L2.5 14.375ZM17.2583 5.86667C17.5833 5.54167 17.5833 5.01667 17.2583 4.69167L15.3083 2.74167C14.9833 2.41667 14.4583 2.41667 14.1333 2.74167L12.6083 4.26667L15.7333 7.39167L17.2583 5.86667Z"
-                    fill="#87B5BA"
-                  />
-                </svg>
+                ✏️
               </div>
             </div>
-
-            <div className="review-item">
-              <div className="review-label">Street Address:</div>
-              <div className="review-value">{userData.streetAddress}</div>
-              <div
-                className="edit-icon"
-                onClick={() => handleEdit("streetAddress")}
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2.5 14.375V17.5H5.625L14.8417 8.28333L11.7167 5.15833L2.5 14.375ZM17.2583 5.86667C17.5833 5.54167 17.5833 5.01667 17.2583 4.69167L15.3083 2.74167C14.9833 2.41667 14.4583 2.41667 14.1333 2.74167L12.6083 4.26667L15.7333 7.39167L17.2583 5.86667Z"
-                    fill="#87B5BA"
-                  />
-                </svg>
-              </div>
-            </div>
-
             <div className="review-item">
               <div className="review-label">Last Name:</div>
-              <div className="review-value">{userData.lastName}</div>
+              <div className="review-value">{lastName}</div>
               <div className="edit-icon" onClick={() => handleEdit("lastName")}>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2.5 14.375V17.5H5.625L14.8417 8.28333L11.7167 5.15833L2.5 14.375ZM17.2583 5.86667C17.5833 5.54167 17.5833 5.01667 17.2583 4.69167L15.3083 2.74167C14.9833 2.41667 14.4583 2.41667 14.1333 2.74167L12.6083 4.26667L15.7333 7.39167L17.2583 5.86667Z"
-                    fill="#87B5BA"
-                  />
-                </svg>
+                ✏️
               </div>
             </div>
-
-            <div className="review-item">
-              <div className="review-label">City:</div>
-              <div className="review-value">{userData.city}</div>
-              <div className="edit-icon" onClick={() => handleEdit("city")}>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2.5 14.375V17.5H5.625L14.8417 8.28333L11.7167 5.15833L2.5 14.375ZM17.2583 5.86667C17.5833 5.54167 17.5833 5.01667 17.2583 4.69167L15.3083 2.74167C14.9833 2.41667 14.4583 2.41667 14.1333 2.74167L12.6083 4.26667L15.7333 7.39167L17.2583 5.86667Z"
-                    fill="#87B5BA"
-                  />
-                </svg>
-              </div>
-            </div>
-
             <div className="review-item">
               <div className="review-label">Email:</div>
-              <div className="review-value">{userData.email}</div>
+              <div className="review-value">{formData.email}</div>
               <div className="edit-icon" onClick={() => handleEdit("email")}>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2.5 14.375V17.5H5.625L14.8417 8.28333L11.7167 5.15833L2.5 14.375ZM17.2583 5.86667C17.5833 5.54167 17.5833 5.01667 17.2583 4.69167L15.3083 2.74167C14.9833 2.41667 14.4583 2.41667 14.1333 2.74167L12.6083 4.26667L15.7333 7.39167L17.2583 5.86667Z"
-                    fill="#87B5BA"
-                  />
-                </svg>
+                ✏️
               </div>
             </div>
-
-            <div className="review-item">
-              <div className="review-label">State:</div>
-              <div className="review-value">{userData.state}</div>
-              <div className="edit-icon" onClick={() => handleEdit("state")}>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2.5 14.375V17.5H5.625L14.8417 8.28333L11.7167 5.15833L2.5 14.375ZM17.2583 5.86667C17.5833 5.54167 17.5833 5.01667 17.2583 4.69167L15.3083 2.74167C14.9833 2.41667 14.4583 2.41667 14.1333 2.74167L12.6083 4.26667L15.7333 7.39167L17.2583 5.86667Z"
-                    fill="#87B5BA"
-                  />
-                </svg>
-              </div>
-            </div>
-
             <div className="review-item">
               <div className="review-label">Phone Number:</div>
-              <div className="review-value">{userData.phone}</div>
+              <div className="review-value">{formData.phone}</div>
               <div className="edit-icon" onClick={() => handleEdit("phone")}>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2.5 14.375V17.5H5.625L14.8417 8.28333L11.7167 5.15833L2.5 14.375ZM17.2583 5.86667C17.5833 5.54167 17.5833 5.01667 17.2583 4.69167L15.3083 2.74167C14.9833 2.41667 14.4583 2.41667 14.1333 2.74167L12.6083 4.26667L15.7333 7.39167L17.2583 5.86667Z"
-                    fill="#87B5BA"
-                  />
-                </svg>
+                ✏️
               </div>
             </div>
-
+            <div className="review-item">
+              <div className="review-label">Street Address:</div>
+              <div className="review-value">{formData.address?.street}</div>
+              <div className="edit-icon" onClick={() => handleEdit("street")}>
+                ✏️
+              </div>
+            </div>
+            <div className="review-item">
+              <div className="review-label">City:</div>
+              <div className="review-value">{formData.address?.city}</div>
+              <div className="edit-icon" onClick={() => handleEdit("city")}>
+                ✏️
+              </div>
+            </div>
+            <div className="review-item">
+              <div className="review-label">State:</div>
+              <div className="review-value">{formData.address?.state}</div>
+              <div className="edit-icon" onClick={() => handleEdit("state")}>
+                ✏️
+              </div>
+            </div>
             <div className="review-item">
               <div className="review-label">Zip:</div>
-              <div className="review-value">{userData.zip}</div>
+              <div className="review-value">{formData.address?.zip}</div>
               <div className="edit-icon" onClick={() => handleEdit("zip")}>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2.5 14.375V17.5H5.625L14.8417 8.28333L11.7167 5.15833L2.5 14.375ZM17.2583 5.86667C17.5833 5.54167 17.5833 5.01667 17.2583 4.69167L15.3083 2.74167C14.9833 2.41667 14.4583 2.41667 14.1333 2.74167L12.6083 4.26667L15.7333 7.39167L17.2583 5.86667Z"
-                    fill="#87B5BA"
-                  />
-                </svg>
+                ✏️
               </div>
             </div>
-
             <div className="review-item">
               <div className="review-label">Age:</div>
-              <div className="review-value">{userData.age}</div>
+              <div className="review-value">{formData.age}</div>
               <div className="edit-icon" onClick={() => handleEdit("age")}>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2.5 14.375V17.5H5.625L14.8417 8.28333L11.7167 5.15833L2.5 14.375ZM17.2583 5.86667C17.5833 5.54167 17.5833 5.01667 17.2583 4.69167L15.3083 2.74167C14.9833 2.41667 14.4583 2.41667 14.1333 2.74167L12.6083 4.26667L15.7333 7.39167L17.2583 5.86667Z"
-                    fill="#87B5BA"
-                  />
-                </svg>
+                ✏️
               </div>
             </div>
-
+            <div className="review-item">
+              <div className="review-label">Gender:</div>
+              <div className="review-value">{formData.gender}</div>
+              <div className="edit-icon" onClick={() => handleEdit("gender")}>
+                ✏️
+              </div>
+            </div>
             <div className="review-item">
               <div className="review-label">Other Services:</div>
               <div className="review-value">
-                {userData.otherServices.join(", ")}
+                {formData.streamingServices?.join(", ")}
               </div>
               <div
                 className="edit-icon"
                 onClick={() => handleEdit("otherServices")}
               >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2.5 14.375V17.5H5.625L14.8417 8.28333L11.7167 5.15833L2.5 14.375ZM17.2583 5.86667C17.5833 5.54167 17.5833 5.01667 17.2583 4.69167L15.3083 2.74167C14.9833 2.41667 14.4583 2.41667 14.1333 2.74167L12.6083 4.26667L15.7333 7.39167L17.2583 5.86667Z"
-                    fill="#87B5BA"
-                  />
-                </svg>
-              </div>
-            </div>
-
-            <div className="review-item">
-              <div className="review-label">Gender:</div>
-              <div className="review-value">{userData.gender}</div>
-              <div className="edit-icon" onClick={() => handleEdit("gender")}>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2.5 14.375V17.5H5.625L14.8417 8.28333L11.7167 5.15833L2.5 14.375ZM17.2583 5.86667C17.5833 5.54167 17.5833 5.01667 17.2583 4.69167L15.3083 2.74167C14.9833 2.41667 14.4583 2.41667 14.1333 2.74167L12.6083 4.26667L15.7333 7.39167L17.2583 5.86667Z"
-                    fill="#87B5BA"
-                  />
-                </svg>
+                ✏️
               </div>
             </div>
           </div>
 
-          <button type="button" onClick={handleSubmit} className="next-button">
+          <button onClick={nextStep} className="next-button">
             Next
           </button>
         </div>
