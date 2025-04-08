@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import "../styles/CreateAccountPage.css";
 
@@ -13,13 +12,10 @@ interface CreateAccountStep4Props {
 
 function CreateAccountStep4({
   formData,
-  setFormData,
   nextStep,
   prevStep,
   setStep,
 }: CreateAccountStep4Props) {
-  const navigate = useNavigate();
-
   const firstName = formData.fullName?.split(" ")[0] || "";
   const lastName = formData.fullName?.split(" ")[1] || "";
 

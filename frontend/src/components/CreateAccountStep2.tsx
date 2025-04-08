@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import "../styles/CreateAccountPage.css";
 
@@ -15,12 +14,6 @@ function CreateAccountStep2({
   nextStep,
   prevStep,
 }: CreateAccountStep2Props) {
-  const navigate = useNavigate();
-
-  const handleBackClick = () => {
-    navigate(-1);
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 

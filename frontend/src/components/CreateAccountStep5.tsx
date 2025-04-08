@@ -14,7 +14,6 @@ interface CreateAccountStep5Props {
 
 function CreateAccountStep5({
   formData,
-  setFormData,
 }: CreateAccountStep5Props) {
   const [loading, setLoading] = useState(false);
 

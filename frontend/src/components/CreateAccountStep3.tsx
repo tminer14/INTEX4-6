@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import "../styles/CreateAccountPage.css";
 import { useState } from "react";
@@ -17,15 +16,9 @@ function CreateAccountStep3({
   nextStep,
   prevStep,
 }: CreateAccountStep3Props) {
-  const navigate = useNavigate();
   const [selectedServices, setSelectedServices] = useState<string[]>(
     formData.streamingServices || []
   );
-
-
-  const handleBackClick = () => {
-    navigate(-1);
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

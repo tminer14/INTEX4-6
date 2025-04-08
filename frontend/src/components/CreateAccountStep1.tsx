@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import "../styles/CreateAccountPage.css";
 import { toast } from "react-hot-toast";
-import axios from "axios";
 
 interface CreateAccountStep1Props {
   formData: any;
