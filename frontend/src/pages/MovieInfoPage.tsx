@@ -31,9 +31,10 @@ function MovieInfoPage() {
   // Function to add points
   const addPoints = () => {
     const currentPoints = parseInt(Cookies.get("userPoints") || "0");
-    const newPoints = currentPoints + 10; // Add 10 points for viewing a movie
+    const newPoints = currentPoints + 10;
     Cookies.set("userPoints", newPoints.toString(), { expires: 7 });
-    alert(`You've earned 10 points! Total points: ${newPoints}`);
+
+    toast.success(`You've earned 10 points! Total: ${newPoints}`); // ✅
   };
 
   // In a real app, fetch movie data from an API
