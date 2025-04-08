@@ -21,47 +21,42 @@ function CreateAccountStep1({
     navigate("/");
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match. Please try again.", {
-        duration: 3000,
-      });
+    const password = formData.password;
+
+    // Password Strength Validation
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters long.");
+      return;
+    }
+    if (!/[A-Z]/.test(password)) {
+      toast.error("Password must contain at least one uppercase letter.");
+      return;
+    }
+    if (!/[a-z]/.test(password)) {
+      toast.error("Password must contain at least one lowercase letter.");
+      return;
+    }
+    if (!/[^A-Za-z0-9]/.test(password)) {
+      toast.error(
+        "Password must contain at least one special character (!@#$%^&*)."
+      );
       return;
     }
 
-    try {
-      const response = await toast.promise(
-        axios.post("/api/account/register", {
-          email: formData.email,
-          password: formData.password,
-        }),
-        {
-          loading: "Creating your account...",
-          success: "🎉 Account created successfully!",
-          error: (err) => {
-            console.error("Registration error:", err);
-            if (err.response?.data?.[0]?.description) {
-              return `🚫 ${err.response.data[0].description}`;
-            } else if (typeof err.response?.data === "string") {
-              return `🚫 ${err.response.data}`;
-            } else {
-              return "🚫 Registration failed. Please try again.";
-            }
-          },
-        }
-      );
-
-      // 🌟 Success! Save token and move to Step 2
-      localStorage.setItem("token", response.data.token);
-
-      nextStep();
-    } catch (error) {
-      console.error("Unexpected registration error:", error);
-      // toast.promise already shows an error message
+    // Confirm password match
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match. Please try again.");
+      return;
     }
+
+    // If everything is good, move to next step
+    nextStep();
   };
+
+
 
 
   return (

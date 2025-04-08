@@ -28,7 +28,7 @@ function CreateAccountStep5({
         Email: formData.email,
         Phone: formData.phone,
         Password: formData.password,
-        Age: formData.age,
+        Age: parseInt(formData.age) || 0,
         Gender: formData.gender,
         City: formData.address.city,
         State: formData.address.state,
@@ -53,8 +53,29 @@ function CreateAccountStep5({
       });
 
       navigate("/login");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error during final account creation:", error);
+
+      if (error.response && error.response.status === 400) {
+        const serverErrors = error.response.data;
+
+        // Check if server error mentions email constraint
+        if (Array.isArray(serverErrors)) {
+          const duplicateEmailError = serverErrors.find((msg: string) =>
+            msg.toLowerCase().includes("email")
+          );
+
+          if (duplicateEmailError) {
+            toast.error(
+              "Email already registered. Please log in or use a different email."
+            );
+            return;
+          }
+        }
+      }
+
+      // Fallback generic error
+      toast.error("Account creation failed. Please try again.");
     } finally {
       setLoading(false);
     }
