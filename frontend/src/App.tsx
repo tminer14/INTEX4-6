@@ -1,3 +1,4 @@
+
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import HomePage from "./pages/HomePage";
@@ -10,11 +11,7 @@ import AdminMoviesPage from "./pages/AdminMoviesPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import Footer from "./components/Footer";
-import CreateAccountStep1 from "./components/CreateAccountStep1";
-import CreateAccountStep2 from "./components/CreateAccountStep2";
-import CreateAccountStep3 from "./components/CreateAccountStep3";
-import CreateAccountStep4 from "./components/CreateAccountStep4";
-import CreateAccountStep5 from "./components/CreateAccountStep5";
+import CreateAccountWizard from "./components/CreateAccountWizard";
 
 function App() {
   return (
@@ -29,12 +26,9 @@ function App() {
         <Route path="/admin" element={<AdminDashboardPage />} />
         <Route path="/admin/movies" element={<AdminMoviesPage />} />
         <Route path="/admin/users" element={<AdminUsersPage />} />
-        <Route path="/signup/step1" element={<CreateAccountStep1 />} />
-        <Route path="/signup/step2" element={<CreateAccountStep2 />} />
-        <Route path="/signup/step3" element={<CreateAccountStep3 />} />
-        <Route path="/signup/step4" element={<CreateAccountStep4 />} />
-        <Route path="/signup/step5" element={<CreateAccountStep5 />} />
-        <Route path="/movieinfo/id" element={<MovieInfoPage />} />
+
+        {/* ✅ Correct signup route */}
+        <Route path="/signup/*" element={<CreateAccountWizard />} />
       </Routes>
       <Footer />
     </div>
