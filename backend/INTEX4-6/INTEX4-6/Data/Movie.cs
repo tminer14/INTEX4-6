@@ -134,5 +134,11 @@ namespace INTEX4_6.Data
 
         [Column("Thrillers")]
         public bool? Thrillers { get; set; }
+        
+        // Link to TopOverallRecs table
+        public ICollection<TopOverallRecs> TopOverallRecs { get; set; }
+
     }
+    
+    
 }
