@@ -1,30 +1,28 @@
-import React from "react";
-
-interface Movie {
-  id: number;
-  type: string;
-  title: string;
-  director: string;
-  cast: string;
-  country: string;
-  year: number;
-  rating: string;
-  duration: string;
-  description: string;
-  genre: string;
-}
+import React, { useEffect, useState } from "react";
+import { Movie } from "../types/Movie";
+import { fetchMovies } from "../api/MoviesAPI";
 
 interface AdminMovieTableProps {
-  movies: Movie[];
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
+  onEdit: (showId: string) => void;
+  onDelete: (showId: string) => void;
 }
 
 export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
-  movies,
+
   onEdit,
   onDelete,
 }) => {
+ const [movies, setMovies] = useState<Movie[]>([]);
+ useEffect(() => {
+  fetchMovies()
+  .then(setMovies)
+  .catch((error) => {
+    console.error("Error fetching movies:", error);
+  });
+ }, [])
+
+
+
   return (
     <div className="movie-table-container">
       <div className="movie-table">
@@ -44,14 +42,14 @@ export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
         </div>
 
         {movies.map((movie, index) => (
-          <div className="table-row" key={`${movie.id}-${index}`}>
-            <div className="cell-id">{movie.id}</div>
+          <div className="table-row" key={`${movie.showId}-${index}`}>
+            <div className="cell-id">{movie.showId}</div>
             <div className="cell-type">{movie.type}</div>
             <div className="cell-title">{movie.title}</div>
             <div className="cell-director">{movie.director}</div>
             <div className="cell-cast">{movie.cast}</div>
             <div className="cell-country">{movie.country}</div>
-            <div className="cell-year">{movie.year}</div>
+            <div className="cell-year">{movie.releaseYear}</div>
             <div className="cell-rating">{movie.rating}</div>
             <div className="cell-duration">{movie.duration}</div>
             <div className="cell-description">{movie.description}</div>
@@ -60,13 +58,13 @@ export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
               <div className="action-buttons">
                 <button
                   className="edit-button"
-                  onClick={() => onEdit(movie.id)}
+                  onClick={() => onEdit(movie.showId)}
                 >
                   Edit
                 </button>
                 <button
                   className="delete-button"
-                  onClick={() => onDelete(movie.id)}
+                  onClick={() => onDelete(movie.showId)}
                 >
                   Delete
                 </button>
