@@ -13,14 +13,11 @@ function UserDashboardPage() {
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  const toggleSearch = () => {
-    setIsSearchOpen(!isSearchOpen);
-  };
-
   useEffect(() => {
     const userId = 73;
 
     axios
+
       .get(`https://localhost:5130/Movies/userBasedRecommendations/${userId}`, {
         withCredentials: true,
       })
@@ -96,6 +93,11 @@ function UserDashboardPage() {
         console.error("Failed to fetch top-rated movies", err);
       });
   }, []);
+
+  // Toggle function
+  const toggleSearch = () => {
+    setIsSearchOpen((prev) => !prev);
+  };
 
   return (
     <div className="dashboard-container">
