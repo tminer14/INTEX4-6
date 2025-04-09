@@ -49,9 +49,6 @@ namespace INTEX4_6.Controllers
                 .ToList();
 
 
-
-            var movies = _context.Movies.Take(100).ToList();
-
             var result = pagedMovies.Select(m => new MovieDto
             {
 

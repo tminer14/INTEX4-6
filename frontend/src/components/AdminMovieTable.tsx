@@ -21,6 +21,11 @@ export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
         setMovies(data.movies);
         setTotalMovies(data.totalMovies);
       })
+    fetchMovies(pageNum, pageSize)
+      .then((data) => {
+        setMovies(data.movies);
+        setTotalMovies(data.totalMovies);
+      })
       .catch((error) => {
         console.error("Error fetching movies:", error);
       });

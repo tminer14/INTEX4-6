@@ -92,7 +92,7 @@ builder.Services.AddAuthorization(options =>
         policy.RequireRole("User"));
 
     options.AddPolicy("AdminOnly", policy =>
-        policy.RequireRole("Admin"));
+        policy.RequireRole("Administrator"));
 });
 
 
@@ -105,7 +105,8 @@ builder.Services.AddCors(options =>
             policy.WithOrigins("http://localhost:3001") 
                 .AllowCredentials()
                 .AllowAnyMethod()
-                .AllowAnyHeader();
+                .AllowAnyHeader()
+                .AllowCredentials();
         });
 });
 

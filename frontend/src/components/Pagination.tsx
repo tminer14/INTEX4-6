@@ -5,6 +5,7 @@ interface PaginationProps {
   onPageChange: (newPage: number) => void;
   onPageSizeChange: (newSize: number) => void;
 }
+
 const Pagination = ({
   currentPage,
   totalPages,
@@ -56,4 +57,5 @@ const Pagination = ({
     </div>
   );
 };
+
 export default Pagination;
