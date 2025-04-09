@@ -93,6 +93,52 @@ namespace INTEX4_6.Controllers
             return Ok(userList);
         }
 
+        [Authorize(Roles = "Administrator")]
+        [HttpDelete("users/{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                return Ok(new { message = "User deleted successfully." });
+            }
+            return BadRequest(result.Errors);
+        }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpPut("users/{id}")]
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.Email = request.Email;
+            user.UserName = request.Email; // if you use email as username
+
+            var updateResult = await _userManager.UpdateAsync(user);
+
+            if (!updateResult.Succeeded)
+            {
+                return BadRequest(updateResult.Errors);
+            }
+
+            return Ok(new { message = "User updated successfully." });
+        }
+
+        public class UpdateUserRequest
+        {
+            public string Email { get; set; }
+        }
+
 
         private async Task<string> GenerateJwtToken(IdentityUser user)
         {
