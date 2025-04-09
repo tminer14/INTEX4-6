@@ -40,7 +40,7 @@ function MovieInfoPage() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5130/Movies/details/${title}`, {
+      .get(`https://localhost:5130/Movies/details/${title}`, {
         withCredentials: true,
       })
       .then((res) => {
