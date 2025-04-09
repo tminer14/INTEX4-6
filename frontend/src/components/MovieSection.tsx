@@ -18,25 +18,22 @@ function MovieSection({ title, movies }: MovieSectionProps) {
     <div className="movie-section">
       <h2 className="section-title">{title}</h2>
       <div className="movie-cards-container">
-        {movies.map((movie) => {
-          return (
-            <Link
-              to={`/movie/${encodeURIComponent(movie.title)}`}
-              key={movie.title}
-              className="movie-card-link"
-            >
-              <img
-                src={movie.imageUrl}
-                alt={movie.title}
-                className="movie-card"
-              />
-            </Link>
-          );
-        })}
+        {movies.map((movie) => (
+          <Link
+            to={`/Movies/details/${encodeURIComponent(movie.title)}`}
+            key={movie.title}
+            className="movie-card-link"
+          >
+            <img
+              src={movie.imageUrl}
+              alt={movie.title}
+              className="movie-card"
+            />
+          </Link>
+        ))}
       </div>
     </div>
   );
 }
-
 
 export default MovieSection;
