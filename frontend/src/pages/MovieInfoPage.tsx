@@ -40,10 +40,6 @@ function MovieInfoPage() {
 
   useEffect(() => {
     axios
-<<<<<<< HEAD
-=======
-      // CHANGE THIS
->>>>>>> d8b06c2 (Added search component)
       .get(`https://localhost:5130/Movies/details/${title}`, {
         withCredentials: true,
       })
