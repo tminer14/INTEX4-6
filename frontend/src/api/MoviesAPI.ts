@@ -5,7 +5,7 @@ interface fetchMoviesResponse {
   totalMovies: number;
 }
 
-const API_URL = "http://localhost:5130";
+const API_URL = "https://localhost:7026";
 
 export async function fetchMovies(
   pageNum: number,
