@@ -18,7 +18,7 @@ function UserDashboardPage() {
 
     axios
 
-      .get(`http://localhost:5130/Movies/userBasedRecommendations/${userId}`, {
+      .get(`https://localhost:5130/Movies/userBasedRecommendations/${userId}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -44,7 +44,7 @@ function UserDashboardPage() {
   // Recent movies
   useEffect(() => {
     axios
-      .get("http://localhost:5130/Movies/recentMovies/", {
+      .get("https://localhost:5130/Movies/recentMovies/", {
         withCredentials: true,
       })
       .then((res) => {
@@ -70,7 +70,7 @@ function UserDashboardPage() {
   useEffect(() => {
     axios
 
-      .get("http://localhost:5130/Movies/top-rated", {
+      .get("https://localhost:5130/Movies/top-rated", {
         withCredentials: true,
       })
       .then((res) => {
@@ -147,7 +147,6 @@ function UserDashboardPage() {
           />
           <MovieSection title="Highly Rated" movies={highlyRatedMovies} />
           <MovieSection title="Recent Additions" movies={recentlyAddedMovies} />
-
         </div>
       </div>
 
