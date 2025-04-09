@@ -5,7 +5,7 @@ interface fetchMoviesResponse {
   totalMovies: number;
 }
 
-const API_URL = "https://localhost:7026";
+const API_URL = "https://localhost:5130";
 
 export async function fetchMovies(
   pageNum: number,
@@ -17,7 +17,7 @@ export async function fetchMovies(
 
   if (!response.ok) {
     throw new Error("Failed to fetch movies");
-  };
+  }
 
   const data: fetchMoviesResponse = await response.json();
   return data;

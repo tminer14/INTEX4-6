@@ -19,8 +19,7 @@ const mockMovie: Movie = {
   duration: "128 minutes",
   country: "United States",
   rating: "4.5",
-  showId: ""
-
+  showId: "",
 };
 
 function MovieInfoPage() {
@@ -39,21 +38,19 @@ function MovieInfoPage() {
     toast.success(`You've earned 10 points! Total: ${newPoints}`); // ✅
   };
 
-useEffect(() => {
-  axios
-    .get(`https://localhost:7026/Movies/details/${title}`, {
-      withCredentials: true,
-    })
-    .then((res) => {
-      setMovie(res.data);
-      addPoints();
-    })
-    .catch((err) => {
-      console.error("Failed to fetch movie details", err);
-    });
-}, [title]);
-
-
+  useEffect(() => {
+    axios
+      .get(`https://localhost:5130/Movies/details/${title}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setMovie(res.data);
+        addPoints();
+      })
+      .catch((err) => {
+        console.error("Failed to fetch movie details", err);
+      });
+  }, [title]);
 
   const handleBack = () => {
     navigate(-1);
