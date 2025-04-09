@@ -22,7 +22,7 @@ function LoginPage() {
 
     try {
       const response = await axios.post(
-        "https://localhost:7026/api/account/login",
+        "https://localhost:7026/api/Account/login",
         {
           email,
           password,

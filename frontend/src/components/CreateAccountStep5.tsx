@@ -45,7 +45,7 @@ function CreateAccountStep5({
         Peacock: formData.streamingServices?.includes("Peacock") || false,
       };
 
-      await toast.promise(axios.post("/api/tessaaccount/register", payload), {
+      await toast.promise(axios.post("/api/TessaAccount/register", payload), {
         loading: "Creating your account...",
         success: "Account created successfully! 🎉",
         error: "Account creation failed. 🚫 Please try again.",
