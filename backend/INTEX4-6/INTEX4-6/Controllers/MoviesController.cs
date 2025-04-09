@@ -50,9 +50,6 @@ namespace INTEX4_6.Controllers
                 .ToList();
 
 
-
-            var movies = _context.Movies.Take(100).ToList();
-
             var result = pagedMovies.Select(m => new MovieDto
             {
 
@@ -184,6 +181,35 @@ namespace INTEX4_6.Controllers
             return Ok(recentMovies);
         }
 
+        [HttpGet("movieBasedRecommendations/{title}")]
+        public IActionResult GetMovieBasedRecommendations(string title)
+        {
+
+            var recommendations = _context.MovieBasedRecs
+                .Where(rec => rec.title == title)
+                .Join(
+                    _context.Movies,
+                    rec => rec.title,
+                    movie => movie.Title,
+                    (rec, movie) => new
+                    {
+                        movie.ShowId,
+                        movie.Title,
+                        movie.Director,
+                        movie.Cast,
+                        movie.Country,
+                        movie.ReleaseYear,
+                        movie.Rating,
+                        movie.Duration,
+                        movie.Description,
+                 
+                    }
+                )
+       
+                .ToList();
+
+            return Ok(recommendations);
+        }
 
     }
 }
