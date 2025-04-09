@@ -19,7 +19,7 @@ const mockMovie: Movie = {
   duration: "128 minutes",
   country: "United States",
   rating: "4.5",
-  showId: "",
+  showId: ""
 
 };
 
