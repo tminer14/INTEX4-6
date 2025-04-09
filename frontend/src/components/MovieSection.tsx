@@ -20,7 +20,7 @@ function MovieSection({ title, movies }: MovieSectionProps) {
         {movies.map((movie) => {
           return (
             <Link
-              to={`/movie/${encodeURIComponent(movie.title)}`}
+              to={`/Movies/details/${encodeURIComponent(movie.title)}`}
               key={movie.title}
               className="movie-card-link"
             >
