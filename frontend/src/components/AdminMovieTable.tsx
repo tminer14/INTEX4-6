@@ -8,7 +8,6 @@ interface AdminMovieTableProps {
   onEdit: (showId: string) => void;
   onDelete: (showId: string) => void;
 }
-
 export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
   onEdit,
   onDelete,
@@ -18,8 +17,12 @@ export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
   const [pageSize, setPageSize] = useState(100);
   const [totalMovies, setTotalMovies] = useState(0);
   const totalPages = Math.ceil(totalMovies / pageSize);
-
   useEffect(() => {
+    fetchMovies(pageNum, pageSize)
+      .then((data) => {
+        setMovies(data.movies);
+        setTotalMovies(data.totalMovies);
+      })
     fetchMovies(pageNum, pageSize)
       .then((data) => {
         setMovies(data.movies);
@@ -29,6 +32,7 @@ export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
         console.error("Error fetching movies:", error);
       });
   }, [pageNum, pageSize]);
+
 
   return (
     <>
@@ -86,6 +90,7 @@ export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
           ))}
         </div>
       </div>
+
       <div className="pagination-container">
         <Pagination
           currentPage={pageNum}
@@ -96,6 +101,7 @@ export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
         />
       </div>
     </>
+
   );
 };
 export default AdminMovieTable;

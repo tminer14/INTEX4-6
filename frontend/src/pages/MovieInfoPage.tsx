@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { DisplayMovie } from "../components/MovieSection";
 import { useParams, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import "../styles/MovieInfoPage.css";
@@ -6,6 +7,7 @@ import logo from "../assets/Logo.png";
 import { Movie } from "../types/Movie";
 import axios from "axios";
 import toast from "react-hot-toast";
+import MovieSection from "../components/MovieSection";
 
 // Mock data for a single movie - in a real app, this would come from an API
 const mockMovie: Movie = {
@@ -19,7 +21,7 @@ const mockMovie: Movie = {
   duration: "128 minutes",
   country: "United States",
   rating: "4.5",
-  showId: ""
+  showId: "",
 
 };
 
@@ -27,46 +29,71 @@ function MovieInfoPage() {
   const { title } = useParams<{ title: string }>();
   const navigate = useNavigate();
   const [movie, setMovie] = useState<Movie | null>(null);
+  const [recommendedMovies, setRecommendedMovies] = useState<DisplayMovie[]>(
+    []
+  );
   const [userRating, setUserRating] = useState<number>(0);
   const [hoveredRating, setHoveredRating] = useState<number>(0);
+
+  const posterUrl = movie?.title
+    ? `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
+        movie.title.replace(/[:'&!]/g, "")
+      )}.jpg`
+    : "";
 
   // Function to add points
   const addPoints = () => {
     const currentPoints = parseInt(Cookies.get("userPoints") || "0");
     const newPoints = currentPoints + 10;
     Cookies.set("userPoints", newPoints.toString(), { expires: 7 });
-
-    toast.success(`You've earned 10 points! Total: ${newPoints}`); // ✅
+    toast.success(`You've earned 10 points! Total: ${newPoints}`);
   };
 
-useEffect(() => {
-  axios
-    .get(`https://localhost:7026/Movies/details/${title}`, {
-      withCredentials: true,
-    })
-    .then((res) => {
-      setMovie(res.data);
-      addPoints();
-    })
-    .catch((err) => {
-      console.error("Failed to fetch movie details", err);
-    });
-}, [title]);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5130/Movies/details/${title}`)
+      .then((res) => {
+        setMovie(res.data);
+        addPoints();
+        console.log("🔁 Fetching recommendations for:", title);
+        console.log("✅ Recommendation response:", res.data);
 
-
+        return axios.get(
+          `http://localhost:5130/Movies/movieBasedRecommendations/${title}`
+        );
+      })
+      .then((res) => {
+        const formatted = res.data.map(
+          (movie: { title: string }, index: number) => {
+            const cleanTitle = movie.title.replace(/[:'&!]/g, "");
+            return {
+              id: index,
+              title: movie.title,
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
+                cleanTitle
+              )}.jpg`,
+            };
+          }
+        );
+        setRecommendedMovies(formatted);
+        console.log("Movies:", recommendedMovies);
+        console.log("🖼️ Formatted recs:", formatted);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch movie info or recommendations", err);
+      });
+  }, [title]);
 
   const handleBack = () => {
     navigate(-1);
   };
 
   const handleSignOut = () => {
-    // Implementation for signing out
     navigate("/");
   };
 
   const handleRatingClick = (rating: number) => {
     setUserRating(rating);
-    // In a real app, you would send this rating to your backend
     alert(`You rated this movie ${rating} stars!`);
   };
 
@@ -103,7 +130,7 @@ useEffect(() => {
               >
                 <path
                   d="M27.7082 17.5H7.2915M7.2915 17.5L17.4998 27.7083M7.2915 17.5L17.4998 7.29167"
-                  stroke="#1E1E1E"
+                  stroke="#ffffff"
                   strokeWidth="4"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -111,7 +138,7 @@ useEffect(() => {
               </svg>
             </div>
             <div className="movie-poster">
-              <img alt={movie.title} className="poster-image" />
+              <img src={posterUrl} alt={movie.title} className="poster-image" />
             </div>
             <div className="play-button">
               <svg
@@ -227,6 +254,8 @@ useEffect(() => {
           </div>
         </div>
       </div>
+
+      <MovieSection title="More Like This" movies={recommendedMovies} />
     </div>
   );
 }
