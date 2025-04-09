@@ -94,6 +94,7 @@
   cursor: pointer;
   width: 35px;
   height: 35px;
+  margin-top: 100px;
 }
 
 .movie-poster {
@@ -101,7 +102,7 @@
   display: flex;
   margin-top: 15px;
   width: 270px;
-  height: 340px;
+  height: 410px;
   background-color: #d9d9d9;
   overflow: hidden;
 }
@@ -161,6 +162,7 @@
 
 .info-value {
   font-weight: 400;
+  text-align: left;
 }
 
 .rating-label {

@@ -28,6 +28,11 @@ function MovieInfoPage() {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [userRating, setUserRating] = useState<number>(0);
   const [hoveredRating, setHoveredRating] = useState<number>(0);
+  const posterUrl = movie?.title
+    ? `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
+        movie.title.replace(/[:'&!]/g, "")
+      )}.jpg`
+    : "";
 
   // Function to add points
   const addPoints = () => {
@@ -100,7 +105,7 @@ function MovieInfoPage() {
               >
                 <path
                   d="M27.7082 17.5H7.2915M7.2915 17.5L17.4998 27.7083M7.2915 17.5L17.4998 7.29167"
-                  stroke="#1E1E1E"
+                  stroke="#ffffff"
                   strokeWidth="4"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -108,7 +113,7 @@ function MovieInfoPage() {
               </svg>
             </div>
             <div className="movie-poster">
-              <img alt={movie.title} className="poster-image" />
+              <img src={posterUrl} alt={movie.title} className="poster-image" />
             </div>
             <div className="play-button">
               <svg
@@ -224,6 +229,7 @@ function MovieInfoPage() {
           </div>
         </div>
       </div>
+      {/* <MovieSection title="More like this" movies={}/> */}
     </div>
   );
 }
