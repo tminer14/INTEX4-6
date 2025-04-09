@@ -11,81 +11,87 @@ function UserDashboardPage() {
   const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
 
+useEffect(() => {
+  const userId = 73;
+
+  axios
+    .get(`https://localhost:7026/Movies/userBasedRecommendations/${userId}`, {
+      withCredentials: true,
+    })
+    .then((res) => {
+      const formatted = res.data.map(
+        (movie: { title: string; showId: string }, index: number) => {
+          const cleanTitle = movie.title.replace(/[:']/g, "");
+          return {
+            id: index,
+            title: movie.title,
+            imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
+              cleanTitle
+            )}.jpg`,
+          };
+        }
+      );
+      setRecommendedMovies(formatted);
+    })
+    .catch((err) => {
+      console.error("Failed to fetch recommended movies", err);
+    });
+}, []);
+
+
   // Recent movies
-  useEffect(() => {
-    axios
-      .get("http://localhost:5130/Movies/recentMovies")
-      .then((res) => {
-        const formatted = res.data.map(
-          (movie: { title: string }, index: number) => {
-            const cleanTitle = movie.title.replace(/[:'&!]/g, "");
-            return {
-              id: index,
-              title: movie.title,
-              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-                cleanTitle
-              )}.jpg`,
-            };
-          }
-        );
-        setRecentlyAddedMovies(formatted);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch recent movies", err);
-      });
-  }, []);
+useEffect(() => {
+  axios
+    .get("https://localhost:7026/Movies/recentMovies", {
+      withCredentials: true,
+    })
+    .then((res) => {
+      const formatted = res.data.map(
+        (movie: { title: string }, index: number) => {
+          const cleanTitle = movie.title.replace(/[:'&!]/g, "");
+          return {
+            id: index,
+            title: movie.title,
+            imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
+              cleanTitle
+            )}.jpg`,
+          };
+        }
+      );
+      setRecentlyAddedMovies(formatted);
+    })
+    .catch((err) => {
+      console.error("Failed to fetch recent movies", err);
+    });
+}, []);
 
-  // Recommended movies
-  useEffect(() => {
-    const userId = 73;
 
-    axios
-      .get(`http://localhost:5130/Movies/userBasedRecommendations/${userId}`)
-      .then((res) => {
-        const formatted = res.data.map(
-          (movie: { title: string; showId: string }, index: number) => {
-            const cleanTitle = movie.title.replace(/[:'&!]/g, "");
-            return {
-              id: index,
-              title: movie.title,
-              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-                cleanTitle
-              )}.jpg`,
-            };
-          }
-        );
-        setRecommendedMovies(formatted);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch recommended movies", err);
-      });
-  }, []);
+useEffect(() => {
+  axios
+    .get("https://localhost:7026/Movies/top-rated", {
+      withCredentials: true,
+    })
+    .then((res) => {
+      const formatted = res.data.map(
+        (movie: { title: string }, index: number) => {
+          const cleanTitle = movie.title.replace(/[:']/g, "");
+          return {
+            id: index,
+            title: movie.title,
+            imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
+              cleanTitle
+            )}.jpg`,
+          };
+        }
+      );
 
-  // Top-rated movies
-  useEffect(() => {
-    axios
-      .get("http://localhost:5130/Movies/top-rated")
-      .then((res) => {
-        const formatted = res.data.map(
-          (movie: { title: string }, index: number) => {
-            // Remove ':' and `'` from the title
-            const cleanTitle = movie.title.replace(/[:'&!]/g, "");
-            return {
-              id: index,
-              title: movie.title,
-              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-                cleanTitle
-              )}.jpg`,
-            };
-          }
-        );
+      setHighlyRatedMovies(formatted);
+    })
+    .catch((err) => {
+      console.error("Failed to fetch top-rated movies", err);
+    });
+}, []);
 
-        setHighlyRatedMovies(formatted);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch top-rated movies", err);
-      });
-  }, []);
 
   return (
     <div className="dashboard-container">
