@@ -15,7 +15,7 @@ interface DisplayMovie {
 function MovieSection({ title, movies }: MovieSectionProps) {
   return (
     <div className="movie-section">
-      <h2 className="section-title">{title}</h2>
+      <h2 className="section-title">{title}</h2>√
       <div className="movie-cards-container">
         {movies.map((movie) => {
           return (

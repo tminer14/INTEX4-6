@@ -1,25 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { Movie } from "../types/Movie";
 import { fetchMovies } from "../api/MoviesAPI";
-
+import Pagination from "./Pagination";
 interface AdminMovieTableProps {
   onEdit: (showId: string) => void;
   onDelete: (showId: string) => void;
 }
-
 export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
   onEdit,
   onDelete,
 }) => {
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [pageNum, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(100);
+  const [totalMovies, setTotalMovies] = useState(0);
+  const totalPages = Math.ceil(totalMovies / pageSize);
   useEffect(() => {
-    fetchMovies()
-      .then(setMovies)
+    fetchMovies(pageNum, pageSize)
+      .then((data) => {
+        setMovies(data.movies);
+        setTotalMovies(data.totalMovies);
+      })
       .catch((error) => {
         console.error("Error fetching movies:", error);
       });
-  }, []);
-
+  }, [pageNum, pageSize]);
   return (
     <div className="movie-table-container">
       <div className="movie-table">
@@ -37,7 +42,6 @@ export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
           <div className="header-genre">Genre</div>
           <div className="header-action">Action</div>
         </div>
-
         {movies.map((movie, index) => (
           <div className="table-row" key={`${movie.showId}-${index}`}>
             <div className="cell-id">{movie.showId}</div>
@@ -70,6 +74,13 @@ export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
           </div>
         ))}
       </div>
+      <Pagination
+        currentPage={pageNum}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        onPageChange={setCurrentPage}
+        onPageSizeChange={setPageSize}
+      />
     </div>
   );
 };

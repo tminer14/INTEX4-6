@@ -26,7 +26,6 @@ namespace INTEX4_6.Controllers
                 .ToList();
             return Ok(titles);
 
-
         }
 
         [HttpGet("withGenres")]
@@ -184,16 +183,16 @@ namespace INTEX4_6.Controllers
             return Ok(recentMovies);
         }
 
-        [HttpGet("movieBasedRecommendations/{title}")]
-        public IActionResult GetMovieBasedRecommendations(string title)
+        [HttpGet("movieBasedRecommendations/{show_id}")]
+        public IActionResult GetMovieBasedRecommendations(string show_id)
         {
 
             var recommendations = _context.MovieBasedRecs
-                .Where(rec => rec.title == title)
+                .Where(rec => rec.show_id == show_id)
                 .Join(
                     _context.Movies,
-                    rec => rec.title,
-                    movie => movie.Title,
+                    rec => rec.show_id,
+                    movie => movie.ShowId,
                     (rec, movie) => new
                     {
                         movie.ShowId,
