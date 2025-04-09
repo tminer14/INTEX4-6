@@ -13,7 +13,6 @@ function UserDashboardPage() {
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
   };
@@ -23,7 +22,6 @@ function UserDashboardPage() {
 
     axios
       .get(`https://localhost:5130/Movies/userBasedRecommendations/${userId}`, {
-
         withCredentials: true,
       })
       .then((res) => {
@@ -34,11 +32,10 @@ function UserDashboardPage() {
               id: index,
               title: movie.title,
               imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-
-                cleanTitle,
+                cleanTitle
               )}.jpg`,
             };
-          },
+          }
         );
         setRecommendedMovies(formatted);
       })
@@ -50,7 +47,7 @@ function UserDashboardPage() {
   // Recent movies
   useEffect(() => {
     axios
-      .get("http://localhost:5130/Movies/recentMovies", {
+      .get("https://localhost:5130/Movies/recentMovies", {
         withCredentials: true,
       })
       .then((res) => {
@@ -61,11 +58,10 @@ function UserDashboardPage() {
               id: index,
               title: movie.title,
               imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-
-                cleanTitle,
+                cleanTitle
               )}.jpg`,
             };
-          },
+          }
         );
         setRecentlyAddedMovies(formatted);
       })
@@ -77,7 +73,7 @@ function UserDashboardPage() {
   useEffect(() => {
     axios
 
-      .get("http://localhost:5130/Movies/top-rated", {
+      .get("https://localhost:5130/Movies/top-rated", {
         withCredentials: true,
       })
       .then((res) => {
@@ -88,11 +84,10 @@ function UserDashboardPage() {
               id: index,
               title: movie.title,
               imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-
-                cleanTitle,
+                cleanTitle
               )}.jpg`,
             };
-          },
+          }
         );
 
         setHighlyRatedMovies(formatted);
