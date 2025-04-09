@@ -1,12 +1,5 @@
 import { Movie } from "../types/Movie";
 
-interface fetchMoviesResponse {
-  movies: Movie[];
-  totalMovies: number;
-}
-
-const API_URL = "http://localhost:5130";
-
 export async function fetchMovies(
   pageNum: number,
   pageSize: number
