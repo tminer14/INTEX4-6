@@ -1,5 +1,6 @@
 import { Movie } from "../types/Movie";
 
+
 interface fetchMoviesResponse {
   movies: Movie[];
   totalMovies: number;

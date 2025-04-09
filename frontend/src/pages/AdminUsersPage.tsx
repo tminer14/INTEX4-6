@@ -18,6 +18,7 @@ const AdminUsersPage: React.FC = () => {
   const [createRoles, setCreateRoles] = useState<string[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
+  const [editRoles, setEditRoles] = useState<string[]>([]);
 
   const roleDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -80,6 +81,7 @@ const AdminUsersPage: React.FC = () => {
   const handleEdit = (user: any) => {
     setEditingUser(user);
     setNewEmail(user.email);
+    setEditRoles(Array.isArray(user.role) ? user.role : [user.role]);
   };
 
   const handleUpdate = async () => {
@@ -90,20 +92,27 @@ const AdminUsersPage: React.FC = () => {
       await axios.put(
         `https://localhost:5130/api/Account/users/${editingUser.id}`,
         { email: newEmail },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setUsers(
-        users.map((u) =>
-          u.id === editingUser.id ? { ...u, email: newEmail } : u
-        )
+      await axios.post(
+        "https://localhost:5130/Role/UpdateUserRoles",
+        {
+          userId: editingUser.id,
+          roles: editRoles,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      console.log("User updated successfully");
+
+      toast.success("User updated successfully!");
+
       setEditingUser(null);
+      setNewEmail("");
+      setEditRoles([]);
+      setTimeout(() => window.location.reload(), 500);
     } catch (error) {
       console.error("Error updating user:", error);
+      toast.error("Failed to update user.");
     }
   };
 
@@ -149,9 +158,7 @@ const AdminUsersPage: React.FC = () => {
           password: createPassword,
           confirmPassword: createConfirmPassword,
         },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       toast.success("User registered successfully!");
@@ -161,13 +168,14 @@ const AdminUsersPage: React.FC = () => {
           await axios.post(
             "https://localhost:5130/Role/AssignRoleToUser",
             {
-              email: createEmail,
-              role: role,
+              userEmail: createEmail,
+              roleName: role,
             },
             {
               headers: { Authorization: `Bearer ${token}` },
             }
           );
+
         } catch (roleError) {
           console.error("Failed to assign role:", role, roleError);
           toast.error(`Failed to assign role: ${role}`);
@@ -263,6 +271,36 @@ const AdminUsersPage: React.FC = () => {
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
             />
+
+            <div className="role-dropdown" style={{ marginTop: "10px" }}>
+              <button
+                type="button"
+                onClick={() => setIsRoleDropdownOpen(!isRoleDropdownOpen)}
+              >
+                {editRoles.length > 0 ? editRoles.join(", ") : "Select Roles"}
+              </button>
+              {isRoleDropdownOpen && (
+                <div className="role-dropdown-menu">
+                  {availableRoles.map((role) => (
+                    <label key={role}>
+                      <input
+                        type="checkbox"
+                        checked={editRoles.includes(role)}
+                        onChange={() => {
+                          if (editRoles.includes(role)) {
+                            setEditRoles(editRoles.filter((r) => r !== role));
+                          } else {
+                            setEditRoles([...editRoles, role]);
+                          }
+                        }}
+                      />
+                      {role}
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <button onClick={handleUpdate}>Save Changes</button>
             <button onClick={() => setEditingUser(null)}>Cancel</button>
           </div>
