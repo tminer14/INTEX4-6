@@ -9,7 +9,6 @@ public class MovieBasedRecs
     [Key]
     public string title { get; set; }
     public int user_id { get; set; }
-    public string recommendation_type { get; set; }
     public string show_id { get; set; }
-    public int rank { get; set; }
+  
 }
