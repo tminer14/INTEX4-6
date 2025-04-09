@@ -18,7 +18,7 @@ function UserDashboardPage() {
 
     axios
 
-      .get(`https://localhost:5130/Movies/userBasedRecommendations/${userId}`, {
+      .get(`http://localhost:5130/Movies/userBasedRecommendations/${userId}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -44,7 +44,7 @@ function UserDashboardPage() {
   // Recent movies
   useEffect(() => {
     axios
-      .get("https://localhost:5130/Movies/recentMovies", {
+      .get("http://localhost:5130/Movies/recentMovies/", {
         withCredentials: true,
       })
       .then((res) => {
@@ -70,13 +70,13 @@ function UserDashboardPage() {
   useEffect(() => {
     axios
 
-      .get("https://localhost:5130/Movies/top-rated", {
+      .get("http://localhost:5130/Movies/top-rated", {
         withCredentials: true,
       })
       .then((res) => {
         const formatted = res.data.map(
           (movie: { title: string }, index: number) => {
-            const cleanTitle = movie.title.replace(/[:']/g, "");
+            const cleanTitle = movie.title.replace(/[:'&]/g, "");
             return {
               id: index,
               title: movie.title,
@@ -141,12 +141,13 @@ function UserDashboardPage() {
         <FilterOptions />
 
         <div className="movie-sections">
-          <MovieSection title="Recent Additions" movies={recentlyAddedMovies} />
           <MovieSection
             title="Recommended For You"
             movies={recommendedMovies}
           />
           <MovieSection title="Highly Rated" movies={highlyRatedMovies} />
+          <MovieSection title="Recent Additions" movies={recentlyAddedMovies} />
+
         </div>
       </div>
 
