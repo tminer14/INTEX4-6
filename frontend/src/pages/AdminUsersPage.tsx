@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -236,6 +237,7 @@ const AdminUsersPage: React.FC = () => {
                     <div>{user.role}</div>
                   )}
                 </div>
+                <div className="cell-role">{user.role}</div>
                 <div className="cell-action">
                   <button
                     className="edit-button"
