@@ -180,6 +180,26 @@ namespace INTEX4_6.Controllers
 
             return Ok(recentMovies);
         }
+        
+        [HttpGet("search")]
+        public async Task<IActionResult> Search([FromQuery] string title)
+        {
+            if (string.IsNullOrEmpty(title))
+            {
+                return BadRequest("Title is required.");
+            }
+
+            var matchedMovies = _context.Movies
+                .Where(m => m.Title == title) // exact match
+                .Select(m => new {
+                    m.ShowId,
+                    m.Title,
+                    ImageUrl = $"https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/{m.Title}.jpg" // <- Constructed URL,
+                })
+                .ToList();
+
+            return Ok(matchedMovies);
+        }
 
         [HttpGet("movieBasedRecommendations/{title}")]
         public IActionResult GetMovieBasedRecommendations(string title)

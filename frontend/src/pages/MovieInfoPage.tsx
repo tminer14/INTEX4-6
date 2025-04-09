@@ -13,12 +13,8 @@ function MovieInfoPage() {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [userRating, setUserRating] = useState<number>(0);
   const [hoveredRating, setHoveredRating] = useState<number>(0);
+  const [imageUrl, setImageUrl] = useState<string>("");
 
-  const posterUrl = movie?.title
-    ? `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-        movie.title.replace(/[:'&!]/g, "")
-      )}.jpg`
-    : "";
 
   // Function to add points
   const addPoints = () => {
@@ -31,7 +27,7 @@ function MovieInfoPage() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5130/Movies/details/${title}`, {
+      .get(`https://localhost:5130/Movies/details/${title}`, {
         withCredentials: true,
       })
       .then((res) => {
