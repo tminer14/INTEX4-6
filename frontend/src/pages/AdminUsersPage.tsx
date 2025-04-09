@@ -33,7 +33,7 @@ const AdminUsersPage: React.FC = () => {
 
       try {
         const response = await axios.get(
-          "https://localhost:7026/api/Account/users",
+          "https://localhost:5130/api/Account/users",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -66,7 +66,7 @@ const AdminUsersPage: React.FC = () => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      await axios.delete(`https://localhost:7026/api/Account/users/${userId}`, {
+      await axios.delete(`https://localhost:5130/api/Account/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -88,7 +88,7 @@ const AdminUsersPage: React.FC = () => {
 
     try {
       await axios.put(
-        `https://localhost:7026/api/Account/users/${editingUser.id}`,
+        `https://localhost:5130/api/Account/users/${editingUser.id}`,
         { email: newEmail },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -143,7 +143,7 @@ const AdminUsersPage: React.FC = () => {
 
     try {
       await axios.post(
-        "https://localhost:7026/api/Account/register",
+        "https://localhost:5130/api/Account/register",
         {
           email: createEmail,
           password: createPassword,
@@ -159,7 +159,7 @@ const AdminUsersPage: React.FC = () => {
       for (const role of createRoles) {
         try {
           await axios.post(
-            "https://localhost:7026/Role/AssignRoleToUser",
+            "https://localhost:5130/Role/AssignRoleToUser",
             {
               email: createEmail,
               role: role,

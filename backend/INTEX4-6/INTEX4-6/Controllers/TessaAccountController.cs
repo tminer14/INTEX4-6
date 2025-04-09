@@ -41,6 +41,7 @@ namespace INTEX4_6.Controllers
                 return BadRequest(errors);
             }
 
+            await _userManager.AddToRoleAsync(identityUser, "User");
 
             // Save to custom MovieUserInfo table
             var movieUser = new MovieUserInfo
