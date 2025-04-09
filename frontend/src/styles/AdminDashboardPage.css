@@ -184,3 +184,25 @@
     height: 45px;
   }
 }
+
+.back-arrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #f7f7ff;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 8px; /* Adjust as needed */
+  transition: color 0.2s ease;
+}
+
+.back-arrow:hover {
+  color: #b0e0e6;
+}
+
+.arrow-icon {
+  font-size: 1.1rem; /* or larger if you want more emphasis */
+}
