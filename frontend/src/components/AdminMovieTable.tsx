@@ -13,6 +13,7 @@ export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
   onDelete,
 }) => {
   const [movies, setMovies] = useState<Movie[]>([]);
+
   const [pageNum, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [totalMovies, setTotalMovies] = useState(0);

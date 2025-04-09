@@ -2,10 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 import "../styles/MovieSection.css";
 import { Movie } from "../types/Movie";
 
-interface MovieWithImageUrl extends Movie {
-  imageUrl: string;
-}
-
 interface MovieSectionProps {
   title: string;
   movies: DisplayMovie[];
@@ -40,6 +36,5 @@ function MovieSection({ title, movies }: MovieSectionProps) {
     </div>
   );
 }
-
 
 export default MovieSection;
