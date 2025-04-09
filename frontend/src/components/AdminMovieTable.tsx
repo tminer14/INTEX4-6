@@ -13,6 +13,7 @@ export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
   onDelete,
 }) => {
   const [movies, setMovies] = useState<Movie[]>([]);
+
   const [pageNum, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [totalMovies, setTotalMovies] = useState(0);
@@ -28,6 +29,7 @@ export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
         console.error("Error fetching movies:", error);
       });
   }, [pageNum, pageSize]);
+
 
   return (
     <div className="movie-table-container">

@@ -8,12 +8,9 @@ interface MovieWithImageUrl extends Movie {
 
 interface MovieSectionProps {
   title: string;
-  movies: DisplayMovie[];
-}
 
-interface DisplayMovie {
-  title: string;
-  imageUrl: string;
+  movies: MovieWithImageUrl[];
+
 }
 
 function MovieSection({ title, movies }: MovieSectionProps) {

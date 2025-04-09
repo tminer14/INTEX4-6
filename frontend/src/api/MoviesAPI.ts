@@ -1,5 +1,13 @@
 import { Movie } from "../types/Movie";
 
+
+interface fetchMoviesResponse {
+  movies: Movie[];
+  totalMovies: number;
+}
+
+const API_URL = "https://localhost:5130";
+
 export async function fetchMovies(
   pageNum: number,
   pageSize: number
@@ -10,7 +18,7 @@ export async function fetchMovies(
 
   if (!response.ok) {
     throw new Error("Failed to fetch movies");
-  };
+  }
 
   const data: fetchMoviesResponse = await response.json();
   return data;

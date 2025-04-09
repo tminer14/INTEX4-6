@@ -20,7 +20,6 @@ const mockMovie: Movie = {
   country: "United States",
   rating: "4.5",
   showId: "",
-
 };
 
 function MovieInfoPage() {
@@ -46,7 +45,9 @@ function MovieInfoPage() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5130/Movies/details/${title}`)
+      .get(`https://localhost:5130/Movies/details/${title}`, {
+        withCredentials: true,
+      })
       .then((res) => {
         setMovie(res.data);
         addPoints();

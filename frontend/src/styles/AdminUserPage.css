@@ -1,0 +1,279 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap");
+
+.admin-panel {
+  font-family: "Inter", sans-serif;
+  background-color: #022b3b;
+  min-height: 100vh;
+}
+
+/* Header Styles */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 27px 34px;
+  background-color: #022b3b;
+}
+
+.cell-role div {
+  margin-bottom: 4px;
+}
+
+.role-dropdown {
+  position: relative;
+  display: block; /* Changed to block for full width */
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+
+.role-dropdown button {
+  width: 100%;
+  padding: 12px;
+  background-color: #237881 !important; /* <--- ADD !important */
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: left;
+}
+
+
+.role-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 10;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.role-dropdown-menu label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: #333;
+  padding: 8px 5px;
+  cursor: pointer;
+}
+
+.role-dropdown-menu label:hover {
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.role-dropdown-menu input[type="checkbox"] {
+  transform: scale(1.2);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 37px;
+  height: 38px;
+  margin-left: -2px;
+  margin-top: -15px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.language-selector {
+  color: #f5f5f5;
+  font-size: 14px;
+}
+
+.sign-out-button {
+  color: #022b3b;
+  padding: 14px 51px;
+  border-radius: 10px;
+  font-size: 14px;
+  background-color: #f7f7ff;
+  border: none;
+  cursor: pointer;
+}
+
+/* Main Content Styles */
+.admin-content {
+  padding: 0 87px;
+}
+
+.page-title {
+  color: #f5f5f5;
+  font-size: 40px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 17px;
+}
+
+.add-movie-button {
+  color: #f5f5f5;
+  font-size: 24px;
+  font-weight: 700;
+  padding: 7px 17px;
+  border-radius: 10px;
+  width: 214px;
+  text-align: center;
+  margin: 0 0 24px 0;
+  background-color: #237881;
+  border: none;
+  cursor: pointer;
+  display: block;
+}
+
+/* Movie Table Styles */
+.movie-table-container {
+  border-radius: 10px;
+  padding: 30px 40px;
+  background-color: #f5f5f5;
+}
+
+.movie-table {
+  width: 100%;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 50px 350px 200px 200px;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #d9d9d9;
+  margin-bottom: 15px;
+}
+
+.table-header > div {
+  color: #000;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 50px 350px 200px 200px;
+  gap: 10px;
+  padding: 15px 0;
+  border-bottom: 1px solid #aaa9a9;
+}
+
+.table-row > div {
+  color: #000;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.edit-button {
+  color: #f5f5f5;
+  padding: 2px 12px;
+  border-radius: 10px;
+  border: none;
+  font-size: 13px;
+  background-color: #237881;
+  cursor: pointer;
+}
+.edit-modal {
+  margin-top: 30px;
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.edit-modal h3 {
+  color: #022b3b;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.edit-modal input {
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: white; /* Fixes black background */
+  color: black; /* Fixes yellow/orange text */
+  font-size: 16px;
+}
+
+.edit-modal button {
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.edit-modal button:first-of-type {
+  background-color: #237881;
+  color: white;
+}
+
+.edit-modal button:last-of-type {
+  background-color: #ca4444;
+  color: white;
+}
+
+
+.delete-button {
+  color: #f5f5f5;
+  padding: 2px 12px;
+  border-radius: 10px;
+  border: none;
+  font-size: 13px;
+  background-color: #ca4444;
+  cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .admin-content {
+    padding: 0 40px;
+  }
+
+.table-header,
+.table-row {
+  display: grid;
+  grid-template-columns: 50px 350px 200px 200px;
+  gap: 10px;
+}
+
+}
+
+@media (max-width: 992px) {
+  .movie-table-container {
+    padding: 20px;
+    overflow-x: auto;
+  }
+
+  .movie-table {
+    min-width: 800px;
+  }
+}
