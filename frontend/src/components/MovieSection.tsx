@@ -18,7 +18,7 @@ function MovieSection({ title, movies }: MovieSectionProps) {
       <div className="movie-cards-container">
         {movies.map((movie) => (
           <Link
-            to={`/movies/details/${encodeURIComponent(movie.title)}`}
+            to={`/Movies/details/${encodeURIComponent(movie.title)}`}
             key={movie.title}
             className="movie-card-link"
           >
@@ -33,6 +33,5 @@ function MovieSection({ title, movies }: MovieSectionProps) {
     </div>
   );
 }
-
 
 export default MovieSection;
