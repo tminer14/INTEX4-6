@@ -7,7 +7,7 @@ namespace INTEX4_6.Data;
 public class UserBasedRecs
 {
     [Key]
-    public int show_id { get; set; }
+    public string show_id { get; set; }
     public int user_id { get; set; }
     public string recommendation_type { get; set; }
     public string title { get; set; }

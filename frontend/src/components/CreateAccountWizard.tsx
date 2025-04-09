@@ -8,7 +8,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
-axios.defaults.baseURL = "https://localhost:7026";
+axios.defaults.baseURL = "https://localhost:5130";
 axios.defaults.withCredentials = true;
 
 function CreateAccountWizard() {

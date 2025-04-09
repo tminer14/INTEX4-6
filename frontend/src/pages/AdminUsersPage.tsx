@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../styles/AdminUserPage.css"; 
+import "../styles/AdminPanelPage.css"; 
 
 const AdminUsersPage: React.FC = () => {
   const navigate = useNavigate();

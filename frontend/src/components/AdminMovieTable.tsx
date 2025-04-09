@@ -30,8 +30,6 @@ export const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
       });
   }, [pageNum, pageSize]);
 
-
-
   return (
     <div className="movie-table-container">
       <div className="movie-table">
