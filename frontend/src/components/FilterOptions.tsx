@@ -1,6 +1,33 @@
 import "../styles/FilterOptions.css";
 
-function FilterOptions() {
+interface FilterOptionsProps {
+  selectedGenre: string | null;
+  setSelectedGenre: (genre: string | null) => void;
+}
+
+const genres = [
+  "Action",
+  "Adventure",
+  "Comedies",
+  "Dramas",
+  "Docuseries",
+  "Thrillers",
+  "Nature TV",
+  "Children",
+  "Fantasy",
+  "Horror Movies",
+  "Musicals",
+  "Reality TV",
+  "Spirituality",
+  "TV Action",
+  "TV Comedies",
+  "TV Dramas",
+];
+
+function FilterOptions({
+  selectedGenre,
+  setSelectedGenre,
+}: FilterOptionsProps) {
   return (
     <div className="filter-options">
       <div className="filter-icon">
@@ -22,7 +49,20 @@ function FilterOptions() {
         </svg>
       </div>
       <div className="filter-buttons">
-        <button className="filter-button">By Genre</button>
+        <select
+          className="genre-dropdown"
+          value={selectedGenre ?? ""}
+          onChange={(e) =>
+            setSelectedGenre(e.target.value === "" ? null : e.target.value)
+          }
+        >
+          <option value="">All Genres</option>
+          {genres.map((genre) => (
+            <option key={genre} value={genre}>
+              {genre}
+            </option>
+          ))}
+        </select>
         <button className="filter-button">By Rating</button>
         <button className="filter-button">By Type</button>
       </div>

@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/357eca02-173d-4fc3-97f1-8c00fbb0e303/resourceGroups/appsvc_windows_eastus/providers/Microsoft.Web/sites/CineNicheGroup4-6",
+  "appService.deploySubpath": "backend/INTEX4-6/INTEX4-6/publish"
+}

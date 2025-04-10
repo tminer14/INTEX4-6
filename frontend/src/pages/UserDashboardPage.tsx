@@ -9,6 +9,7 @@ import ScrollLoader from "../components/ScrollLoader"; // ✅ NEW IMPORT
 import "../styles/UserDashboard.css";
 import logo from "../assets/Logo.png";
 import MoviesByGenreSection from "../components/MoviesByGenre";
+import { recTypeToGenre } from "../assets/genreMap";
 
 function UserDashboardPage() {
   const [highlyRatedMovies, setHighlyRatedMovies] = useState([]);
@@ -40,22 +41,38 @@ function UserDashboardPage() {
   const [isLoadingRecommended, setIsLoadingRecommended] = useState(true);
   const [isLoadingHighlyRated, setIsLoadingHighlyRated] = useState(true);
   const [isLoadingRecent, setIsLoadingRecent] = useState(true);
+  const API_URL =
+    "https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies";
+
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
 
   // Display User Recommendations
   useEffect(() => {
     const userId = 73;
     axios
-      .get(`https://localhost:5130/Movies/userBasedRecommendations/${userId}`, {
+      .get(`${API_URL}/userBasedRecommendations/${userId}`, {
         withCredentials: true,
       })
       .then((res) => {
         const formatted = res.data.map(
-          (movie: { title: string; showId: string }, index: number) => {
-            const cleanTitle = movie.title.replace(/[:'&-]/g, "");
+          (
+            movie: {
+              title: string;
+              showId: string;
+              recommendationType: string;
+            },
+            index: number
+          ) => {
+            const cleanTitle = movie.title.replace(/[:']/g, "");
             return {
               id: index,
               title: movie.title,
-              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(cleanTitle)}.jpg`,
+
+              recommendationType: movie.recommendationType,
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
+                cleanTitle
+              )}.jpg`,
+
             };
           }
         );
@@ -71,7 +88,7 @@ function UserDashboardPage() {
 
   useEffect(() => {
     axios
-      .get("https://localhost:5130/Movies/recentMovies", {
+      .get(`${API_URL}/recentMovies`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -97,7 +114,7 @@ function UserDashboardPage() {
 
   useEffect(() => {
     axios
-      .get("https://localhost:5130/Movies/top-rated", {
+      .get(`${API_URL}/top-rated`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -124,6 +141,13 @@ function UserDashboardPage() {
   const toggleSearch = () => {
     setIsSearchOpen((prev) => !prev);
   };
+
+  const filteredRecommended = selectedGenre
+    ? recommendedMovies.filter(
+        (movie: any) =>
+          recTypeToGenre[movie.recommendationType] === selectedGenre
+      )
+    : recommendedMovies;
 
   return (
     <div className="dashboard-container">
@@ -168,7 +192,10 @@ function UserDashboardPage() {
       <div className="dashboard-content">
         <h1 className="dashboard-title">Discover Your Next Favorite.</h1>
 
-        <FilterOptions />
+        <FilterOptions
+          selectedGenre={selectedGenre}
+          setSelectedGenre={setSelectedGenre}
+        />
 
         <div className="movie-sections">
           {isLoadingRecommended ? (
@@ -176,7 +203,7 @@ function UserDashboardPage() {
           ) : (
             <MovieSection
               title="Recommended For You"
-              movies={recommendedMovies}
+              movies={filteredRecommended}
             />
           )}
 
