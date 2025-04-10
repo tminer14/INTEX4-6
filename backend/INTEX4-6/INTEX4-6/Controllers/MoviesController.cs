@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using INTEX4_6.Data;
 using INTEX4_6.Dtos;
+using INTEX4_6.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -399,5 +400,32 @@ namespace INTEX4_6.Controllers
             _context.SaveChanges();
             return Ok();
         }
+
+        [HttpPost("rate")]
+        public IActionResult RateMovie([FromBody] MovieRating rating)
+        {
+            if (rating == null || string.IsNullOrEmpty(rating.ShowId))
+            {
+                return BadRequest("Invalid rating data.");
+            }
+
+            var existingRating = _context.MovieRatings
+                .FirstOrDefault(r => r.UserId == rating.UserId && r.ShowId == rating.ShowId);
+
+            if (existingRating != null)
+            {
+                existingRating.Rating = rating.Rating;
+                _context.MovieRatings.Update(existingRating);
+            }
+            else
+            {
+                _context.MovieRatings.Add(rating);
+            }
+
+            _context.SaveChanges();
+
+            return Ok(new { message = "Rating submitted successfully." });
+        }
+
     }
 }
