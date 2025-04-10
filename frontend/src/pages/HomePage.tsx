@@ -45,7 +45,6 @@ function HomePage() {
           </div>
         </section>
         <InputDesign />
-        <FeaturedMovies />
       </div>
     </div>
   );
