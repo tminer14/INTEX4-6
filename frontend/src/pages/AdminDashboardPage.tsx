@@ -2,11 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/AdminDashboardPage.css";
 
-import logo from "../assets/Logo.png";
-import { FaArrowLeft } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
 
 const AdminDashboardPage: React.FC = () => {
   const navigate = useNavigate();
@@ -26,30 +23,29 @@ const AdminDashboardPage: React.FC = () => {
   };
 
   // In a real application, you would get the admin's name from authentication context or API
-const [adminName, setAdminName] = useState<string>("");
+  const [adminName, setAdminName] = useState<string>("");
 
-useEffect(() => {
-  const fetchAdminName = async () => {
-    try {
-      const response = await axios.get(
-        "https://your-backend-url.com/Movies/GetUserFullName",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      const name = response.data.fullName;
-      setAdminName(name && name.trim() !== "" ? name : "Admin");
-    } catch (error) {
-      console.error("Failed to fetch admin name:", error);
-      setAdminName("Admin"); // Optional: fallback even if fetch fails
-    }
-  };
+  useEffect(() => {
+    const fetchAdminName = async () => {
+      try {
+        const response = await axios.get(
+          "https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies/GetUserFullName",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        const name = response.data.fullName;
+        setAdminName(name && name.trim() !== "" ? name : "Admin");
+      } catch (error) {
+        console.error("Failed to fetch admin name:", error);
+        setAdminName("Admin"); // Optional: fallback even if fetch fails
+      }
+    };
 
-  fetchAdminName();
-}, []);
-
+    fetchAdminName();
+  }, []);
 
   return (
     <div className="admin-dashboard">

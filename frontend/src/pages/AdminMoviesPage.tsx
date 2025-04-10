@@ -51,7 +51,7 @@ const AdminMoviesPage: React.FC = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "https://localhost:5130/Movies/withGenres",
+        "https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies/withGenres",
         {
           params: { pageNum: page, pageSize: customPageSize },
         }
@@ -162,12 +162,15 @@ const AdminMoviesPage: React.FC = () => {
 
       if (editingMovie) {
         await axios.put(
-          `https://localhost:5130/Movies/${completeMovie.showId}`,
+          `https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies/${completeMovie.showId}`,
           completeMovie
         );
         toast.success("Movie updated successfully!");
       } else {
-        await axios.post("https://localhost:5130/Movies/create", completeMovie);
+        await axios.post(
+          "https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies/create",
+          completeMovie
+        );
         toast.success("Movie created successfully!");
       }
 
