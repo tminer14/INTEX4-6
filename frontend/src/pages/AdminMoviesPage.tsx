@@ -14,7 +14,7 @@ const AdminMoviesPage: React.FC = () => {
   const [editingMovie, setEditingMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(500);
+  const [pageSize, setPageSize] = useState(500);
   const [totalPages, setTotalPages] = useState(1);
   const [totalMovies, setTotalMovies] = useState(0);
 
@@ -22,6 +22,11 @@ const AdminMoviesPage: React.FC = () => {
     localStorage.removeItem("authToken");
     console.log("Sign out clicked");
     navigate("/");
+  };
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+    setCurrentPage(1); // Reset to page 1 when changing page size
+    fetchMoviesList(1, newPageSize);
   };
 
   const handleNextPage = () => {
@@ -40,26 +45,27 @@ const AdminMoviesPage: React.FC = () => {
     }
   };
 
-  const fetchMoviesList = async (page = 1) => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        "https://localhost:5130/Movies/withGenres",
-        {
-          params: { pageNum: page, pageSize },
-        }
-      );
+const fetchMoviesList = async (page = 1, customPageSize = pageSize) => {
+  try {
+    setLoading(true);
+    const response = await axios.get(
+      "https://localhost:5130/Movies/withGenres",
+      {
+        params: { pageNum: page, pageSize: customPageSize },
+      }
+    );
 
-      setMovies(response.data.movies);
-      setTotalMovies(response.data.totalMovies);
-      setTotalPages(Math.ceil(response.data.totalMovies / pageSize));
-    } catch (error) {
-      console.error("Failed to fetch movies:", error);
-      toast.error("Failed to load movies.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    setMovies(response.data.movies);
+    setTotalMovies(response.data.totalMovies);
+    setTotalPages(Math.ceil(response.data.totalMovies / customPageSize));
+  } catch (error) {
+    console.error("Failed to fetch movies:", error);
+    toast.error("Failed to load movies.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
     fetchMoviesList();
@@ -203,16 +209,53 @@ const AdminMoviesPage: React.FC = () => {
         </button>
       </div>
 
-      <div className="pagination-controls">
+      <div
+        className="pagination-controls"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          justifyContent: "center",
+          marginTop: "10px",
+        }}
+      >
         <button disabled={currentPage === 1} onClick={handlePreviousPage}>
           Previous
         </button>
+
         <span>
           Page {currentPage} of {totalPages}
         </span>
+
         <button disabled={currentPage === totalPages} onClick={handleNextPage}>
           Next
         </button>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+          <label htmlFor="pageSizeSelect" style={{ fontWeight: "bold" }}>
+            Movies per page:
+          </label>
+          <select
+            id="pageSizeSelect"
+            value={pageSize}
+            onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+            style={{
+              padding: "5px 10px",
+              borderRadius: "8px",
+              border: "1px solid #ccc",
+              backgroundColor: "#1A1A1A", // DARK background
+              color: "#F7F7FF", // LIGHT text color
+              fontSize: "14px",
+              cursor: "pointer",
+            }}
+          >
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+            <option value={500}>500</option>
+          </select>
+        </div>
       </div>
 
       {loading ? (
