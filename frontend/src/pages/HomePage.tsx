@@ -40,9 +40,6 @@ function HomePage() {
               </button>
             </div>
           </div>
-          <div className="pricing-info">
-            Starting at $9.99. No commitments. Cancel anytime.
-          </div>
         </section>
         <InputDesign />
       </div>

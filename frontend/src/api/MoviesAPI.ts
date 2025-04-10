@@ -1,7 +1,8 @@
 import axios from "axios";
 import { Movie } from "../types/Movie";
 
-const BASE_URL = "https://localhost:5130/Movies"; // Adjust your base URL if needed
+const BASE_URL =
+  "https://cinenichegroup4-6-dsfcb8dvcabpazd6.eastus-01.azurewebsites.net/Movies"; // Adjust your base URL if needed
 
 export const fetchMovies = async (pageNum: number, pageSize: number) => {
   const response = await axios.get(`${BASE_URL}/withGenres`, {

@@ -16,7 +16,9 @@ const AdminMoviesPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(500);
   const [totalPages, setTotalPages] = useState(1);
-  const [totalMovies, setTotalMovies] = useState(0);
+
+  const API_URL =
+    "https://cinenichegroup4-6-dsfcb8dvcabpazd6.eastus-01.azurewebsites.net/Movies";
 
   const handleSignOut = () => {
     localStorage.removeItem("authToken");
@@ -43,15 +45,11 @@ const AdminMoviesPage: React.FC = () => {
   const fetchMoviesList = async (page = 1) => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        "https://localhost:5130/Movies/withGenres",
-        {
-          params: { pageNum: page, pageSize },
-        }
-      );
+      const response = await axios.get(`${API_URL}/withGenres`, {
+        params: { pageNum: page, pageSize },
+      });
 
       setMovies(response.data.movies);
-      setTotalMovies(response.data.totalMovies);
       setTotalPages(Math.ceil(response.data.totalMovies / pageSize));
     } catch (error) {
       console.error("Failed to fetch movies:", error);
@@ -83,7 +81,7 @@ const AdminMoviesPage: React.FC = () => {
   const handleDeleteMovie = async (showId: string) => {
     if (!window.confirm("Are you sure you want to delete this movie?")) return;
     try {
-      await axios.delete(`https://localhost:5130/Movies/${showId}`);
+      await axios.delete(`${API_URL}/${showId}`);
       toast.success("Movie deleted successfully!");
       fetchMoviesList();
     } catch (error) {
@@ -152,16 +150,13 @@ const AdminMoviesPage: React.FC = () => {
         if (!completeMovie.showId) {
           completeMovie.showId = editingMovie.showId;
         }
-        await axios.put(
-          `https://localhost:5130/Movies/${completeMovie.showId}`,
-          completeMovie
-        );
+        await axios.put(`${API_URL}/${completeMovie.showId}`, completeMovie);
         toast.success("Movie updated successfully!");
       } else {
         completeMovie.showId = Math.floor(
           Math.random() * 1000000000
         ).toString();
-        await axios.post("https://localhost:5130/Movies", completeMovie);
+        await axios.post(`${API_URL}`, completeMovie);
         toast.success("Movie created successfully!");
       }
 

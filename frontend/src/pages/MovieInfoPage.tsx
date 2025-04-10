@@ -15,7 +15,6 @@ function MovieInfoPage() {
   const [hoveredRating, setHoveredRating] = useState<number>(0);
   const [imageUrl, setImageUrl] = useState<string>("");
 
-
   // Function to add points
   const addPoints = () => {
     const currentPoints = parseInt(Cookies.get("userPoints") || "0");
@@ -27,9 +26,12 @@ function MovieInfoPage() {
 
   useEffect(() => {
     axios
-      .get(`https://localhost:5130/Movies/details/${title}`, {
-        withCredentials: true,
-      })
+      .get(
+        `https://cinenichegroup4-6-dsfcb8dvcabpazd6.eastus-01.azurewebsites.net/Movies/details/${title}`,
+        {
+          withCredentials: true,
+        }
+      )
       .then((res) => {
         const movieData = res.data;
         setMovie(movieData);
@@ -96,7 +98,6 @@ function MovieInfoPage() {
                 <path
                   d="M27.7082 17.5H7.2915M7.2915 17.5L17.4998 27.7083M7.2915 17.5L17.4998 7.29167"
                   stroke="#f7f7ff"
-
                   strokeWidth="4"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -105,7 +106,6 @@ function MovieInfoPage() {
             </div>
             <div className="movie-poster">
               <img src={imageUrl} alt={movie.title} className="poster-image" />
-
             </div>
 
             <div className="play-button">
