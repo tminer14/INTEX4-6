@@ -1,7 +1,10 @@
-﻿using INTEX4_6.Data;
+﻿using System.Diagnostics;
+using System.Text.Json;
+using INTEX4_6.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace INTEX4_6.Controllers
 {
@@ -22,35 +25,29 @@ namespace INTEX4_6.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
-            // Create the Identity user
             var identityUser = new IdentityUser
             {
-                UserName = dto.Email,
                 Email = dto.Email,
-                PhoneNumber = dto.Phone
+                UserName = dto.Email,
             };
 
-            var result = await _userManager.CreateAsync(identityUser, dto.Password);
-            if (!result.Succeeded)
-            {
-                var errors = result.Errors.Select(e => e.Description).ToList();
-                return BadRequest(errors);
-            }
+            var createResult = await _userManager.CreateAsync(identityUser, dto.Password);
+
+            if (!createResult.Succeeded)
+                return BadRequest(createResult.Errors);
 
             await _userManager.AddToRoleAsync(identityUser, "User");
 
-            // Save to custom MovieUserInfo table
             var movieUser = new MovieUserInfo
             {
-                Name = dto.Name,
-                Phone = dto.Phone,
-                Email = dto.Email,
-                Age = dto.Age,
-                Gender = dto.Gender,
+                UserId = new Random().Next(100000, 999999),
+                Name = dto.Name ?? "Unknown",
+                Phone = dto.Phone ?? "Unknown",
+                Email = dto.Email ?? "Unknown",
+                Age = dto.Age != 0 ? dto.Age : 18, // Default age if not set
+                Gender = dto.Gender ?? "Unspecified",
                 Netflix = dto.Netflix,
                 AmazonPrime = dto.AmazonPrime,
                 DisneyPlus = dto.DisneyPlus,
@@ -59,16 +56,23 @@ namespace INTEX4_6.Controllers
                 Hulu = dto.Hulu,
                 AppleTV = dto.AppleTV,
                 Peacock = dto.Peacock,
-                City = dto.City,
-                State = dto.State,
-                Zip = dto.Zip
+                City = dto.City ?? "Unknown",
+                State = dto.State ?? "Unknown",
+                Zip = dto.Zip != 0 ? dto.Zip : 99999
             };
 
-            _movieDbContext.MovieUsers.Add(movieUser);
-            await _movieDbContext.SaveChangesAsync();
 
-            return Ok(new { message = "User registered successfully." });
+            try
+            {
+                await _movieDbContext.MovieUsers.AddAsync(movieUser);
+                await _movieDbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "Failed to save MovieUserInfo", inner = ex.Message });
+            }
+
+            return Ok(new { message = "Account created successfully!" });
         }
-
     }
 }

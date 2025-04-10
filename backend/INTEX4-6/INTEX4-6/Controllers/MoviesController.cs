@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using INTEX4_6.Data;
 using INTEX4_6.Dtos;
+using INTEX4_6.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -131,6 +132,43 @@ namespace INTEX4_6.Controllers
 
             return Ok(pageResult);
         }
+
+        // Return 20 movies based on the genre passed in 
+        [HttpGet("basedOnGenre")]
+public async Task<IActionResult> GetMoviesBasedOnGenre([FromQuery] string genre)
+{
+    if (string.IsNullOrWhiteSpace(genre))
+    {
+        return BadRequest("Genre is required.");
+    }
+
+    // Pull all movies
+    var allMovies = await _context.Movies.ToListAsync();
+
+    // Filter by genre
+    var filteredMovies = allMovies
+        .Where(m => BuildGenreListFromInts(m)
+            .Any(g => g.Equals(genre, StringComparison.OrdinalIgnoreCase)))
+        .Take(20)
+        .Select(m => new
+        {
+            m.ShowId,
+            m.Type,
+            m.Title,
+            m.Director,
+            m.Cast,
+            m.Country,
+            m.ReleaseYear,
+            m.Rating,
+            m.Duration,
+            m.Description,
+            Genre = BuildGenreListFromInts(m)
+        })
+        .ToList();
+
+    return Ok(filteredMovies);
+}
+
        
         private List<string> GetGenresFromBooleans(Movie movie)
         {
@@ -169,7 +207,7 @@ namespace INTEX4_6.Controllers
             return Ok(topMovies);
         }
 
-       [HttpGet("details/{title}")]
+        [HttpGet("details/{title}")]
 public IActionResult GetMovieDetails(string title)
 {
     var movie = _context.Movies.FirstOrDefault(m => m.Title == title);
@@ -191,12 +229,11 @@ public IActionResult GetMovieDetails(string title)
         movie.Rating,
         movie.Duration,
         movie.Description,
-        Genres = BuildGenreListFromInts(movie)
+        genres = BuildGenreListFromInts(movie) // ✅ lowercase and sent as a list
     };
 
     return Ok(result);
 }
-
 
        [HttpGet("userBasedRecommendations/{id}")]
 public IActionResult GetUserBasedRecommendations(int id)
@@ -270,35 +307,33 @@ public IActionResult GetUserBasedRecommendations(int id)
             return Ok(matchedMovies);
         }
 
-        [HttpGet("movieBasedRecommendations/{title}")]
-        public IActionResult GetMovieBasedRecommendations(string title)
-        {
+        [HttpGet("movieBasedRecommendations/{source_show_id}")]
+public IActionResult GetMovieBasedRecommendations(string source_show_id)
+{
+    var recommendations = _context.MovieBasedRecs
+        .Where(rec => rec.source_show_id == source_show_id)
+        .Join(
+            _context.Movies,
+            rec => rec.show_id, // <- recommended movie's ID
+            movie => movie.ShowId,
+            (rec, movie) => new
+            {
+                movie.ShowId,
+                movie.Title,
+                movie.Director,
+                movie.Cast,
+                movie.Country,
+                movie.ReleaseYear,
+                movie.Rating,
+                movie.Duration,
+                movie.Description,
+            }
+        )
+        .ToList();
 
-            var recommendations = _context.MovieBasedRecs
-                .Where(rec => rec.title == title)
-                .Join(
-                    _context.Movies,
-                    rec => rec.title,
-                    movie => movie.Title,
-                    (rec, movie) => new
-                    {
-                        movie.ShowId,
-                        movie.Title,
-                        movie.Director,
-                        movie.Cast,
-                        movie.Country,
-                        movie.ReleaseYear,
-                        movie.Rating,
-                        movie.Duration,
-                        movie.Description,
-                 
-                    }
-                )
-       
-                .ToList();
+    return Ok(recommendations);
+}
 
-            return Ok(recommendations);
-        }
 
         [HttpPost("create")]
         [AllowAnonymous]
@@ -421,6 +456,7 @@ public IActionResult GetUserBasedRecommendations(int id)
             _context.SaveChanges();
             return Ok();
         }
+
     }
 }
 

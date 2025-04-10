@@ -101,13 +101,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("https://localhost:5173") // ✅ Correct this!
+            policy.WithOrigins("https://localhost:5130", "https://jolly-ground-0f8d9041e.6.azurestaticapps.net") // ✅ Correct this!
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials();
         });
 });
-
 
 // Email Sender (NoOp version)
 builder.Services.AddSingleton(typeof(IEmailSender<>), typeof(NoOpEmailSender<>));
@@ -153,7 +152,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-
 // Configure HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
@@ -161,18 +159,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 
-app.UseHttpsRedirection();
-
-
-app.Use(async (context, next) =>
-{
-    context.Response.Headers["Content-Security-Policy"] =
-        "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; img-src 'self' data:; font-src 'self' fonts.gstatic.com data:; connect-src 'self' https://localhost:5130 https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';";
-
-    await next();
-});
 
 app.UseAuthentication(); // <-- VERY IMPORTANT: Authentication FIRST
 app.UseAuthorization();
@@ -202,5 +191,9 @@ app.MapGet("/pingauth", (ClaimsPrincipal user) =>
     var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com";
     return Results.Json(new { email = email });
 }).RequireAuthorization();
+
+
+app.MapGet("/test-cors", () => Results.Ok("CORS works!"))
+   .RequireCors("AllowFrontend");
 
 app.Run();

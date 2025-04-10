@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../styles/MovieSection.css";
 import { Movie } from "../types/Movie";
 import PosterNotFound from "../assets/PosterNotFound.webp";

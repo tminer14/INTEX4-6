@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage";
 import UserDashboardPage from "./pages/UserDashboardPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import AdminRoute from "./components/AdminRoute";
+import UserRoute from "./components/UserRoute";
 import AdminMoviesPage from "./pages/AdminMoviesPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
@@ -20,12 +21,33 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/movies" element={<MovieListPage />} />
-        <Route path="/Movies/details/:title" element={<MovieInfoPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/dashboard" element={<UserDashboardPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/forbidden" element={<ForbiddenPage />} />
+        <Route
+          path="/dashboard"
+          element={
+            <UserRoute>
+              <UserDashboardPage />
+            </UserRoute>
+          }
+        />
+        <Route
+          path="/movies"
+          element={
+            <UserRoute>
+              <MovieListPage />
+            </UserRoute>
+          }
+        />
+        <Route
+          path="/Movies/details/:title"
+          element={
+            <UserRoute>
+              <MovieInfoPage />
+            </UserRoute>
+          }
+        />
         <Route
           path="/admin"
           element={
