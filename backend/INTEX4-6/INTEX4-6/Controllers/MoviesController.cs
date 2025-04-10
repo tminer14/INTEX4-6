@@ -132,6 +132,43 @@ namespace INTEX4_6.Controllers
 
             return Ok(pageResult);
         }
+
+        // Return 20 movies based on the genre passed in 
+        [HttpGet("basedOnGenre")]
+public async Task<IActionResult> GetMoviesBasedOnGenre([FromQuery] string genre)
+{
+    if (string.IsNullOrWhiteSpace(genre))
+    {
+        return BadRequest("Genre is required.");
+    }
+
+    // Pull all movies
+    var allMovies = await _context.Movies.ToListAsync();
+
+    // Filter by genre
+    var filteredMovies = allMovies
+        .Where(m => BuildGenreListFromInts(m)
+            .Any(g => g.Equals(genre, StringComparison.OrdinalIgnoreCase)))
+        .Take(20)
+        .Select(m => new
+        {
+            m.ShowId,
+            m.Type,
+            m.Title,
+            m.Director,
+            m.Cast,
+            m.Country,
+            m.ReleaseYear,
+            m.Rating,
+            m.Duration,
+            m.Description,
+            Genre = BuildGenreListFromInts(m)
+        })
+        .ToList();
+
+    return Ok(filteredMovies);
+}
+
        
         private List<string> GetGenresFromBooleans(Movie movie)
         {
@@ -271,35 +308,33 @@ public IActionResult GetUserBasedRecommendations(int id)
             return Ok(matchedMovies);
         }
 
-        [HttpGet("movieBasedRecommendations/{title}")]
-        public IActionResult GetMovieBasedRecommendations(string title)
-        {
+        [HttpGet("movieBasedRecommendations/{source_show_id}")]
+public IActionResult GetMovieBasedRecommendations(string source_show_id)
+{
+    var recommendations = _context.MovieBasedRecs
+        .Where(rec => rec.source_show_id == source_show_id)
+        .Join(
+            _context.Movies,
+            rec => rec.show_id, // <- recommended movie's ID
+            movie => movie.ShowId,
+            (rec, movie) => new
+            {
+                movie.ShowId,
+                movie.Title,
+                movie.Director,
+                movie.Cast,
+                movie.Country,
+                movie.ReleaseYear,
+                movie.Rating,
+                movie.Duration,
+                movie.Description,
+            }
+        )
+        .ToList();
 
-            var recommendations = _context.MovieBasedRecs
-                .Where(rec => rec.title == title)
-                .Join(
-                    _context.Movies,
-                    rec => rec.title,
-                    movie => movie.Title,
-                    (rec, movie) => new
-                    {
-                        movie.ShowId,
-                        movie.Title,
-                        movie.Director,
-                        movie.Cast,
-                        movie.Country,
-                        movie.ReleaseYear,
-                        movie.Rating,
-                        movie.Duration,
-                        movie.Description,
-                 
-                    }
-                )
-       
-                .ToList();
+    return Ok(recommendations);
+}
 
-            return Ok(recommendations);
-        }
 
         [HttpPost("create")]
         [AllowAnonymous]
@@ -421,32 +456,6 @@ public IActionResult GetUserBasedRecommendations(int id)
             _context.Movies.Remove(movie);
             _context.SaveChanges();
             return Ok();
-        }
-
-        [HttpPost("rate")]
-        public IActionResult RateMovie([FromBody] MovieRating rating)
-        {
-            if (rating == null || string.IsNullOrEmpty(rating.ShowId))
-            {
-                return BadRequest("Invalid rating data.");
-            }
-
-            var existingRating = _context.MovieRatings
-                .FirstOrDefault(r => r.UserId == rating.UserId && r.ShowId == rating.ShowId);
-
-            if (existingRating != null)
-            {
-                existingRating.Rating = rating.Rating;
-                _context.MovieRatings.Update(existingRating);
-            }
-            else
-            {
-                _context.MovieRatings.Add(rating);
-            }
-
-            _context.SaveChanges();
-
-            return Ok(new { message = "Rating submitted successfully." });
         }
 
     }

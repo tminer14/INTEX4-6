@@ -7,6 +7,7 @@ import SearchPanel from "../components/SearchPanel";
 import MovieSectionLoader from "../components/MovieSectionLoader";
 import "../styles/UserDashboard.css";
 import logo from "../assets/Logo.png";
+import MoviesByGenreSection from "../components/MoviesByGenre";
 
 function UserDashboardPage() {
   const [highlyRatedMovies, setHighlyRatedMovies] = useState([]);
@@ -30,7 +31,7 @@ function UserDashboardPage() {
       .then((res) => {
         const formatted = res.data.map(
           (movie: { title: string; showId: string }, index: number) => {
-            const cleanTitle = movie.title.replace(/[:']/g, "");
+            const cleanTitle = movie.title.replace(/[:'&-]/g, "");
             return {
               id: index,
               title: movie.title,
@@ -154,29 +155,43 @@ function UserDashboardPage() {
         <FilterOptions />
 
         <div className="movie-sections">
-          {isLoadingRecommended ? (
-            <MovieSectionLoader />
-          ) : (
-            <MovieSection
-              title="Recommended For You"
-              movies={recommendedMovies}
-            />
-          )}
-
-          {isLoadingHighlyRated ? (
-            <MovieSectionLoader />
-          ) : (
-            <MovieSection title="Highly Rated" movies={highlyRatedMovies} />
-          )}
-
-          {isLoadingRecent ? (
-            <MovieSectionLoader />
-          ) : (
-            <MovieSection
-              title="Recent Additions"
-              movies={recentlyAddedMovies}
-            />
-          )}
+          <MovieSection
+            title="Recommended For You"
+            movies={recommendedMovies}
+          />
+          <MovieSection title="Highly Rated" movies={highlyRatedMovies} />
+          <MovieSection title="Recent Additions" movies={recentlyAddedMovies} />
+          <MoviesByGenreSection genre="Comedy" />
+          <MoviesByGenreSection genre="Action" />
+          <MoviesByGenreSection genre="Adventure" />
+          <MoviesByGenreSection genre="Anime Series International TV Shows" />
+          <MoviesByGenreSection genre="British TV Shows Docuseries International TV Shows" />
+          <MoviesByGenreSection genre="Children" />
+          <MoviesByGenreSection genre="Comedies" />
+          <MoviesByGenreSection genre="Comedies Dramas International Movies" />
+          <MoviesByGenreSection genre="Comedies Romantic Movies" />
+          <MoviesByGenreSection genre="Crime TV Shows Docuseries" />
+          <MoviesByGenreSection genre="Documentaries" />
+          <MoviesByGenreSection genre="Documentaries International Movies" />
+          <MoviesByGenreSection genre="Docuseries" />
+          <MoviesByGenreSection genre="Dramas" />
+          <MoviesByGenreSection genre="Dramas International Movies" />
+          <MoviesByGenreSection genre="Dramas Romantic Movie" />
+          <MoviesByGenreSection genre="Family Movies" />
+          <MoviesByGenreSection genre="Fantasy" />
+          <MoviesByGenreSection genre="Horror Movies" />
+          <MoviesByGenreSection genre="International Movies Thrillers" />
+          <MoviesByGenreSection genre="International TV Shows Romantic TV Shows TV Dramas" />
+          <MoviesByGenreSection genre="Kids' TV" />
+          <MoviesByGenreSection genre="Language TV Shows" />
+          <MoviesByGenreSection genre="Musicals" />
+          <MoviesByGenreSection genre="Nature TV" />
+          <MoviesByGenreSection genre="Reality TV" />
+          <MoviesByGenreSection genre="Spirituality" />
+          <MoviesByGenreSection genre="TV Action" />
+          <MoviesByGenreSection genre="TV Comedies" />
+          <MoviesByGenreSection genre="Talk Shows TV Comedies" />
+          <MoviesByGenreSection genre="Thrillers" />
         </div>
       </div>
 
