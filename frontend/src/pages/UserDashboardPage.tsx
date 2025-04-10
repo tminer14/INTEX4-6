@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import FilterOptions from "../components/FilterOptions";
 import MovieSection from "../components/MovieSection";
 import SearchPanel from "../components/SearchPanel";
 import MovieSectionLoader from "../components/MovieSectionLoader";
@@ -10,6 +9,7 @@ import "../styles/UserDashboard.css";
 import logo from "../assets/Logo.png";
 import MoviesByGenreSection from "../components/MoviesByGenre";
 import { recTypeToGenre } from "../assets/genreMap";
+import RecommendedGenreFilter from "../components/RecommendedGenreFilter";
 
 function UserDashboardPage() {
   const [highlyRatedMovies, setHighlyRatedMovies] = useState([]);
@@ -17,6 +17,7 @@ function UserDashboardPage() {
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [userFullName, setUserFullName] = useState<string>("");
+
   useEffect(() => {
     const fetchUserFullName = async () => {
       try {
@@ -45,6 +46,7 @@ function UserDashboardPage() {
 
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
 
+  // Display User Recommendations
   useEffect(() => {
     const userId = 73;
     axios
@@ -70,7 +72,6 @@ function UserDashboardPage() {
               imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
                 cleanTitle
               )}.jpg`,
-
             };
           }
         );
@@ -156,9 +157,7 @@ function UserDashboardPage() {
           </Link>
 
           <div className="header-actions">
-            <div className="language-selector">
-              <span>Language</span>
-            </div>
+            <div className="language-selector"></div>
             <button
               className="search-button"
               onClick={toggleSearch}
@@ -190,20 +189,8 @@ function UserDashboardPage() {
       <div className="dashboard-content">
         <h1 className="dashboard-title">Discover Your Next Favorite.</h1>
 
-        <FilterOptions
-          selectedGenre={selectedGenre}
-          setSelectedGenre={setSelectedGenre}
-        />
-
         <div className="movie-sections">
-          {isLoadingRecommended ? (
-            <MovieSectionLoader />
-          ) : (
-            <MovieSection
-              title="Recommended For You"
-              movies={filteredRecommended}
-            />
-          )}
+          <RecommendedGenreFilter userId={73} />
 
           {isLoadingHighlyRated ? (
             <MovieSectionLoader />
