@@ -13,22 +13,15 @@ function UserDashboardPage() {
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-<<<<<<< HEAD
-=======
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
   };
 
->>>>>>> d8b06c2 (Added search component)
   useEffect(() => {
     const userId = 73;
 
     axios
-<<<<<<< HEAD
       .get(`https://localhost:5130/Movies/userBasedRecommendations/${userId}`, {
-=======
-      .get(`http://localhost:5130/Movies/userBasedRecommendations/${userId}`, {
->>>>>>> d8b06c2 (Added search component)
         withCredentials: true,
       })
       .then((res) => {
@@ -39,17 +32,10 @@ function UserDashboardPage() {
               id: index,
               title: movie.title,
               imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-<<<<<<< HEAD
                 cleanTitle
               )}.jpg`,
             };
           }
-=======
-                cleanTitle,
-              )}.jpg`,
-            };
-          },
->>>>>>> d8b06c2 (Added search component)
         );
         setRecommendedMovies(formatted);
       })
@@ -61,11 +47,7 @@ function UserDashboardPage() {
   // Recent movies
   useEffect(() => {
     axios
-<<<<<<< HEAD
       .get("https://localhost:5130/Movies/recentMovies", {
-=======
-      .get("http://localhost:5130/Movies/recentMovies", {
->>>>>>> d8b06c2 (Added search component)
         withCredentials: true,
       })
       .then((res) => {
@@ -76,17 +58,10 @@ function UserDashboardPage() {
               id: index,
               title: movie.title,
               imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-<<<<<<< HEAD
                 cleanTitle
               )}.jpg`,
             };
           }
-=======
-                cleanTitle,
-              )}.jpg`,
-            };
-          },
->>>>>>> d8b06c2 (Added search component)
         );
         setRecentlyAddedMovies(formatted);
       })
@@ -97,11 +72,7 @@ function UserDashboardPage() {
 
   useEffect(() => {
     axios
-<<<<<<< HEAD
       .get("https://localhost:5130/Movies/top-rated", {
-=======
-      .get("http://localhost:5130/Movies/top-rated", {
->>>>>>> d8b06c2 (Added search component)
         withCredentials: true,
       })
       .then((res) => {
@@ -112,17 +83,10 @@ function UserDashboardPage() {
               id: index,
               title: movie.title,
               imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-<<<<<<< HEAD
                 cleanTitle
               )}.jpg`,
             };
           }
-=======
-                cleanTitle,
-              )}.jpg`,
-            };
-          },
->>>>>>> d8b06c2 (Added search component)
         );
 
         setHighlyRatedMovies(formatted);
