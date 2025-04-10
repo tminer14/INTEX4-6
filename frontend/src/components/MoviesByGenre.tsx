@@ -30,7 +30,7 @@ function MoviesByGenreSection({ genre }: MoviesByGenreSectionProps) {
     )
       .then((res) => res.json())
       .then((data) => {
-        const formatted = data.map((movie: Movie, index: number) => {
+        const formatted = data.map((movie: Movie) => {
           const cleanTitle = movie.title.replace(/[:'"?&]/g, "");
           return {
             ...movie,
