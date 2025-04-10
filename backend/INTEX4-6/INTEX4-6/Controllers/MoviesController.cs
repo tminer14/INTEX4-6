@@ -19,7 +19,6 @@ namespace INTEX4_6.Controllers
         }
 
         private void MapGenresToInts(Movie movie, List<string> genres)
-
         {
             var genreMap = new Dictionary<string, Action<bool>>
             {
@@ -75,45 +74,6 @@ namespace INTEX4_6.Controllers
         {
             var genres = new List<string>();
 
-            if (movie.Action == 1) genres.Add("Action");
-            if (movie.Adventure == 1) genres.Add("Adventure");
-            if (movie.AnimeSeriesInternationalTvShows == 1) genres.Add("Anime Series International TV Shows");
-            if (movie.BritishTvShowsDocuseriesInternationalTvShows == 1) genres.Add("British TV Shows Docuseries International TV Shows");
-            if (movie.Children == 1) genres.Add("Children");
-            if (movie.Comedies == 1) genres.Add("Comedies");
-            if (movie.ComediesDramasInternationalMovies == 1) genres.Add("Comedies Dramas International Movies");
-            if (movie.ComediesInternationalMovies == 1) genres.Add("Comedies International Movies");
-            if (movie.ComediesRomanticMovies == 1) genres.Add("Comedies Romantic Movies");
-            if (movie.CrimeTvShowsDocuseries == 1) genres.Add("Crime TV Shows Docuseries");
-            if (movie.Documentaries == 1) genres.Add("Documentaries");
-            if (movie.DocumentariesInternationalMovies == 1) genres.Add("Documentaries International Movies");
-            if (movie.Docuseries == 1) genres.Add("Docuseries");
-            if (movie.Dramas == 1) genres.Add("Dramas");
-            if (movie.DramasInternationalMovies == 1) genres.Add("Dramas International Movies");
-            if (movie.DramasRomanticMovies == 1) genres.Add("Dramas Romantic Movies");
-            if (movie.FamilyMovies == 1) genres.Add("Family Movies");
-            if (movie.Fantasy == 1) genres.Add("Fantasy");
-            if (movie.HorrorMovies == 1) genres.Add("Horror Movies");
-            if (movie.InternationalMoviesThrillers == 1) genres.Add("International Movies Thrillers");
-            if (movie.InternationalTvShowsRomanticTvShowsTvDramas == 1) genres.Add("International TV Shows Romantic TV Shows TV Dramas");
-            if (movie.KidsTv == 1) genres.Add("Kids' TV");
-            if (movie.LanguageTvShows == 1) genres.Add("Language TV Shows");
-            if (movie.Musicals == 1) genres.Add("Musicals");
-            if (movie.NatureTv == 1) genres.Add("Nature TV");
-            if (movie.RealityTv == 1) genres.Add("Reality TV");
-            if (movie.Spirituality == 1) genres.Add("Spirituality");
-            if (movie.TalkShowsTvComedies == 1) genres.Add("Talk Shows TV Comedies");
-            if (movie.Thrillers == 1) genres.Add("Thrillers");
-            if (movie.TvAction == 1) genres.Add("TV Action");
-            if (movie.TvComedies == 1) genres.Add("TV Comedies");
-            if (movie.TvDramas == 1) genres.Add("TV Dramas");
-
-            return genres;
-        }
-        private List<string> GetGenresFromInts(Movie movie)
-        {
-            var genres = new List<string>();
-
             var genreProperties = typeof(Movie)
                 .GetProperties()
                 .Where(prop => (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(int?)) &&
@@ -122,9 +82,7 @@ namespace INTEX4_6.Controllers
             foreach (var prop in genreProperties)
             {
                 object rawValue = prop.GetValue(movie);
-                bool isGenreTrue = rawValue is int i && i == 1;
-
-                if (isGenreTrue)
+                if (rawValue is int i && i == 1)
                 {
                     var columnAttr = (ColumnAttribute)prop.GetCustomAttributes(typeof(ColumnAttribute), false).First();
                     genres.Add(columnAttr.Name);
@@ -137,67 +95,17 @@ namespace INTEX4_6.Controllers
         [HttpGet("titles")]
         public IActionResult GetTitles()
         {
-            var titles = _context.Movies
-                .Select(m => m.Title)
-                .ToList();
-
+            var titles = _context.Movies.Select(m => m.Title).ToList();
             return Ok(titles);
         }
 
-        [HttpGet("all")]
-        public IActionResult GetAllMovies()
-        {
-            var count = _context.Movies.Count();
-            Console.WriteLine($"📊 Count of movies: {count}");
-
-            var movies = _context.Movies.Take(5).ToList();
-
-            foreach (var movie in movies)
-            {
-                Console.WriteLine($"🎬 {movie.ShowId} | {movie.Title}");
-            }
-
-            return Ok(movies);
-        }
-
         [HttpGet("withGenres")]
-        public IActionResult GetAllMoviesWithGenres(int pageSize = 25, int pageNum = 1)
-        {
-            if (pageNum <= 0 || pageSize <= 0)
-            {
-                return BadRequest("Page number and page size must be greater than 0.");
-            }
-
-            var query = _context.Movies.AsQueryable().OrderBy(m => m.Title);
-
-            var totalMovies = query.Count();
-
-            var pagedMovies = query
         public async Task<IActionResult> GetMoviesWithGenres(int pageNum = 1, int pageSize = 50)
         {
             var query = _context.Movies.AsQueryable();
-
             var totalMovies = await query.CountAsync();
+            var movieEntities = await query.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
 
-            var movieEntities = await query
-                .Skip((pageNum - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            var result = pagedMovies.Select(m => new MovieDto
-            {
-                ShowId = m.ShowId,
-                Type = m.Type,
-                Title = m.Title,
-                Director = m.Director,
-                Cast = m.Cast,
-                Country = m.Country,
-                ReleaseYear = m.ReleaseYear,
-                Rating = m.Rating,
-                Duration = m.Duration,
-                Description = m.Description,
-                Genre = GetGenresFromBooleans(m)
-            // Manually build the genres list from booleans
             var moviesWithGenres = movieEntities.Select(m => new
             {
                 m.ShowId,
@@ -210,20 +118,18 @@ namespace INTEX4_6.Controllers
                 m.Rating,
                 m.Duration,
                 m.Description,
-                Genre = BuildGenreListFromInts(m)  // <--- this magic!
+                Genre = BuildGenreListFromInts(m)
             }).ToList();
 
             var pageResult = new
             {
                 TotalMovies = totalMovies,
-                Movies = result
+                Movies = moviesWithGenres
             };
-            Console.WriteLine("Fetched Movies Count: " + movieEntities.Count);
-            Console.WriteLine("Movies With Genres Count: " + moviesWithGenres.Count);
 
             return Ok(pageResult);
         }
-
+       
         private List<string> GetGenresFromBooleans(Movie movie)
         {
             var genres = new List<string>();
