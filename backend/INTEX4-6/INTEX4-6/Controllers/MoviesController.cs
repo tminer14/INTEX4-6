@@ -498,7 +498,6 @@ public IActionResult GetMovieBasedRecommendations(string source_show_id)
             return Ok();
         }
 
-<<<<<<< HEAD
         [HttpPost("rate")]
         public IActionResult RateMovie([FromBody] MovieRating rating)
         {
@@ -538,14 +537,12 @@ public IActionResult GetMovieBasedRecommendations(string source_show_id)
         }
 
 
-=======
        [HttpGet("userBasedRecommendationsByGenre/{id}")]
 public async Task<IActionResult> GetUserRecommendationsByGenre(int id, [FromQuery] string genre)
 {
     if (string.IsNullOrWhiteSpace(genre))
     {
         return BadRequest("Genre is required.");
->>>>>>> 4cdfd3bf9386a0719a823a25872b1ec3424f76c6
     }
 
     // Join using show_id instead of Title

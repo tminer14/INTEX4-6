@@ -225,7 +225,6 @@ function UserDashboardPage() {
           {/* Genre-based sections */}
           <MoviesByGenreSection genre="Comedy" />
           <MoviesByGenreSection genre="Action" />
-          <MoviesByGenreSection genre="Adventure" />
           <MoviesByGenreSection genre="Anime Series International TV Shows" />
           <MoviesByGenreSection genre="British TV Shows Docuseries International TV Shows" />
           <MoviesByGenreSection genre="Children" />
