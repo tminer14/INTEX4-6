@@ -12,7 +12,7 @@ namespace INTEX4_6.Data
         public string Director { get; set; }
         public string Cast { get; set; }
         public string Country { get; set; }
-        public string ReleaseYear { get; set; }
+        public int? ReleaseYear { get; set; }
         public string Rating { get; set; }
         public string Duration { get; set; }
         public string Description { get; set; }

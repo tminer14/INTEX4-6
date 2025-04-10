@@ -13,11 +13,11 @@ function UserDashboardPage() {
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+
   useEffect(() => {
     const userId = 73;
 
     axios
-
       .get(`https://localhost:5130/Movies/userBasedRecommendations/${userId}`, {
         withCredentials: true,
       })
@@ -44,7 +44,7 @@ function UserDashboardPage() {
   // Recent movies
   useEffect(() => {
     axios
-      .get("https://localhost:5130/Movies/recentMovies/", {
+      .get("https://localhost:5130/Movies/recent", {
         withCredentials: true,
       })
       .then((res) => {
@@ -67,9 +67,9 @@ function UserDashboardPage() {
       });
   }, []);
 
+
   useEffect(() => {
     axios
-
       .get("https://localhost:5130/Movies/top-rated", {
         withCredentials: true,
       })

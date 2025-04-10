@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using INTEX4_6.Data;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
+
 
 namespace INTEX4_6.Controllers
 {
@@ -10,93 +11,78 @@ namespace INTEX4_6.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        private MovieDbContext _context;
+        private readonly MovieDbContext _context;
 
-        public MoviesController(MovieDbContext temp)
+        public MoviesController(MovieDbContext context)
         {
-            _context = temp;
+            _context = context;
         }
 
-
-        [HttpGet("titles")]
-        public IActionResult GetTitles()
+        private void MapGenresToInts(Movie movie, List<string> genres)
         {
-            var titles = _context.Movies
-                .Select(m => m.Title)
-                .ToList();
-            return Ok(titles);
-
-
-        }
-
-        [HttpGet("withGenres")]
-        public IActionResult GetAllMoviesWithGenres(int pageSize=25, int pageNum = 1)
-        {
-            if (pageNum <=0 || pageSize <=0)
+            var genreMap = new Dictionary<string, Action<bool>>
             {
-                return BadRequest("Page number and page size must be greater than 0.");
-            }
-
-            var query = _context.Movies.AsQueryable();
-
-            query = query.OrderBy(m => m.Title);
-
-
-            var totalMovies = query.Count();
-
-            var pagedMovies = query 
-                .Skip((pageNum - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
-
-            var result = pagedMovies.Select(m => new MovieDto
-            {
-
-                ShowId = m.ShowId,
-                Type = m.Type,
-                Title = m.Title,
-                Director = m.Director,
-                Cast = m.Cast,
-                Country = m.Country,
-                ReleaseYear = m.ReleaseYear,
-                Rating = m.Rating,
-                Duration = m.Duration,
-                Description = m.Description,
-                Genre = GetGenresFromBooleans(m)
-
-
-            }).ToList();
-
-            var pageResult = new
-            {
-                TotalMovies = totalMovies,
-                Movies= result
+                { "Action", value => movie.Action = value ? 1 : 0 },
+                { "Adventure", value => movie.Adventure = value ? 1 : 0 },
+                { "Anime Series International TV Shows", value => movie.AnimeSeriesInternationalTvShows = value ? 1 : 0 },
+                { "British TV Shows Docuseries International TV Shows", value => movie.BritishTvShowsDocuseriesInternationalTvShows = value ? 1 : 0 },
+                { "Children", value => movie.Children = value ? 1 : 0 },
+                { "Comedies", value => movie.Comedies = value ? 1 : 0 },
+                { "Comedies Dramas International Movies", value => movie.ComediesDramasInternationalMovies = value ? 1 : 0 },
+                { "Comedies International Movies", value => movie.ComediesInternationalMovies = value ? 1 : 0 },
+                { "Comedies Romantic Movies", value => movie.ComediesRomanticMovies = value ? 1 : 0 },
+                { "Crime TV Shows Docuseries", value => movie.CrimeTvShowsDocuseries = value ? 1 : 0 },
+                { "Documentaries", value => movie.Documentaries = value ? 1 : 0 },
+                { "Documentaries International Movies", value => movie.DocumentariesInternationalMovies = value ? 1 : 0 },
+                { "Docuseries", value => movie.Docuseries = value ? 1 : 0 },
+                { "Dramas", value => movie.Dramas = value ? 1 : 0 },
+                { "Dramas International Movies", value => movie.DramasInternationalMovies = value ? 1 : 0 },
+                { "Dramas Romantic Movies", value => movie.DramasRomanticMovies = value ? 1 : 0 },
+                { "Family Movies", value => movie.FamilyMovies = value ? 1 : 0 },
+                { "Fantasy", value => movie.Fantasy = value ? 1 : 0 },
+                { "Horror Movies", value => movie.HorrorMovies = value ? 1 : 0 },
+                { "International Movies Thrillers", value => movie.InternationalMoviesThrillers = value ? 1 : 0 },
+                { "International TV Shows Romantic TV Shows TV Dramas", value => movie.InternationalTvShowsRomanticTvShowsTvDramas = value ? 1 : 0 },
+                { "Kids' TV", value => movie.KidsTv = value ? 1 : 0 },
+                { "Language TV Shows", value => movie.LanguageTvShows = value ? 1 : 0 },
+                { "Musicals", value => movie.Musicals = value ? 1 : 0 },
+                { "Nature TV", value => movie.NatureTv = value ? 1 : 0 },
+                { "Reality TV", value => movie.RealityTv = value ? 1 : 0 },
+                { "Spirituality", value => movie.Spirituality = value ? 1 : 0 },
+                { "Talk Shows TV Comedies", value => movie.TalkShowsTvComedies = value ? 1 : 0 },
+                { "Thrillers", value => movie.Thrillers = value ? 1 : 0 },
+                { "TV Action", value => movie.TvAction = value ? 1 : 0 },
+                { "TV Comedies", value => movie.TvComedies = value ? 1 : 0 },
+                { "TV Dramas", value => movie.TvDramas = value ? 1 : 0 },
             };
 
-            return Ok(pageResult);
+            foreach (var setter in genreMap.Values)
+            {
+                setter(false);
+            }
+
+            foreach (var genre in genres)
+            {
+                if (genreMap.ContainsKey(genre))
+                {
+                    genreMap[genre](true);
+                }
+            }
         }
 
-        //pulling genres from booleans
-        private List<string> GetGenresFromBooleans(Movie movie)
+        private List<string> BuildGenreListFromInts(Movie movie)
         {
             var genres = new List<string>();
 
             var genreProperties = typeof(Movie)
                 .GetProperties()
-                .Where(prop =>
-                    (prop.PropertyType == typeof(bool) || prop.PropertyType == typeof(bool?)) &&
-                    prop.GetCustomAttributes(typeof(ColumnAttribute), false).FirstOrDefault() is ColumnAttribute);
+                .Where(prop => (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(int?)) &&
+                               prop.GetCustomAttributes(typeof(ColumnAttribute), false).FirstOrDefault() is ColumnAttribute);
 
             foreach (var prop in genreProperties)
             {
                 object rawValue = prop.GetValue(movie);
-
-                Console.WriteLine($"Prop: {prop.Name}, Type: {prop.PropertyType}, Value: {rawValue}");
-
-                bool isGenreTrue = rawValue is bool b && b;
-
-                if (isGenreTrue)
+                if (rawValue is int i && i == 1)
                 {
                     var columnAttr = (ColumnAttribute)prop.GetCustomAttributes(typeof(ColumnAttribute), false).First();
                     genres.Add(columnAttr.Name);
@@ -106,8 +92,69 @@ namespace INTEX4_6.Controllers
             return genres;
         }
 
+        [HttpGet("titles")]
+        public IActionResult GetTitles()
+        {
+            var titles = _context.Movies.Select(m => m.Title).ToList();
+            return Ok(titles);
+        }
 
-        // Route to pass the top-rated movies into our user dashboard 
+        [HttpGet("withGenres")]
+        public async Task<IActionResult> GetMoviesWithGenres(int pageNum = 1, int pageSize = 50)
+        {
+            var query = _context.Movies.AsQueryable();
+            var totalMovies = await query.CountAsync();
+            var movieEntities = await query.Skip((pageNum - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var moviesWithGenres = movieEntities.Select(m => new
+            {
+                m.ShowId,
+                m.Type,
+                m.Title,
+                m.Director,
+                m.Cast,
+                m.Country,
+                m.ReleaseYear,
+                m.Rating,
+                m.Duration,
+                m.Description,
+                Genre = BuildGenreListFromInts(m)
+            }).ToList();
+
+            var pageResult = new
+            {
+                TotalMovies = totalMovies,
+                Movies = moviesWithGenres
+            };
+
+            return Ok(pageResult);
+        }
+       
+        private List<string> GetGenresFromBooleans(Movie movie)
+        {
+            var genres = new List<string>();
+
+            var genreProperties = typeof(Movie)
+                .GetProperties()
+                .Where(prop =>
+                    (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(int?)) &&
+                    prop.GetCustomAttributes(typeof(ColumnAttribute), false).FirstOrDefault() is ColumnAttribute);
+
+            foreach (var prop in genreProperties)
+            {
+                var value = prop.GetValue(movie);
+                bool isGenre = value is int i && i > 0;
+
+                if (isGenre)
+                {
+                    var columnAttr = (ColumnAttribute)prop.GetCustomAttributes(typeof(ColumnAttribute), false).First();
+                    genres.Add(columnAttr.Name);
+                }
+            }
+
+            return genres;
+        }
+
         [HttpGet("top-rated")]
         public IActionResult GetTopRatedMovies()
         {
@@ -120,7 +167,6 @@ namespace INTEX4_6.Controllers
             return Ok(topMovies);
         }
 
-        // to view the details of each movie! 
         [HttpGet("details/{title}")]
         public IActionResult GetMovieDetails(string title)
         {
@@ -128,26 +174,20 @@ namespace INTEX4_6.Controllers
 
             if (movie == null)
             {
-                return NotFound(new { message = $"Movie with ID {title} not found." });
+                return NotFound(new { message = $"Movie with title '{title}' not found." });
             }
 
             return Ok(movie);
         }
 
         [HttpGet("userBasedRecommendations/{id}")]
-        public IActionResult GetUserBasedRecommendations(string id)
+        public IActionResult GetUserBasedRecommendations(int id)
         {
-            if (!int.TryParse(id, out int userId))
-            {
-                return BadRequest(new { message = "Invalid user ID format." });
-            }
-
             var recommendations = _context.UserBasedRecs
-                .Where(r => r.user_id == userId)
-                .Where(r => r.recommendation_type == "top_picks")
+                .Where(r => r.UserId == id && r.RecommendationType == "top_picks")
                 .Join(
                     _context.Movies,
-                    rec => rec.title,
+                    rec => rec.Title,
                     movie => movie.Title,
                     (rec, movie) => new
                     {
@@ -160,15 +200,19 @@ namespace INTEX4_6.Controllers
                         movie.Rating,
                         movie.Duration,
                         movie.Description,
-                        rec.rank,
-                        rec.recommendation_type
+                        rec.Rank,
+                        rec.RecommendationType
                     }
                 )
-                .OrderBy(r => r.rank)
+                .OrderBy(r => r.Rank)
                 .ToList();
+
+            Console.WriteLine($"🎯 Returning {recommendations.Count} matched movies");
 
             return Ok(recommendations);
         }
+
+
 
         [HttpGet("recentMovies")]
         public IActionResult GetRecentMovies()
@@ -244,5 +288,61 @@ public IActionResult GetGenres()
     return Ok(genreProperties);
 }
 
+        [HttpPost]
+        public IActionResult CreateMovie([FromBody] Movie movie)
+        {
+            if (movie == null)
+            {
+                return BadRequest();
+            }
+
+            _context.Movies.Add(movie);
+            _context.SaveChanges();
+            return Ok(movie);
+        }
+
+        [HttpPut("{showId}")]
+        public IActionResult UpdateMovie(string showId, [FromBody] Movie updatedMovie)
+        {
+            var existingMovie = _context.Movies.FirstOrDefault(m => m.ShowId == showId);
+            if (existingMovie == null)
+            {
+                return NotFound();
+            }
+            if (showId != updatedMovie.ShowId)
+            {
+                return BadRequest();
+            }
+
+            // Update fields
+            existingMovie.Title = updatedMovie.Title;
+            existingMovie.Director = updatedMovie.Director;
+            existingMovie.Cast = updatedMovie.Cast;
+            existingMovie.Country = updatedMovie.Country;
+            existingMovie.ReleaseYear = updatedMovie.ReleaseYear;
+            existingMovie.Rating = updatedMovie.Rating;
+            existingMovie.Duration = updatedMovie.Duration;
+            existingMovie.Description = updatedMovie.Description;
+            existingMovie.Type = updatedMovie.Type;
+
+            // TODO: Update genre booleans if needed
+            _context.SaveChanges();
+            return Ok(existingMovie);
+        }
+
+
+        [HttpDelete("{showId}")]
+        public IActionResult DeleteMovie(string showId)
+        {
+            var movie = _context.Movies.FirstOrDefault(m => m.ShowId == showId);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            _context.Movies.Remove(movie);
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 }
