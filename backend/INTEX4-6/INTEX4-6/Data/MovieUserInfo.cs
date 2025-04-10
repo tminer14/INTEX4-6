@@ -28,28 +28,28 @@ namespace INTEX4_6.Data
         public string Gender { get; set; }
 
         [Column("Netflix")]
-        public bool Netflix { get; set; }
+        public int Netflix { get; set; }
 
         [Column("Amazon Prime")]
-        public bool AmazonPrime { get; set; }
+        public int AmazonPrime { get; set; }
 
         [Column("Disney+")]
-        public bool DisneyPlus { get; set; }
+        public int DisneyPlus { get; set; }
 
         [Column("Paramount+")]
-        public bool ParamountPlus { get; set; }
+        public int ParamountPlus { get; set; }
 
         [Column("Max")]
-        public bool Max { get; set; }
+        public int Max { get; set; }
 
         [Column("Hulu")]
-        public bool Hulu { get; set; }
+        public int Hulu { get; set; }
 
         [Column("Apple TV+")]
-        public bool AppleTV { get; set; }
+        public int AppleTV { get; set; }
 
         [Column("Peacock")]
-        public bool Peacock { get; set; }
+        public int Peacock { get; set; }
 
         [Column("city")]
         public string City { get; set; }
@@ -58,6 +58,6 @@ namespace INTEX4_6.Data
         public string State { get; set; }
 
         [Column("zip")]
-        public string Zip { get; set; }
+        public int Zip { get; set; }
     }
 }

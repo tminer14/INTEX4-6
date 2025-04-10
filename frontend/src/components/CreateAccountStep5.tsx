@@ -12,9 +12,7 @@ interface CreateAccountStep5Props {
   prevStep: () => void;
 }
 
-function CreateAccountStep5({
-  formData,
-}: CreateAccountStep5Props) {
+function CreateAccountStep5({ formData }: CreateAccountStep5Props) {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -24,26 +22,29 @@ function CreateAccountStep5({
     try {
       const payload = {
         Name: formData.fullName,
-        Email: formData.email,
         Phone: formData.phone,
-        Password: formData.password,
+        Email: formData.email,
+        Password: formData.password, // Needed for IdentityUser
         Age: parseInt(formData.age) || 0,
         Gender: formData.gender,
-        City: formData.address.city,
-        State: formData.address.state,
-        Zip: formData.address.zip,
-        Netflix: formData.streamingServices?.includes("Netflix") || false,
-        AmazonPrime:
-          formData.streamingServices?.includes("Amazon Prime") || false,
-        DisneyPlus:
-          formData.streamingServices?.includes("Disney Plus") || false,
-        ParamountPlus:
-          formData.streamingServices?.includes("Paramount Plus") || false,
-        Max: formData.streamingServices?.includes("Max") || false,
-        Hulu: formData.streamingServices?.includes("Hulu") || false,
-        AppleTV: formData.streamingServices?.includes("Apple TV") || false,
-        Peacock: formData.streamingServices?.includes("Peacock") || false,
+        City: formData.address.city || "Unknown",
+        State: formData.address.state || "Unknown",
+        Zip: formData.address.zip ? parseInt(formData.address.zip) : 0,
+        Netflix: formData.streamingServices?.includes("Netflix") ? 1 : 0,
+        AmazonPrime: formData.streamingServices?.includes("Amazon Prime")
+          ? 1
+          : 0,
+        DisneyPlus: formData.streamingServices?.includes("Disney Plus") ? 1 : 0,
+        ParamountPlus: formData.streamingServices?.includes("Paramount Plus")
+          ? 1
+          : 0,
+        Max: formData.streamingServices?.includes("Max") ? 1 : 0,
+        Hulu: formData.streamingServices?.includes("Hulu") ? 1 : 0,
+        AppleTV: formData.streamingServices?.includes("Apple TV") ? 1 : 0,
+        Peacock: formData.streamingServices?.includes("Peacock") ? 1 : 0,
       };
+
+      console.log("Payload:", payload);
 
       await toast.promise(axios.post("/api/TessaAccount/register", payload), {
         loading: "Creating your account...",
@@ -79,7 +80,6 @@ function CreateAccountStep5({
       setLoading(false);
     }
   };
-
 
   return (
     <div className="create-account-container">
