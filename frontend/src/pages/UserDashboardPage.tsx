@@ -4,6 +4,8 @@ import axios from "axios";
 import FilterOptions from "../components/FilterOptions";
 import MovieSection from "../components/MovieSection";
 import SearchPanel from "../components/SearchPanel";
+import MovieSectionLoader from "../components/MovieSectionLoader";
+import ScrollLoader from "../components/ScrollLoader"; // ✅ NEW IMPORT
 import "../styles/UserDashboard.css";
 import logo from "../assets/Logo.png";
 import MoviesByGenreSection from "../components/MoviesByGenre";
@@ -13,11 +15,33 @@ function UserDashboardPage() {
   const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [userFullName, setUserFullName] = useState<string>("");
+  useEffect(() => {
+    const fetchUserFullName = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:5130/Movies/GetUserFullName",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setUserFullName(response.data.fullName);
+      } catch (error) {
+        console.error("Failed to fetch user full name", error);
+      }
+    };
 
-  // Recommended for you movies
+    fetchUserFullName();
+  }, []);
+
+  const [isLoadingRecommended, setIsLoadingRecommended] = useState(true);
+  const [isLoadingHighlyRated, setIsLoadingHighlyRated] = useState(true);
+  const [isLoadingRecent, setIsLoadingRecent] = useState(true);
+
   useEffect(() => {
     const userId = 73;
-
     axios
       .get(`https://localhost:5130/Movies/userBasedRecommendations/${userId}`, {
         withCredentials: true,
@@ -29,9 +53,7 @@ function UserDashboardPage() {
             return {
               id: index,
               title: movie.title,
-              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-                cleanTitle
-              )}.jpg`,
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(cleanTitle)}.jpg`,
             };
           }
         );
@@ -39,10 +61,12 @@ function UserDashboardPage() {
       })
       .catch((err) => {
         console.error("Failed to fetch recommended movies", err);
+      })
+      .finally(() => {
+        setIsLoadingRecommended(false);
       });
   }, []);
 
-  // Recent movies
   useEffect(() => {
     axios
       .get("https://localhost:5130/Movies/recentMovies", {
@@ -55,9 +79,7 @@ function UserDashboardPage() {
             return {
               id: index,
               title: movie.title,
-              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-                cleanTitle
-              )}.jpg`,
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(cleanTitle)}.jpg`,
             };
           }
         );
@@ -65,6 +87,9 @@ function UserDashboardPage() {
       })
       .catch((err) => {
         console.error("Failed to fetch recent movies", err);
+      })
+      .finally(() => {
+        setIsLoadingRecent(false);
       });
   }, []);
 
@@ -80,21 +105,20 @@ function UserDashboardPage() {
             return {
               id: index,
               title: movie.title,
-              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-                cleanTitle
-              )}.jpg`,
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(cleanTitle)}.jpg`,
             };
           }
         );
-
         setHighlyRatedMovies(formatted);
       })
       .catch((err) => {
         console.error("Failed to fetch top-rated movies", err);
+      })
+      .finally(() => {
+        setIsLoadingHighlyRated(false);
       });
   }, []);
 
-  // Toggle function
   const toggleSearch = () => {
     setIsSearchOpen((prev) => !prev);
   };
@@ -106,6 +130,7 @@ function UserDashboardPage() {
           <Link to="/" className="logo-link">
             <img src={logo} alt="Logo" className="logo" />
           </Link>
+
           <div className="header-actions">
             <div className="language-selector">
               <span>Language</span>
@@ -134,19 +159,41 @@ function UserDashboardPage() {
           </div>
         </div>
       </header>
-
+      {/* New User Welcome Text */}
+      <div className="user-welcome">
+        <span>Welcome, {userFullName || "Guest"}!</span>
+      </div>
       <div className="dashboard-content">
         <h1 className="dashboard-title">Discover Your Next Favorite.</h1>
 
         <FilterOptions />
 
         <div className="movie-sections">
-          <MovieSection
-            title="Recommended For You"
-            movies={recommendedMovies}
-          />
-          <MovieSection title="Highly Rated" movies={highlyRatedMovies} />
-          <MovieSection title="Recent Additions" movies={recentlyAddedMovies} />
+          {isLoadingRecommended ? (
+            <MovieSectionLoader />
+          ) : (
+            <MovieSection
+              title="Recommended For You"
+              movies={recommendedMovies}
+            />
+          )}
+
+          {isLoadingHighlyRated ? (
+            <MovieSectionLoader />
+          ) : (
+            <MovieSection title="Highly Rated" movies={highlyRatedMovies} />
+          )}
+
+          {isLoadingRecent ? (
+            <MovieSectionLoader />
+          ) : (
+            <MovieSection
+              title="Recent Additions"
+              movies={recentlyAddedMovies}
+            />
+          )}
+
+          {/* Genre-based sections */}
           <MoviesByGenreSection genre="Comedy" />
           <MoviesByGenreSection genre="Action" />
           <MoviesByGenreSection genre="Adventure" />
@@ -178,6 +225,9 @@ function UserDashboardPage() {
           <MoviesByGenreSection genre="TV Comedies" />
           <MoviesByGenreSection genre="Talk Shows TV Comedies" />
           <MoviesByGenreSection genre="Thrillers" />
+
+          {/* 🌀 Scroll loader at the bottom */}
+          <ScrollLoader />
         </div>
       </div>
 
