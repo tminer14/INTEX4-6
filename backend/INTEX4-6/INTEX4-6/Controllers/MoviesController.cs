@@ -13,7 +13,7 @@ namespace INTEX4_6.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class MoviesController : ControllerBase
     {
         private readonly MovieDbContext _context;
@@ -479,6 +479,46 @@ public IActionResult GetMovieBasedRecommendations(string source_show_id)
             return Ok();
         }
 
+       [HttpGet("userBasedRecommendationsByGenre/{id}")]
+public async Task<IActionResult> GetUserRecommendationsByGenre(int id, [FromQuery] string genre)
+{
+    if (string.IsNullOrWhiteSpace(genre))
+    {
+        return BadRequest("Genre is required.");
     }
+
+    // Join using show_id instead of Title
+    var recommendedMovies = await _context.UserBasedRecs
+        .Where(r => r.UserId == id && r.RecommendationType == genre)
+        .Join(
+            _context.Movies,
+            r => r.ShowId,        
+            movie => movie.ShowId,    
+            (r, movie) => movie
+        )
+        .Take(10)
+        .ToListAsync();
+
+    // Package with genre list for the frontend
+    var result = recommendedMovies.Select(m => new
+    {
+        m.ShowId,
+        m.Type,
+        m.Title,
+        m.Director,
+        m.Cast,
+        m.Country,
+        m.ReleaseYear,
+        m.Rating,
+        m.Duration,
+        m.Description,
+        Genre = BuildGenreListFromInts(m)
+    }).ToList();
+
+    return Ok(result);
 }
+
+
+
+}}
 
