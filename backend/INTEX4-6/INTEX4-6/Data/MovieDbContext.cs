@@ -8,18 +8,14 @@ namespace INTEX4_6.Data
         {
         }
 
-    public DbSet<Movie> Movies { get; set; }
-    public DbSet<MovieUserInfo> MovieUsers { get; set; }
-    public DbSet<TopOverallRecs> TopOverallRecs { get; set; }
-    
-    public DbSet<UserBasedRecs> UserBasedRecs {get; set; }
-    public DbSet<MovieBasedRecs> MovieBasedRecs { get; set; }
-
         public DbSet<Movie> Movies { get; set; }
         public DbSet<MovieUserInfo> MovieUsers { get; set; }
         public DbSet<TopOverallRecs> TopOverallRecs { get; set; }
-        public DbSet<UserBasedRecs> UserBasedRecs { get; set; }
+    
+        public DbSet<UserBasedRecs> UserBasedRecs {get; set; }
+        public DbSet<MovieBasedRecs> MovieBasedRecs { get; set; }
 
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // 👇 Declare UserBasedRecs as keyless (no primary key in table)
@@ -28,5 +24,5 @@ namespace INTEX4_6.Data
             // Optional: if you have other keyless entities or config
             // modelBuilder.Entity<OtherThing>().HasNoKey();
         }
-    }
+        }
 }

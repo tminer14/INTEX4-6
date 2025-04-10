@@ -161,18 +161,6 @@ namespace INTEX4_6.Controllers
         }
 
         [HttpGet("withGenres")]
-        public IActionResult GetAllMoviesWithGenres(int pageSize = 25, int pageNum = 1)
-        {
-            if (pageNum <= 0 || pageSize <= 0)
-            {
-                return BadRequest("Page number and page size must be greater than 0.");
-            }
-
-            var query = _context.Movies.AsQueryable().OrderBy(m => m.Title);
-
-            var totalMovies = query.Count();
-
-            var pagedMovies = query
         public async Task<IActionResult> GetMoviesWithGenres(int pageNum = 1, int pageSize = 50)
         {
             var query = _context.Movies.AsQueryable();
@@ -218,8 +206,6 @@ namespace INTEX4_6.Controllers
                 TotalMovies = totalMovies,
                 Movies = result
             };
-            Console.WriteLine("Fetched Movies Count: " + movieEntities.Count);
-            Console.WriteLine("Movies With Genres Count: " + moviesWithGenres.Count);
 
             return Ok(pageResult);
         }
