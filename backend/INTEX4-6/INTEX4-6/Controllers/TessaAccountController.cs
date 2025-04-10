@@ -60,9 +60,6 @@ namespace INTEX4_6.Controllers
                 Zip = dto.Zip != 0 ? dto.Zip : 99999
             };
 
-            // 👀 Log fully before saving
-            Debug.WriteLine(System.Text.Json.JsonSerializer.Serialize(movieUser));
-
             try
             {
                 await _movieDbContext.MovieUsers.AddAsync(movieUser);
