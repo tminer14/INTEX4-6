@@ -1,0 +1,156 @@
+.cookies-popup {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  overflow: hidden;
+  background-color: #022b3b;
+  padding: 0 20px 20px;
+}
+
+.cookies-popup-content {
+  display: flex;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 42px 48px;
+  background-color: #fff;
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+  gap: 20px;
+}
+
+.cookies-popup-left {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  font-family:
+    Inter,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  color: #000;
+  font-weight: 400;
+  text-align: center;
+  margin-top: 18px;
+}
+
+.cookies-header {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font-size: 96px;
+}
+
+.cookies-title {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
+}
+
+.cookie-icon {
+  width: 35px;
+  height: 35px;
+  margin-top: 58px;
+  object-fit: contain;
+  object-position: center;
+}
+
+.cookies-message {
+  font-size: 24px;
+  margin-top: 20px;
+}
+
+.cookies-popup-right {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin-left: 20px;
+  font-family:
+    Inter,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.close-icon {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  object-position: center;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+.cookies-buttons {
+  display: flex;
+  margin-top: 37px;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.accept-button {
+  border-radius: 10px;
+  padding: 13px 70px;
+  color: #000;
+  background-color: #fc7853;
+  border: none;
+  cursor: pointer;
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-basis: 0;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.reject-button {
+  border-radius: 10px;
+  padding: 13px 70px;
+  color: #fff;
+  background-color: #022b3b;
+  border: none;
+  cursor: pointer;
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-basis: 0;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .cookies-popup-content {
+    flex-direction: column;
+    padding: 20px 30px 30px;
+  }
+
+  .cookies-popup-left,
+  .cookies-popup-right {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .cookies-header {
+    font-size: 60px;
+  }
+
+  .cookies-message {
+    font-size: 18px;
+  }
+
+  .cookies-buttons {
+    margin-top: 20px;
+  }
+
+  .accept-button,
+  .reject-button {
+    padding: 10px 40px;
+    font-size: 18px;
+  }
+}
