@@ -58,7 +58,7 @@ const SearchPanel: React.FC<SearchPanelProps> = ({ isOpen, onClose }) => {
     if (!query.trim()) return;
     try {
       const response = await fetch(
-        `https://cinenichegroup4-6-dsfcb8dvcabpazd6.eastus-01.azurewebsites.net/Movies/search?title=${encodeURIComponent(query)}`
+        `https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies/search?title=${encodeURIComponent(query)}`
       );
       const data: MovieItem[] = await response.json();
       setResults(data);

@@ -22,7 +22,7 @@ function LoginPage() {
 
     try {
       const response = await axios.post(
-        "https://cinenichegroup4-6-dsfcb8dvcabpazd6.eastus-01.azurewebsites.net/api/Account/login",
+        "https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/api/Account/login",
         {
           email,
           password,
