@@ -1,5 +1,3 @@
-import "../styles/MovieSectionLoader.css"; // Create or reuse styling
-
 const MovieSectionLoader = () => {
   return (
     <div className="movie-section-loading">

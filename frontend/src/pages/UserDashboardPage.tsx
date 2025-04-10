@@ -155,12 +155,31 @@ function UserDashboardPage() {
         <FilterOptions />
 
         <div className="movie-sections">
-          <MovieSection
-            title="Recommended For You"
-            movies={recommendedMovies}
-          />
-          <MovieSection title="Highly Rated" movies={highlyRatedMovies} />
-          <MovieSection title="Recent Additions" movies={recentlyAddedMovies} />
+          {isLoadingRecommended ? (
+            <MovieSectionLoader />
+          ) : (
+            <MovieSection
+              title="Recommended For You"
+              movies={recommendedMovies}
+            />
+          )}
+
+          {isLoadingHighlyRated ? (
+            <MovieSectionLoader />
+          ) : (
+            <MovieSection title="Highly Rated" movies={highlyRatedMovies} />
+          )}
+
+          {isLoadingRecent ? (
+            <MovieSectionLoader />
+          ) : (
+            <MovieSection
+              title="Recent Additions"
+              movies={recentlyAddedMovies}
+            />
+          )}
+
+          {/* Genre-based sections */}
           <MoviesByGenreSection genre="Comedy" />
           <MoviesByGenreSection genre="Action" />
           <MoviesByGenreSection genre="Adventure" />
