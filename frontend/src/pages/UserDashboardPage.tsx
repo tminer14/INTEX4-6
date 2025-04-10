@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import FilterOptions from "../components/FilterOptions";
 import MovieSection from "../components/MovieSection";
 import SearchPanel from "../components/SearchPanel";
 import MovieSectionLoader from "../components/MovieSectionLoader";
@@ -10,6 +9,7 @@ import "../styles/UserDashboard.css";
 import logo from "../assets/Logo.png";
 import MoviesByGenreSection from "../components/MoviesByGenre";
 import { recTypeToGenre } from "../assets/genreMap";
+import RecommendedGenreFilter from "../components/RecommendedGenreFilter";
 
 function UserDashboardPage() {
   const [highlyRatedMovies, setHighlyRatedMovies] = useState([]);
@@ -17,6 +17,8 @@ function UserDashboardPage() {
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [userFullName, setUserFullName] = useState<string>("");
+  const [userId, setUserId] = useState<number | null>(null);
+
   useEffect(() => {
     const fetchUserFullName = async () => {
       try {
@@ -45,8 +47,29 @@ function UserDashboardPage() {
 
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
 
+  // Display User Recommendations
   useEffect(() => {
-    const userId = 73;
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:5130/Movies/GetUserId", // 🚨 Adjust to your actual backend route
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setUserId(response.data.userId); // 🚀 store userId from response
+      } catch (error) {
+        console.error("Failed to fetch user ID", error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
     axios
       .get(`${API_URL}/userBasedRecommendations/${userId}`, {
         withCredentials: true,
@@ -54,35 +77,28 @@ function UserDashboardPage() {
       .then((res) => {
         const formatted = res.data.map(
           (
-            movie: {
-              title: string;
-              showId: string;
-              recommendationType: string;
-            },
+            movie: { title: string; recommendationType: string },
             index: number
           ) => {
             const cleanTitle = movie.title.replace(/[:']/g, "");
             return {
               id: index,
               title: movie.title,
-
               recommendationType: movie.recommendationType,
-              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-                cleanTitle
-              )}.jpg`,
-
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(cleanTitle)}.jpg`,
             };
           }
         );
         setRecommendedMovies(formatted);
       })
+
       .catch((err) => {
         console.error("Failed to fetch recommended movies", err);
       })
       .finally(() => {
         setIsLoadingRecommended(false);
       });
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     axios
@@ -156,9 +172,7 @@ function UserDashboardPage() {
           </Link>
 
           <div className="header-actions">
-            <div className="language-selector">
-              <span>Language</span>
-            </div>
+            <div className="language-selector"></div>
             <button
               className="search-button"
               onClick={toggleSearch}
@@ -190,20 +204,8 @@ function UserDashboardPage() {
       <div className="dashboard-content">
         <h1 className="dashboard-title">Discover Your Next Favorite.</h1>
 
-        <FilterOptions
-          selectedGenre={selectedGenre}
-          setSelectedGenre={setSelectedGenre}
-        />
-
         <div className="movie-sections">
-          {isLoadingRecommended ? (
-            <MovieSectionLoader />
-          ) : (
-            <MovieSection
-              title="Recommended For You"
-              movies={filteredRecommended}
-            />
-          )}
+          <RecommendedGenreFilter userId={73} />
 
           {isLoadingHighlyRated ? (
             <MovieSectionLoader />
