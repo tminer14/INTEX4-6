@@ -11,56 +11,57 @@ namespace INTEX4_6.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-
         private readonly MovieDbContext _context;
 
-        private MovieDbContext _context;
-        private void MapGenresToBooleans(Movie movie, List<string> genres)
+        public MoviesController(MovieDbContext context)
         {
-            // Step 1: Map genres to corresponding movie properties
-            var genreMap = new Dictionary<string, Action<bool>>
-    {
-        { "Action", value => movie.Action = value },
-        { "Adventure", value => movie.Adventure = value },
-        { "Anime Series International TV Shows", value => movie.AnimeSeriesInternationalTvShows = value },
-        { "British TV Shows Docuseries International TV Shows", value => movie.BritishTvShowsDocuseriesInternationalTvShows = value },
-        { "Children", value => movie.Children = value },
-        { "Comedies", value => movie.Comedies = value },
-        { "Comedies Dramas International Movies", value => movie.ComediesDramasInternationalMovies = value },
-        { "Comedies International Movies", value => movie.ComediesInternationalMovies = value },
-        { "Comedies Romantic Movies", value => movie.ComediesRomanticMovies = value },
-        { "Crime TV Shows Docuseries", value => movie.CrimeTvShowsDocuseries = value },
-        { "Documentaries", value => movie.Documentaries = value },
-        { "Documentaries International Movies", value => movie.DocumentariesInternationalMovies = value },
-        { "Docuseries", value => movie.Docuseries = value },
-        { "Dramas", value => movie.Dramas = value },
-        { "Dramas International Movies", value => movie.DramasInternationalMovies = value },
-        { "Dramas Romantic Movies", value => movie.DramasRomanticMovies = value },
-        { "Family Movies", value => movie.FamilyMovies = value },
-        { "Fantasy", value => movie.Fantasy = value },
-        { "Horror Movies", value => movie.HorrorMovies = value },
-        { "International Movies Thrillers", value => movie.InternationalMoviesThrillers = value },
-        { "International TV Shows Romantic TV Shows TV Dramas", value => movie.InternationalTvShowsRomanticTvShowsTvDramas = value },
-        { "Kids' TV", value => movie.KidsTv = value },
-        { "Language TV Shows", value => movie.LanguageTvShows = value },
-        { "Musicals", value => movie.Musicals = value },
-        { "Nature TV", value => movie.NatureTv = value },
-        { "Reality TV", value => movie.RealityTv = value },
-        { "Spirituality", value => movie.Spirituality = value },
-        { "Talk Shows TV Comedies", value => movie.TalkShowsTvComedies = value },
-        { "Thrillers", value => movie.Thrillers = value },
-        { "TV Action", value => movie.TvAction = value },
-        { "TV Comedies", value => movie.TvComedies = value },
-        { "TV Dramas", value => movie.TvDramas = value },
-    };
+            _context = context;
+        }
 
-            // Step 2: First, set all properties to false
+        private void MapGenresToInts(Movie movie, List<string> genres)
+
+        {
+            var genreMap = new Dictionary<string, Action<bool>>
+            {
+                { "Action", value => movie.Action = value ? 1 : 0 },
+                { "Adventure", value => movie.Adventure = value ? 1 : 0 },
+                { "Anime Series International TV Shows", value => movie.AnimeSeriesInternationalTvShows = value ? 1 : 0 },
+                { "British TV Shows Docuseries International TV Shows", value => movie.BritishTvShowsDocuseriesInternationalTvShows = value ? 1 : 0 },
+                { "Children", value => movie.Children = value ? 1 : 0 },
+                { "Comedies", value => movie.Comedies = value ? 1 : 0 },
+                { "Comedies Dramas International Movies", value => movie.ComediesDramasInternationalMovies = value ? 1 : 0 },
+                { "Comedies International Movies", value => movie.ComediesInternationalMovies = value ? 1 : 0 },
+                { "Comedies Romantic Movies", value => movie.ComediesRomanticMovies = value ? 1 : 0 },
+                { "Crime TV Shows Docuseries", value => movie.CrimeTvShowsDocuseries = value ? 1 : 0 },
+                { "Documentaries", value => movie.Documentaries = value ? 1 : 0 },
+                { "Documentaries International Movies", value => movie.DocumentariesInternationalMovies = value ? 1 : 0 },
+                { "Docuseries", value => movie.Docuseries = value ? 1 : 0 },
+                { "Dramas", value => movie.Dramas = value ? 1 : 0 },
+                { "Dramas International Movies", value => movie.DramasInternationalMovies = value ? 1 : 0 },
+                { "Dramas Romantic Movies", value => movie.DramasRomanticMovies = value ? 1 : 0 },
+                { "Family Movies", value => movie.FamilyMovies = value ? 1 : 0 },
+                { "Fantasy", value => movie.Fantasy = value ? 1 : 0 },
+                { "Horror Movies", value => movie.HorrorMovies = value ? 1 : 0 },
+                { "International Movies Thrillers", value => movie.InternationalMoviesThrillers = value ? 1 : 0 },
+                { "International TV Shows Romantic TV Shows TV Dramas", value => movie.InternationalTvShowsRomanticTvShowsTvDramas = value ? 1 : 0 },
+                { "Kids' TV", value => movie.KidsTv = value ? 1 : 0 },
+                { "Language TV Shows", value => movie.LanguageTvShows = value ? 1 : 0 },
+                { "Musicals", value => movie.Musicals = value ? 1 : 0 },
+                { "Nature TV", value => movie.NatureTv = value ? 1 : 0 },
+                { "Reality TV", value => movie.RealityTv = value ? 1 : 0 },
+                { "Spirituality", value => movie.Spirituality = value ? 1 : 0 },
+                { "Talk Shows TV Comedies", value => movie.TalkShowsTvComedies = value ? 1 : 0 },
+                { "Thrillers", value => movie.Thrillers = value ? 1 : 0 },
+                { "TV Action", value => movie.TvAction = value ? 1 : 0 },
+                { "TV Comedies", value => movie.TvComedies = value ? 1 : 0 },
+                { "TV Dramas", value => movie.TvDramas = value ? 1 : 0 },
+            };
+
             foreach (var setter in genreMap.Values)
             {
                 setter(false);
             }
 
-            // Step 3: Then set true for the genres present
             foreach (var genre in genres)
             {
                 if (genreMap.ContainsKey(genre))
@@ -70,49 +71,67 @@ namespace INTEX4_6.Controllers
             }
         }
 
-        private List<string> BuildGenreListFromBooleans(Movie movie)
+        private List<string> BuildGenreListFromInts(Movie movie)
         {
             var genres = new List<string>();
 
-            if (movie.Action == true) genres.Add("Action");
-            if (movie.Adventure == true) genres.Add("Adventure");
-            if (movie.AnimeSeriesInternationalTvShows == true) genres.Add("Anime Series International TV Shows");
-            if (movie.BritishTvShowsDocuseriesInternationalTvShows == true) genres.Add("British TV Shows Docuseries International TV Shows");
-            if (movie.Children == true) genres.Add("Children");
-            if (movie.Comedies == true) genres.Add("Comedies");
-            if (movie.ComediesDramasInternationalMovies == true) genres.Add("Comedies Dramas International Movies");
-            if (movie.ComediesInternationalMovies == true) genres.Add("Comedies International Movies");
-            if (movie.ComediesRomanticMovies == true) genres.Add("Comedies Romantic Movies");
-            if (movie.CrimeTvShowsDocuseries == true) genres.Add("Crime TV Shows Docuseries");
-            if (movie.Documentaries == true) genres.Add("Documentaries");
-            if (movie.DocumentariesInternationalMovies == true) genres.Add("Documentaries International Movies");
-            if (movie.Docuseries == true) genres.Add("Docuseries");
-            if (movie.Dramas == true) genres.Add("Dramas");
-            if (movie.DramasInternationalMovies == true) genres.Add("Dramas International Movies");
-            if (movie.DramasRomanticMovies == true) genres.Add("Dramas Romantic Movies");
-            if (movie.FamilyMovies == true) genres.Add("Family Movies");
-            if (movie.Fantasy == true) genres.Add("Fantasy");
-            if (movie.HorrorMovies == true) genres.Add("Horror Movies");
-            if (movie.InternationalMoviesThrillers == true) genres.Add("International Movies Thrillers");
-            if (movie.InternationalTvShowsRomanticTvShowsTvDramas == true) genres.Add("International TV Shows Romantic TV Shows TV Dramas");
-            if (movie.KidsTv == true) genres.Add("Kids' TV");
-            if (movie.LanguageTvShows == true) genres.Add("Language TV Shows");
-            if (movie.Musicals == true) genres.Add("Musicals");
-            if (movie.NatureTv == true) genres.Add("Nature TV");
-            if (movie.RealityTv == true) genres.Add("Reality TV");
-            if (movie.Spirituality == true) genres.Add("Spirituality");
-            if (movie.TalkShowsTvComedies == true) genres.Add("Talk Shows TV Comedies");
-            if (movie.Thrillers == true) genres.Add("Thrillers");
-            if (movie.TvAction == true) genres.Add("TV Action");
-            if (movie.TvComedies == true) genres.Add("TV Comedies");
-            if (movie.TvDramas == true) genres.Add("TV Dramas");
+            if (movie.Action == 1) genres.Add("Action");
+            if (movie.Adventure == 1) genres.Add("Adventure");
+            if (movie.AnimeSeriesInternationalTvShows == 1) genres.Add("Anime Series International TV Shows");
+            if (movie.BritishTvShowsDocuseriesInternationalTvShows == 1) genres.Add("British TV Shows Docuseries International TV Shows");
+            if (movie.Children == 1) genres.Add("Children");
+            if (movie.Comedies == 1) genres.Add("Comedies");
+            if (movie.ComediesDramasInternationalMovies == 1) genres.Add("Comedies Dramas International Movies");
+            if (movie.ComediesInternationalMovies == 1) genres.Add("Comedies International Movies");
+            if (movie.ComediesRomanticMovies == 1) genres.Add("Comedies Romantic Movies");
+            if (movie.CrimeTvShowsDocuseries == 1) genres.Add("Crime TV Shows Docuseries");
+            if (movie.Documentaries == 1) genres.Add("Documentaries");
+            if (movie.DocumentariesInternationalMovies == 1) genres.Add("Documentaries International Movies");
+            if (movie.Docuseries == 1) genres.Add("Docuseries");
+            if (movie.Dramas == 1) genres.Add("Dramas");
+            if (movie.DramasInternationalMovies == 1) genres.Add("Dramas International Movies");
+            if (movie.DramasRomanticMovies == 1) genres.Add("Dramas Romantic Movies");
+            if (movie.FamilyMovies == 1) genres.Add("Family Movies");
+            if (movie.Fantasy == 1) genres.Add("Fantasy");
+            if (movie.HorrorMovies == 1) genres.Add("Horror Movies");
+            if (movie.InternationalMoviesThrillers == 1) genres.Add("International Movies Thrillers");
+            if (movie.InternationalTvShowsRomanticTvShowsTvDramas == 1) genres.Add("International TV Shows Romantic TV Shows TV Dramas");
+            if (movie.KidsTv == 1) genres.Add("Kids' TV");
+            if (movie.LanguageTvShows == 1) genres.Add("Language TV Shows");
+            if (movie.Musicals == 1) genres.Add("Musicals");
+            if (movie.NatureTv == 1) genres.Add("Nature TV");
+            if (movie.RealityTv == 1) genres.Add("Reality TV");
+            if (movie.Spirituality == 1) genres.Add("Spirituality");
+            if (movie.TalkShowsTvComedies == 1) genres.Add("Talk Shows TV Comedies");
+            if (movie.Thrillers == 1) genres.Add("Thrillers");
+            if (movie.TvAction == 1) genres.Add("TV Action");
+            if (movie.TvComedies == 1) genres.Add("TV Comedies");
+            if (movie.TvDramas == 1) genres.Add("TV Dramas");
 
             return genres;
         }
-
-        public MoviesController(MovieDbContext context)
+        private List<string> GetGenresFromInts(Movie movie)
         {
-            _context = context;
+            var genres = new List<string>();
+
+            var genreProperties = typeof(Movie)
+                .GetProperties()
+                .Where(prop => (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(int?)) &&
+                               prop.GetCustomAttributes(typeof(ColumnAttribute), false).FirstOrDefault() is ColumnAttribute);
+
+            foreach (var prop in genreProperties)
+            {
+                object rawValue = prop.GetValue(movie);
+                bool isGenreTrue = rawValue is int i && i == 1;
+
+                if (isGenreTrue)
+                {
+                    var columnAttr = (ColumnAttribute)prop.GetCustomAttributes(typeof(ColumnAttribute), false).First();
+                    genres.Add(columnAttr.Name);
+                }
+            }
+
+            return genres;
         }
 
         [HttpGet("titles")]
@@ -191,7 +210,7 @@ namespace INTEX4_6.Controllers
                 m.Rating,
                 m.Duration,
                 m.Description,
-                Genre = BuildGenreListFromBooleans(m)  // <--- this magic!
+                Genre = BuildGenreListFromInts(m)  // <--- this magic!
             }).ToList();
 
             var pageResult = new
