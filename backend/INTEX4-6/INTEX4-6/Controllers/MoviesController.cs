@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using INTEX4_6.Data;
+using INTEX4_6.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
@@ -202,6 +204,7 @@ namespace INTEX4_6.Controllers
                         movie.Description,
                         rec.Rank,
                         rec.RecommendationType
+                        
                     }
                 )
                 .OrderBy(r => r.Rank)
@@ -275,31 +278,83 @@ namespace INTEX4_6.Controllers
             return Ok(recommendations);
         }
 
-        [HttpGet("genres")]
-public IActionResult GetGenres()
-{
-    var genreProperties = typeof(Movie)
-        .GetProperties()
-        .Where(p => p.PropertyType == typeof(bool?) || p.PropertyType == typeof(bool))
-        .Select(p => p.GetCustomAttributes(typeof(ColumnAttribute), false)
-                     .FirstOrDefault() is ColumnAttribute attr ? attr.Name : p.Name)
-        .ToList();
-
-    return Ok(genreProperties);
-}
-
-        [HttpPost]
-        public IActionResult CreateMovie([FromBody] Movie movie)
+        [HttpPost("create")]
+        [AllowAnonymous]
+        public IActionResult CreateMovie([FromBody] MovieCreateDto movieDto)
         {
-            if (movie == null)
+            var conn = _context.Database.GetDbConnection();
+            Console.WriteLine("🔵 DB CONNECTION STRING AT RUNTIME: " + conn.ConnectionString);
+
+            if (movieDto == null)
             {
-                return BadRequest();
+                Console.WriteLine("❌ Incoming movie DTO payload could not be bound (null).");
+                return BadRequest("Movie payload is null or badly formatted.");
             }
 
+            Console.WriteLine("✅ Movie DTO received: " + movieDto.Title);
+
+            // Manually map DTO to Entity
+            var movie = new Movie
+            {
+                ShowId = movieDto.ShowId,
+                Type = movieDto.Type,
+                Title = movieDto.Title,
+                Director = movieDto.Director,
+                Cast = movieDto.Cast,
+                Country = movieDto.Country,
+                ReleaseYear = movieDto.ReleaseYear,
+                Rating = movieDto.Rating,
+                Duration = movieDto.Duration,
+                Description = movieDto.Description,
+
+                // Genres
+                Action = movieDto.Action,
+                Adventure = movieDto.Adventure,
+                AnimeSeriesInternationalTvShows = movieDto.AnimeSeriesInternationalTvShows,
+                BritishTvShowsDocuseriesInternationalTvShows = movieDto.BritishTvShowsDocuseriesInternationalTvShows,
+                Children = movieDto.Children,
+                Comedies = movieDto.Comedies,
+                ComediesDramasInternationalMovies = movieDto.ComediesDramasInternationalMovies,
+                ComediesInternationalMovies = movieDto.ComediesInternationalMovies,
+                ComediesRomanticMovies = movieDto.ComediesRomanticMovies,
+                CrimeTvShowsDocuseries = movieDto.CrimeTvShowsDocuseries,
+                Documentaries = movieDto.Documentaries,
+                DocumentariesInternationalMovies = movieDto.DocumentariesInternationalMovies,
+                Docuseries = movieDto.Docuseries,
+                Dramas = movieDto.Dramas,
+                DramasInternationalMovies = movieDto.DramasInternationalMovies,
+                DramasRomanticMovies = movieDto.DramasRomanticMovies,
+                FamilyMovies = movieDto.FamilyMovies,
+                Fantasy = movieDto.Fantasy,
+                HorrorMovies = movieDto.HorrorMovies,
+                InternationalMoviesThrillers = movieDto.InternationalMoviesThrillers,
+                InternationalTvShowsRomanticTvShowsTvDramas = movieDto.InternationalTvShowsRomanticTvShowsTvDramas,
+                KidsTv = movieDto.KidsTv,
+                LanguageTvShows = movieDto.LanguageTvShows,
+                Musicals = movieDto.Musicals,
+                NatureTv = movieDto.NatureTv,
+                RealityTv = movieDto.RealityTv,
+                Spirituality = movieDto.Spirituality,
+                TalkShowsTvComedies = movieDto.TalkShowsTvComedies,
+                Thrillers = movieDto.Thrillers,
+                TvAction = movieDto.TvAction,
+                TvComedies = movieDto.TvComedies,
+                TvDramas = movieDto.TvDramas
+            };
+
             _context.Movies.Add(movie);
-            _context.SaveChanges();
-            return Ok(movie);
+            var result = _context.SaveChanges();
+
+            if (result > 0)
+            {
+                return Ok(movie);
+            }
+            else
+            {
+                return StatusCode(500, "Failed to save movie to database.");
+            }
         }
+
 
         [HttpPut("{showId}")]
         public IActionResult UpdateMovie(string showId, [FromBody] Movie updatedMovie)
