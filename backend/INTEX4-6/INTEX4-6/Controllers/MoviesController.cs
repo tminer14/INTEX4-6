@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using INTEX4_6.Data;
+using INTEX4_6.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
@@ -177,57 +179,36 @@ public IActionResult GetMovieDetails(string title)
         return NotFound(new { message = $"Movie with title '{title}' not found." });
     }
 
-    var result = new
-    {
-        movie.ShowId,
-        movie.Type,
-        movie.Title,
-        movie.Director,
-        movie.Cast,
-        movie.Country,
-        movie.ReleaseYear,
-        movie.Rating,
-        movie.Duration,
-        movie.Description,
-        genres = BuildGenreListFromInts(movie) // ✅ lowercase and sent as a list
-    };
-
-    return Ok(result);
-}
+            return Ok(movie);
+        }
 
         [HttpGet("userBasedRecommendations/{id}")]
-public IActionResult GetUserBasedRecommendations(int id)
-{
-    // Get raw data first — materialize the join
-    var joinedData = _context.UserBasedRecs
-        .Where(r => r.UserId == id && r.RecommendationType == "top_picks")
-        .Join(
-            _context.Movies,
-            rec => rec.Title,
-            movie => movie.Title,
-            (rec, movie) => new { rec, movie }
-        )
-        .ToList();  // Materialize into memory
-
-    // Now transform in memory using BuildGenreListFromInts
-    var recommendations = joinedData
-        .Select(x => new
+        public IActionResult GetUserBasedRecommendations(int id)
         {
-            x.movie.ShowId,
-            x.movie.Title,
-            x.movie.Director,
-            x.movie.Cast,
-            x.movie.Country,
-            x.movie.ReleaseYear,
-            x.movie.Rating,
-            x.movie.Duration,
-            x.movie.Description,
-            Genres = BuildGenreListFromInts(x.movie),
-            x.rec.Rank,
-            x.rec.RecommendationType
-        })
-        .OrderBy(x => x.Rank)
-        .ToList();
+            var recommendations = _context.UserBasedRecs
+                .Where(r => r.UserId == id && r.RecommendationType == "top_picks")
+                .Join(
+                    _context.Movies,
+                    rec => rec.Title,
+                    movie => movie.Title,
+                    (rec, movie) => new
+                    {
+                        movie.ShowId,
+                        movie.Title,
+                        movie.Director,
+                        movie.Cast,
+                        movie.Country,
+                        movie.ReleaseYear,
+                        movie.Rating,
+                        movie.Duration,
+                        movie.Description,
+                        rec.Rank,
+                        rec.RecommendationType
+                        
+                    }
+                )
+                .OrderBy(r => r.Rank)
+                .ToList();
 
     Console.WriteLine($"🎯 Returning {recommendations.Count} matched movies");
 
@@ -296,31 +277,83 @@ public IActionResult GetUserBasedRecommendations(int id)
             return Ok(recommendations);
         }
 
-        [HttpGet("genres")]
-public IActionResult GetGenres()
-{
-    var genreProperties = typeof(Movie)
-        .GetProperties()
-        .Where(p => p.PropertyType == typeof(bool?) || p.PropertyType == typeof(bool))
-        .Select(p => p.GetCustomAttributes(typeof(ColumnAttribute), false)
-                     .FirstOrDefault() is ColumnAttribute attr ? attr.Name : p.Name)
-        .ToList();
-
-    return Ok(genreProperties);
-}
-
-        [HttpPost]
-        public IActionResult CreateMovie([FromBody] Movie movie)
+        [HttpPost("create")]
+        [AllowAnonymous]
+        public IActionResult CreateMovie([FromBody] MovieCreateDto movieDto)
         {
-            if (movie == null)
+            var conn = _context.Database.GetDbConnection();
+            Console.WriteLine("🔵 DB CONNECTION STRING AT RUNTIME: " + conn.ConnectionString);
+
+            if (movieDto == null)
             {
-                return BadRequest();
+                Console.WriteLine("❌ Incoming movie DTO payload could not be bound (null).");
+                return BadRequest("Movie payload is null or badly formatted.");
             }
 
+            Console.WriteLine("✅ Movie DTO received: " + movieDto.Title);
+
+            // Manually map DTO to Entity
+            var movie = new Movie
+            {
+                ShowId = movieDto.ShowId,
+                Type = movieDto.Type,
+                Title = movieDto.Title,
+                Director = movieDto.Director,
+                Cast = movieDto.Cast,
+                Country = movieDto.Country,
+                ReleaseYear = movieDto.ReleaseYear,
+                Rating = movieDto.Rating,
+                Duration = movieDto.Duration,
+                Description = movieDto.Description,
+
+                // Genres
+                Action = movieDto.Action,
+                Adventure = movieDto.Adventure,
+                AnimeSeriesInternationalTvShows = movieDto.AnimeSeriesInternationalTvShows,
+                BritishTvShowsDocuseriesInternationalTvShows = movieDto.BritishTvShowsDocuseriesInternationalTvShows,
+                Children = movieDto.Children,
+                Comedies = movieDto.Comedies,
+                ComediesDramasInternationalMovies = movieDto.ComediesDramasInternationalMovies,
+                ComediesInternationalMovies = movieDto.ComediesInternationalMovies,
+                ComediesRomanticMovies = movieDto.ComediesRomanticMovies,
+                CrimeTvShowsDocuseries = movieDto.CrimeTvShowsDocuseries,
+                Documentaries = movieDto.Documentaries,
+                DocumentariesInternationalMovies = movieDto.DocumentariesInternationalMovies,
+                Docuseries = movieDto.Docuseries,
+                Dramas = movieDto.Dramas,
+                DramasInternationalMovies = movieDto.DramasInternationalMovies,
+                DramasRomanticMovies = movieDto.DramasRomanticMovies,
+                FamilyMovies = movieDto.FamilyMovies,
+                Fantasy = movieDto.Fantasy,
+                HorrorMovies = movieDto.HorrorMovies,
+                InternationalMoviesThrillers = movieDto.InternationalMoviesThrillers,
+                InternationalTvShowsRomanticTvShowsTvDramas = movieDto.InternationalTvShowsRomanticTvShowsTvDramas,
+                KidsTv = movieDto.KidsTv,
+                LanguageTvShows = movieDto.LanguageTvShows,
+                Musicals = movieDto.Musicals,
+                NatureTv = movieDto.NatureTv,
+                RealityTv = movieDto.RealityTv,
+                Spirituality = movieDto.Spirituality,
+                TalkShowsTvComedies = movieDto.TalkShowsTvComedies,
+                Thrillers = movieDto.Thrillers,
+                TvAction = movieDto.TvAction,
+                TvComedies = movieDto.TvComedies,
+                TvDramas = movieDto.TvDramas
+            };
+
             _context.Movies.Add(movie);
-            _context.SaveChanges();
-            return Ok(movie);
+            var result = _context.SaveChanges();
+
+            if (result > 0)
+            {
+                return Ok(movie);
+            }
+            else
+            {
+                return StatusCode(500, "Failed to save movie to database.");
+            }
         }
+
 
         [HttpPut("{showId}")]
         public IActionResult UpdateMovie(string showId, [FromBody] Movie updatedMovie)

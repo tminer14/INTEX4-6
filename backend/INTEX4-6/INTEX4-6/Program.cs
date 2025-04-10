@@ -117,6 +117,42 @@ builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, CustomUser
 
 
 var app = builder.Build();
+// SEED ROLES AND DEFAULT ADMIN USER
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+    string[] roles = { "User", "Administrator" };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+
+    // Optional: Seed a default Admin user
+    var adminEmail = "admin@admin.com";
+    var adminPassword = "Admin123!";
+
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+    if (adminUser == null)
+    {
+        var newAdmin = new IdentityUser
+        {
+            UserName = adminEmail,
+            Email = adminEmail
+        };
+        var createAdminResult = await userManager.CreateAsync(newAdmin, adminPassword);
+        if (createAdminResult.Succeeded)
+        {
+            await userManager.AddToRoleAsync(newAdmin, "Administrator");
+        }
+    }
+}
+
 
 // Configure HTTP request pipeline
 if (app.Environment.IsDevelopment())
