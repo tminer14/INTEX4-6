@@ -47,26 +47,25 @@ const AdminMoviesPage: React.FC = () => {
     }
   };
 
-const fetchMoviesList = async (page = 1, customPageSize = pageSize) => {
-  try {
-    setLoading(true);
-    const response = await axios.get(
-      "https://localhost:5130/Movies/withGenres",
-      {
-        params: { pageNum: page, pageSize: customPageSize },
-      }
-    );
+  const fetchMoviesList = async (page = 1, customPageSize = pageSize) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        "https://localhost:5130/Movies/withGenres",
+        {
+          params: { pageNum: page, pageSize: customPageSize },
+        }
+      );
 
-    setMovies(response.data.movies);
-    setTotalMovies(response.data.totalMovies);
-    setTotalPages(Math.ceil(response.data.totalMovies / customPageSize));
-  } catch (error) {
-    console.error("Failed to fetch movies:", error);
-    toast.error("Failed to load movies.");
-  } finally {
-    setLoading(false);
-  }
-};
+      setMovies(response.data.movies);
+      setTotalPages(Math.ceil(response.data.totalMovies / customPageSize));
+    } catch (error) {
+      console.error("Failed to fetch movies:", error);
+      toast.error("Failed to load movies.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchMoviesList();
@@ -135,13 +134,13 @@ const fetchMoviesList = async (page = 1, customPageSize = pageSize) => {
       TvDramas: 0,
     };
 
-    movie.genre.forEach((g) => {
+    movie.genres.forEach((g) => {
       if (g in genreFlags) {
         genreFlags[g as keyof typeof genreFlags] = 1;
       }
     });
 
-    const { genre, ...restOfMovie } = movie;
+    const { genres, ...restOfMovie } = movie;
 
     return {
       ...restOfMovie,
@@ -180,7 +179,6 @@ const fetchMoviesList = async (page = 1, customPageSize = pageSize) => {
       toast.error("Failed to save movie.");
     }
   };
-
 
   return (
     <div className="admin-panel admin-movies-page">
