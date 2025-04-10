@@ -101,7 +101,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("https://localhost:5173") // ✅ Correct this!
+            policy.WithOrigins("https://localhost:5130", "https://jolly-ground-0f8d9041e.6.azurestaticapps.net") // ✅ Correct this!
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials();
@@ -157,5 +157,9 @@ app.MapGet("/pingauth", (ClaimsPrincipal user) =>
     var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com";
     return Results.Json(new { email = email });
 }).RequireAuthorization();
+
+
+app.MapGet("/test-cors", () => Results.Ok("CORS works!"))
+   .RequireCors("AllowFrontend");
 
 app.Run();
