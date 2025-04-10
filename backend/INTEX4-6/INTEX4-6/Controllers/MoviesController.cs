@@ -169,51 +169,73 @@ namespace INTEX4_6.Controllers
             return Ok(topMovies);
         }
 
-        [HttpGet("details/{title}")]
-        public IActionResult GetMovieDetails(string title)
+       [HttpGet("details/{title}")]
+public IActionResult GetMovieDetails(string title)
+{
+    var movie = _context.Movies.FirstOrDefault(m => m.Title == title);
+
+    if (movie == null)
+    {
+        return NotFound(new { message = $"Movie with title '{title}' not found." });
+    }
+
+    var result = new
+    {
+        movie.ShowId,
+        movie.Type,
+        movie.Title,
+        movie.Director,
+        movie.Cast,
+        movie.Country,
+        movie.ReleaseYear,
+        movie.Rating,
+        movie.Duration,
+        movie.Description,
+        Genres = BuildGenreListFromInts(movie)
+    };
+
+    return Ok(result);
+}
+
+
+       [HttpGet("userBasedRecommendations/{id}")]
+public IActionResult GetUserBasedRecommendations(int id)
+{
+    // Step 1: Materialize the join into memory
+    var joinedData = _context.UserBasedRecs
+        .Where(r => r.UserId == id && r.RecommendationType == "top_picks")
+        .Join(
+            _context.Movies,
+            rec => rec.Title,
+            movie => movie.Title,
+            (rec, movie) => new { rec, movie }
+        )
+        .ToList();  // Needed so we can safely use C# methods
+
+    // Step 2: Now map genres using your method
+    var recommendations = joinedData
+        .Select(x => new
         {
-            var movie = _context.Movies.FirstOrDefault(m => m.Title == title);
+            x.movie.ShowId,
+            x.movie.Title,
+            x.movie.Director,
+            x.movie.Cast,
+            x.movie.Country,
+            x.movie.ReleaseYear,
+            x.movie.Rating,
+            x.movie.Duration,
+            x.movie.Description,
+            Genres = BuildGenreListFromInts(x.movie),  // ✅ Include genres
+            x.rec.Rank,
+            x.rec.RecommendationType
+        })
+        .OrderBy(x => x.Rank)
+        .ToList();
 
-            if (movie == null)
-            {
-                return NotFound(new { message = $"Movie with title '{title}' not found." });
-            }
+    Console.WriteLine($"🎯 Returning {recommendations.Count} matched movies");
 
-            return Ok(movie);
-        }
-
-        [HttpGet("userBasedRecommendations/{id}")]
-        public IActionResult GetUserBasedRecommendations(int id)
-        {
-            var recommendations = _context.UserBasedRecs
-                .Where(r => r.UserId == id && r.RecommendationType == "top_picks")
-                .Join(
-                    _context.Movies,
-                    rec => rec.Title,
-                    movie => movie.Title,
-                    (rec, movie) => new
-                    {
-                        movie.ShowId,
-                        movie.Title,
-                        movie.Director,
-                        movie.Cast,
-                        movie.Country,
-                        movie.ReleaseYear,
-                        movie.Rating,
-                        movie.Duration,
-                        movie.Description,
-                        rec.Rank,
-                        rec.RecommendationType
-                        
-                    }
-                )
-                .OrderBy(r => r.Rank)
-                .ToList();
-
-            Console.WriteLine($"🎯 Returning {recommendations.Count} matched movies");
-
-            return Ok(recommendations);
-        }
+    return Ok(recommendations);
+}
 
 
 
@@ -401,3 +423,4 @@ namespace INTEX4_6.Controllers
         }
     }
 }
+

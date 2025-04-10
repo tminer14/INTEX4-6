@@ -15,7 +15,6 @@ function MovieInfoPage() {
   const [hoveredRating, setHoveredRating] = useState<number>(0);
   const [imageUrl, setImageUrl] = useState<string>("");
 
-
   // Function to add points
   const addPoints = () => {
     const currentPoints = parseInt(Cookies.get("userPoints") || "0");
@@ -34,6 +33,8 @@ function MovieInfoPage() {
         const movieData = res.data;
         setMovie(movieData);
         addPoints();
+
+        console.log("Genres", movieData);
 
         // Clean and generate the image URL like in MovieSection
         const cleaned = movieData.title.replace(/[:'"?&]/g, "");
@@ -96,7 +97,6 @@ function MovieInfoPage() {
                 <path
                   d="M27.7082 17.5H7.2915M7.2915 17.5L17.4998 27.7083M7.2915 17.5L17.4998 7.29167"
                   stroke="#f7f7ff"
-
                   strokeWidth="4"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -105,7 +105,6 @@ function MovieInfoPage() {
             </div>
             <div className="movie-poster">
               <img src={imageUrl} alt={movie.title} className="poster-image" />
-
             </div>
 
             <div className="play-button">
@@ -145,7 +144,7 @@ function MovieInfoPage() {
 
               <div className="info-row">
                 <span className="info-label">Genre:</span>
-                <span className="info-value">{movie.genre}</span>
+                <span className="info-value">{movie.genres?.join(", ")}</span>
               </div>
 
               <div className="info-row">
@@ -180,7 +179,7 @@ function MovieInfoPage() {
 
               <div className="info-row">
                 <span className="info-label">Rating:</span>
-                <span className="info-value">{movie.rating}/5</span>
+                <span className="info-value">{movie.rating}</span>
               </div>
 
               <div className="rating-label">Seen it? Rate this movie:</div>
