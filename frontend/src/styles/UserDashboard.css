@@ -162,21 +162,60 @@
 }
 
 .skeleton-card {
-  width: 120px;
-  height: 180px;
+  position: relative;
+  overflow: hidden;
   background-color: #e0e0e0;
   border-radius: 8px;
-  animation: pulse 1.6s infinite ease-in-out;
+  width: 120px;
+  height: 180px;
 }
 
-@keyframes pulse {
+.skeleton-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150px;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
   0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.4;
+    transform: translateX(0);
   }
   100% {
-    opacity: 1;
+    transform: translateX(250px);
+  }
+}
+
+.scroll-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 40px 0;
+  color: #ccc;
+  font-family: "Inter", sans-serif;
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #ccc;
+  border-top: 3px solid #028090;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }

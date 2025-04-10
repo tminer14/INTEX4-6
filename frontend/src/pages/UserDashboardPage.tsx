@@ -5,6 +5,7 @@ import FilterOptions from "../components/FilterOptions";
 import MovieSection from "../components/MovieSection";
 import SearchPanel from "../components/SearchPanel";
 import MovieSectionLoader from "../components/MovieSectionLoader";
+import ScrollLoader from "../components/ScrollLoader"; // ✅ NEW IMPORT
 import "../styles/UserDashboard.css";
 import logo from "../assets/Logo.png";
 import MoviesByGenreSection from "../components/MoviesByGenre";
@@ -15,15 +16,12 @@ function UserDashboardPage() {
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // 🕐 Loading states
   const [isLoadingRecommended, setIsLoadingRecommended] = useState(true);
   const [isLoadingHighlyRated, setIsLoadingHighlyRated] = useState(true);
   const [isLoadingRecent, setIsLoadingRecent] = useState(true);
 
-  // Recommended for you movies
   useEffect(() => {
     const userId = 73;
-
     axios
       .get(`https://localhost:5130/Movies/userBasedRecommendations/${userId}`, {
         withCredentials: true,
@@ -35,9 +33,7 @@ function UserDashboardPage() {
             return {
               id: index,
               title: movie.title,
-              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-                cleanTitle
-              )}.jpg`,
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(cleanTitle)}.jpg`,
             };
           }
         );
@@ -51,7 +47,6 @@ function UserDashboardPage() {
       });
   }, []);
 
-  // Recent movies
   useEffect(() => {
     axios
       .get("https://localhost:5130/Movies/recentMovies", {
@@ -64,9 +59,7 @@ function UserDashboardPage() {
             return {
               id: index,
               title: movie.title,
-              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-                cleanTitle
-              )}.jpg`,
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(cleanTitle)}.jpg`,
             };
           }
         );
@@ -80,7 +73,6 @@ function UserDashboardPage() {
       });
   }, []);
 
-  // Highly rated movies
   useEffect(() => {
     axios
       .get("https://localhost:5130/Movies/top-rated", {
@@ -93,9 +85,7 @@ function UserDashboardPage() {
             return {
               id: index,
               title: movie.title,
-              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-                cleanTitle
-              )}.jpg`,
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(cleanTitle)}.jpg`,
             };
           }
         );
@@ -211,6 +201,9 @@ function UserDashboardPage() {
           <MoviesByGenreSection genre="TV Comedies" />
           <MoviesByGenreSection genre="Talk Shows TV Comedies" />
           <MoviesByGenreSection genre="Thrillers" />
+
+          {/* 🌀 Scroll loader at the bottom */}
+          <ScrollLoader />
         </div>
       </div>
 
