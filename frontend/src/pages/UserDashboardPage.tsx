@@ -16,6 +16,7 @@ function UserDashboardPage() {
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [userFullName, setUserFullName] = useState<string>("");
+
   useEffect(() => {
     const fetchUserFullName = async () => {
       try {
@@ -40,6 +41,7 @@ function UserDashboardPage() {
   const [isLoadingHighlyRated, setIsLoadingHighlyRated] = useState(true);
   const [isLoadingRecent, setIsLoadingRecent] = useState(true);
 
+  // Display User Recommendations
   useEffect(() => {
     const userId = 73;
     axios
