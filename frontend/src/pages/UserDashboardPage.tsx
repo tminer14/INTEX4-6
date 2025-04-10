@@ -13,6 +13,7 @@ function UserDashboardPage() {
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+  // Recommended for you movies
   useEffect(() => {
     const userId = 73;
 

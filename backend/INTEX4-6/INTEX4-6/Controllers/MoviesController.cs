@@ -168,50 +168,71 @@ namespace INTEX4_6.Controllers
         }
 
         [HttpGet("details/{title}")]
-        public IActionResult GetMovieDetails(string title)
-        {
-            var movie = _context.Movies.FirstOrDefault(m => m.Title == title);
+public IActionResult GetMovieDetails(string title)
+{
+    var movie = _context.Movies.FirstOrDefault(m => m.Title == title);
 
-            if (movie == null)
-            {
-                return NotFound(new { message = $"Movie with title '{title}' not found." });
-            }
+    if (movie == null)
+    {
+        return NotFound(new { message = $"Movie with title '{title}' not found." });
+    }
 
-            return Ok(movie);
-        }
+    var result = new
+    {
+        movie.ShowId,
+        movie.Type,
+        movie.Title,
+        movie.Director,
+        movie.Cast,
+        movie.Country,
+        movie.ReleaseYear,
+        movie.Rating,
+        movie.Duration,
+        movie.Description,
+        genres = BuildGenreListFromInts(movie) // ✅ lowercase and sent as a list
+    };
+
+    return Ok(result);
+}
 
         [HttpGet("userBasedRecommendations/{id}")]
-        public IActionResult GetUserBasedRecommendations(int id)
+public IActionResult GetUserBasedRecommendations(int id)
+{
+    // Get raw data first — materialize the join
+    var joinedData = _context.UserBasedRecs
+        .Where(r => r.UserId == id && r.RecommendationType == "top_picks")
+        .Join(
+            _context.Movies,
+            rec => rec.Title,
+            movie => movie.Title,
+            (rec, movie) => new { rec, movie }
+        )
+        .ToList();  // Materialize into memory
+
+    // Now transform in memory using BuildGenreListFromInts
+    var recommendations = joinedData
+        .Select(x => new
         {
-            var recommendations = _context.UserBasedRecs
-                .Where(r => r.UserId == id && r.RecommendationType == "top_picks")
-                .Join(
-                    _context.Movies,
-                    rec => rec.Title,
-                    movie => movie.Title,
-                    (rec, movie) => new
-                    {
-                        movie.ShowId,
-                        movie.Title,
-                        movie.Director,
-                        movie.Cast,
-                        movie.Country,
-                        movie.ReleaseYear,
-                        movie.Rating,
-                        movie.Duration,
-                        movie.Description,
-                        rec.Rank,
-                        rec.RecommendationType
-                    }
-                )
-                .OrderBy(r => r.Rank)
-                .ToList();
+            x.movie.ShowId,
+            x.movie.Title,
+            x.movie.Director,
+            x.movie.Cast,
+            x.movie.Country,
+            x.movie.ReleaseYear,
+            x.movie.Rating,
+            x.movie.Duration,
+            x.movie.Description,
+            Genres = BuildGenreListFromInts(x.movie),
+            x.rec.Rank,
+            x.rec.RecommendationType
+        })
+        .OrderBy(x => x.Rank)
+        .ToList();
 
-            Console.WriteLine($"🎯 Returning {recommendations.Count} matched movies");
+    Console.WriteLine($"🎯 Returning {recommendations.Count} matched movies");
 
-            return Ok(recommendations);
-        }
-
+    return Ok(recommendations);
+}
 
 
         [HttpGet("recentMovies")]
@@ -346,3 +367,4 @@ public IActionResult GetGenres()
         }
     }
 }
+
