@@ -13,9 +13,6 @@ function UserDashboardPage() {
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  const toggleSearch = () => {
-    setIsSearchOpen(!isSearchOpen);
-  };
 
   useEffect(() => {
     const userId = 73;
@@ -47,6 +44,7 @@ function UserDashboardPage() {
   // Recent movies
   useEffect(() => {
     axios
+      .get("https://localhost:5130/Movies/recent", {
         withCredentials: true,
       })
       .then((res) => {
@@ -68,6 +66,7 @@ function UserDashboardPage() {
         console.error("Failed to fetch recent movies", err);
       });
   }, []);
+
 
   useEffect(() => {
     axios
