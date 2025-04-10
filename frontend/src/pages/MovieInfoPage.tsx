@@ -60,7 +60,7 @@ function MovieInfoPage() {
     const source_show_id = "s12";
     axios
       .get(
-        `https://localhost:5130/Movies/movieBasedRecommendations/${source_show_id}`,
+        `https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies/movieBasedRecommendations/${source_show_id}`,
         {
           withCredentials: true,
         }
@@ -141,7 +141,6 @@ function MovieInfoPage() {
               </svg>
             </div>
             <div className="movie-poster">
-
               <img
                 src={imageUrl}
                 alt={movie.title}

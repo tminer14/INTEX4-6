@@ -21,7 +21,7 @@ function UserDashboardPage() {
     const fetchUserFullName = async () => {
       try {
         const response = await axios.get(
-          "https://localhost:5130/Movies/GetUserFullName",
+          "https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies/GetUserFullName",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -70,7 +70,6 @@ function UserDashboardPage() {
               imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
                 cleanTitle
               )}.jpg`,
-
             };
           }
         );
