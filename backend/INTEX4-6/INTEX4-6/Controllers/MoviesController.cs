@@ -204,6 +204,7 @@ namespace INTEX4_6.Controllers
                         movie.Description,
                         rec.Rank,
                         rec.RecommendationType
+                        
                     }
                 )
                 .OrderBy(r => r.Rank)
