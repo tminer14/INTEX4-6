@@ -7,8 +7,8 @@ namespace INTEX4_6.Data;
 public class MovieBasedRecs
 {
     [Key]
-    public string title { get; set; }
-    public int user_id { get; set; }
     public string show_id { get; set; }
+    public string title { get; set; }
+    public string source_show_id { get; set; }
   
 }

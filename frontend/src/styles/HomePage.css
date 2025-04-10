@@ -120,5 +120,15 @@
   font-weight: 400;
   width: 100%;
   height: 120px;
-  padding-top: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pricing-info p {
+  width: 100%; /* or use a larger fixed width like 800px */
+  max-width: 1000px; /* optional */
+  background: linear-gradient(90deg, #237881 0%, #022b3b 100%);
+  padding: 60px 50px;
+  border-radius: 10px;
 }

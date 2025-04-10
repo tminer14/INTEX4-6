@@ -23,14 +23,14 @@ namespace INTEX4_6.Data
         [Required]
         public string Gender { get; set; }
 
-        public bool Netflix { get; set; }
-        public bool AmazonPrime { get; set; }
-        public bool DisneyPlus { get; set; }
-        public bool Hulu { get; set; }
-        public bool Max { get; set; }
-        public bool ParamountPlus { get; set; }
-        public bool AppleTV { get; set; }
-        public bool Peacock { get; set; }
+        public int Netflix { get; set; }
+        public int AmazonPrime { get; set; }
+        public int DisneyPlus { get; set; }
+        public int Hulu { get; set; }
+        public int Max { get; set; }
+        public int ParamountPlus { get; set; }
+        public int AppleTV { get; set; }
+        public int Peacock { get; set; }
 
         [Required]
         public string City { get; set; }
@@ -39,6 +39,6 @@ namespace INTEX4_6.Data
         public string State { get; set; }
 
         [Required]
-        public string Zip { get; set; }
+        public int Zip { get; set; }
     }
 }

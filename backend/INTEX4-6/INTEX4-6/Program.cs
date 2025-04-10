@@ -101,13 +101,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("https://localhost:5173") // ✅ Correct this!
+            policy.WithOrigins("https://localhost:5130", "https://jolly-ground-0f8d9041e.6.azurestaticapps.net") // ✅ Correct this!
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials();
         });
 });
-
 
 // Email Sender (NoOp version)
 builder.Services.AddSingleton(typeof(IEmailSender<>), typeof(NoOpEmailSender<>));
@@ -117,6 +116,41 @@ builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, CustomUser
 
 
 var app = builder.Build();
+// SEED ROLES AND DEFAULT ADMIN USER
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+    string[] roles = { "User", "Administrator" };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+
+    // Optional: Seed a default Admin user
+    var adminEmail = "admin@admin.com";
+    var adminPassword = "Admin123!";
+
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+    if (adminUser == null)
+    {
+        var newAdmin = new IdentityUser
+        {
+            UserName = adminEmail,
+            Email = adminEmail
+        };
+        var createAdminResult = await userManager.CreateAsync(newAdmin, adminPassword);
+        if (createAdminResult.Succeeded)
+        {
+            await userManager.AddToRoleAsync(newAdmin, "Administrator");
+        }
+    }
+}
 
 // Configure HTTP request pipeline
 if (app.Environment.IsDevelopment())
@@ -125,6 +159,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
@@ -166,5 +201,9 @@ app.MapGet("/pingauth", (ClaimsPrincipal user) =>
     var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com";
     return Results.Json(new { email = email });
 }).RequireAuthorization();
+
+
+app.MapGet("/test-cors", () => Results.Ok("CORS works!"))
+   .RequireCors("AllowFrontend");
 
 app.Run();
