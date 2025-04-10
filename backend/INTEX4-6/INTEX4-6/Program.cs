@@ -51,7 +51,7 @@ builder.Services.AddDbContext<MovieDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MovieConnection")));
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
 
 // Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
@@ -162,15 +162,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 
-
-
-app.Use(async (context, next) =>
-{
-    context.Response.Headers["Content-Security-Policy"] =
-        "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; img-src 'self' data:; font-src 'self' fonts.gstatic.com data:; connect-src 'self' https://localhost:5130 https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';";
-
-    await next();
-});
 
 app.UseAuthentication(); // <-- VERY IMPORTANT: Authentication FIRST
 app.UseAuthorization();
