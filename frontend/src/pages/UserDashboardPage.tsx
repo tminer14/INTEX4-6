@@ -15,6 +15,26 @@ function UserDashboardPage() {
   const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [userFullName, setUserFullName] = useState<string>("");
+  useEffect(() => {
+    const fetchUserFullName = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:5130/Movies/GetUserFullName",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setUserFullName(response.data.fullName);
+      } catch (error) {
+        console.error("Failed to fetch user full name", error);
+      }
+    };
+
+    fetchUserFullName();
+  }, []);
 
   const [isLoadingRecommended, setIsLoadingRecommended] = useState(true);
   const [isLoadingHighlyRated, setIsLoadingHighlyRated] = useState(true);
@@ -110,6 +130,7 @@ function UserDashboardPage() {
           <Link to="/" className="logo-link">
             <img src={logo} alt="Logo" className="logo" />
           </Link>
+
           <div className="header-actions">
             <div className="language-selector">
               <span>Language</span>
@@ -138,7 +159,10 @@ function UserDashboardPage() {
           </div>
         </div>
       </header>
-
+      {/* New User Welcome Text */}
+      <div className="user-welcome">
+        <span>Welcome, {userFullName || "Guest"}!</span>
+      </div>
       <div className="dashboard-content">
         <h1 className="dashboard-title">Discover Your Next Favorite.</h1>
 

@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import "./App.css";
 import HomePage from "./pages/HomePage";
 import MovieListPage from "./pages/MovieListPage";
@@ -17,6 +18,29 @@ import ForbiddenPage from "./pages/ForbiddenPage";
 import { Toaster } from "react-hot-toast";
 
 function App() {
+  const navigate = useNavigate(); // 👈 added navigate
+  const THIRTY_MINUTES = 30 * 60 * 1000; // 30 minutes in ms
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    console.log(token);
+    const handleLogout = () => {
+      localStorage.removeItem("authToken");
+      navigate("/"); // 👈 send user to homepage
+      window.location.reload(); // optional: hard reload
+    };
+
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    if (token) {
+      timeoutId = setTimeout(() => {
+        handleLogout();
+      }, THIRTY_MINUTES);
+    }
+
+    return () => clearTimeout(timeoutId);
+  }, [navigate]);
+
   return (
     <div className="App">
       <Routes>
