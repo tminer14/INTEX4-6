@@ -14,7 +14,7 @@ function UserDashboardPage() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const API_URL =
-    "https://cinenichegroup4-6-dsfcb8dvcabpazd6.eastus-01.azurewebsites.net/Movies";
+    "https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies";
 
   useEffect(() => {
     const userId = 73;

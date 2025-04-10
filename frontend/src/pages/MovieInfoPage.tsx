@@ -27,7 +27,7 @@ function MovieInfoPage() {
   useEffect(() => {
     axios
       .get(
-        `https://cinenichegroup4-6-dsfcb8dvcabpazd6.eastus-01.azurewebsites.net/Movies/details/${title}`,
+        `https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies/details/${title}`,
         {
           withCredentials: true,
         }
