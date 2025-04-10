@@ -16,7 +16,9 @@ const AdminMoviesPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(500);
   const [totalPages, setTotalPages] = useState(1);
-  const [totalMovies, setTotalMovies] = useState(0);
+
+  const API_URL =
+    "https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies";
 
   const handleSignOut = () => {
     localStorage.removeItem("authToken");
@@ -66,7 +68,6 @@ const fetchMoviesList = async (page = 1, customPageSize = pageSize) => {
   }
 };
 
-
   useEffect(() => {
     fetchMoviesList();
   }, []);
@@ -89,7 +90,7 @@ const fetchMoviesList = async (page = 1, customPageSize = pageSize) => {
   const handleDeleteMovie = async (showId: string) => {
     if (!window.confirm("Are you sure you want to delete this movie?")) return;
     try {
-      await axios.delete(`https://localhost:5130/Movies/${showId}`);
+      await axios.delete(`${API_URL}/${showId}`);
       toast.success("Movie deleted successfully!");
       fetchMoviesList();
     } catch (error) {

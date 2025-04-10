@@ -101,13 +101,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("https://localhost:5173") // ✅ Correct this!
+            policy.WithOrigins("https://localhost:5130", "https://jolly-ground-0f8d9041e.6.azurestaticapps.net") // ✅ Correct this!
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials();
         });
 });
-
 
 // Email Sender (NoOp version)
 builder.Services.AddSingleton(typeof(IEmailSender<>), typeof(NoOpEmailSender<>));
@@ -160,9 +159,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 
-app.UseHttpsRedirection();
 
 
 app.Use(async (context, next) =>

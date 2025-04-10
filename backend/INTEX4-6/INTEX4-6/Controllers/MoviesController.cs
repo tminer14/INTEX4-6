@@ -207,7 +207,7 @@ public async Task<IActionResult> GetMoviesBasedOnGenre([FromQuery] string genre)
             return Ok(topMovies);
         }
 
-       [HttpGet("details/{title}")]
+        [HttpGet("details/{title}")]
 public IActionResult GetMovieDetails(string title)
 {
     var movie = _context.Movies.FirstOrDefault(m => m.Title == title);
@@ -229,12 +229,11 @@ public IActionResult GetMovieDetails(string title)
         movie.Rating,
         movie.Duration,
         movie.Description,
-        Genres = BuildGenreListFromInts(movie)
+        genres = BuildGenreListFromInts(movie) // ✅ lowercase and sent as a list
     };
 
     return Ok(result);
 }
-
 
        [HttpGet("userBasedRecommendations/{id}")]
 public IActionResult GetUserBasedRecommendations(int id)

@@ -19,13 +19,15 @@ function UserDashboardPage() {
   const [isLoadingRecommended, setIsLoadingRecommended] = useState(true);
   const [isLoadingHighlyRated, setIsLoadingHighlyRated] = useState(true);
   const [isLoadingRecent, setIsLoadingRecent] = useState(true);
+  const API_URL =
+    "https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies";
 
-  // Recommended for you movies
+
   useEffect(() => {
     const userId = 73;
 
     axios
-      .get(`https://localhost:5130/Movies/userBasedRecommendations/${userId}`, {
+      .get(`${API_URL}/userBasedRecommendations/${userId}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -54,7 +56,7 @@ function UserDashboardPage() {
   // Recent movies
   useEffect(() => {
     axios
-      .get("https://localhost:5130/Movies/recentMovies", {
+      .get(`${API_URL}/recentMovies`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -83,7 +85,7 @@ function UserDashboardPage() {
   // Highly rated movies
   useEffect(() => {
     axios
-      .get("https://localhost:5130/Movies/top-rated", {
+      .get(`${API_URL}/top-rated`, {
         withCredentials: true,
       })
       .then((res) => {
