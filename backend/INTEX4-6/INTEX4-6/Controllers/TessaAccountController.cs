@@ -42,6 +42,7 @@ namespace INTEX4_6.Controllers
 
             var movieUser = new MovieUserInfo
             {
+                UserId = new Random().Next(100000, 999999),
                 Name = dto.Name ?? "Unknown",
                 Phone = dto.Phone ?? "Unknown",
                 Email = dto.Email ?? "Unknown",
@@ -59,6 +60,7 @@ namespace INTEX4_6.Controllers
                 State = dto.State ?? "Unknown",
                 Zip = dto.Zip != 0 ? dto.Zip : 99999
             };
+
 
             try
             {

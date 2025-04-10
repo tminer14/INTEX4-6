@@ -8,7 +8,6 @@ namespace INTEX4_6.Data
     public class MovieUserInfo
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("user_id")]
         public int UserId { get; set; }
 
