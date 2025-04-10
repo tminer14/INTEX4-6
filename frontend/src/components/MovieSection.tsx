@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/MovieSection.css";
 import { Movie } from "../types/Movie";
+import PosterNotFound from "../assets/PosterNotFound.webp";
 
 interface MovieWithImageUrl extends Movie {
   imageUrl: string;
@@ -10,7 +11,6 @@ interface MovieSectionProps {
   title: string;
 
   movies: MovieWithImageUrl[];
-
 }
 
 function MovieSection({ title, movies }: MovieSectionProps) {
@@ -28,6 +28,10 @@ function MovieSection({ title, movies }: MovieSectionProps) {
               src={movie.imageUrl}
               alt={movie.title}
               className="movie-card"
+              onError={(e) => {
+                e.currentTarget.onerror = null; // 🛡 prevent infinite loop
+                e.currentTarget.src = PosterNotFound;
+              }}
             />
           </Link>
         ))}
