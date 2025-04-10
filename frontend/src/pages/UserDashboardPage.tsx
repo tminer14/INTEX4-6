@@ -13,6 +13,8 @@ function UserDashboardPage() {
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [userFullName, setUserFullName] = useState<string>("");
+  const [userId, setUserId] = useState<number | null>(null);
+
   useEffect(() => {
     const fetchUserFullName = async () => {
       try {
@@ -34,7 +36,27 @@ function UserDashboardPage() {
   }, []);
 
   useEffect(() => {
-    const userId = 73;
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:5130/Movies/GetUserId", // 🚨 Adjust to your actual backend route
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setUserId(response.data.userId); // 🚀 store userId from response
+      } catch (error) {
+        console.error("Failed to fetch user ID", error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
 
     axios
       .get(`https://localhost:5130/Movies/userBasedRecommendations/${userId}`, {
@@ -42,23 +64,25 @@ function UserDashboardPage() {
       })
       .then((res) => {
         const formatted = res.data.map(
-          (movie: { title: string; showId: string }, index: number) => {
-            const cleanTitle = movie.title.replace(/[:']/g, "");
-            return {
-              id: index,
-              title: movie.title,
-              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-                cleanTitle
-              )}.jpg`,
-            };
-          }
+          (
+            movie: { title: string; recommendationType: string },
+            index: number
+          ) => ({
+            id: index,
+            title: movie.title,
+            recommendationType: movie.recommendationType,
+            imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
+              movie.title.replace(/[:']/g, "")
+            )}.jpg`,
+          })
         );
         setRecommendedMovies(formatted);
       })
+
       .catch((err) => {
         console.error("Failed to fetch recommended movies", err);
       });
-  }, []);
+  }, [userId]);
 
   // Recent movies
   useEffect(() => {

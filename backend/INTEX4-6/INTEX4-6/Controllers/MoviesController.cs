@@ -153,7 +153,27 @@ namespace INTEX4_6.Controllers
 
             return Ok(pageResult);
         }
-       
+        [HttpGet("GetUserId")]
+        public async Task<IActionResult> GetUserId()
+        {
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrEmpty(email))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _context.MovieUsers
+                .Where(u => u.Email == email)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            return Ok(new { userId = user.UserId }); // ✅ Return just the ID
+        }
+
         private List<string> GetGenresFromBooleans(Movie movie)
         {
             var genres = new List<string>();
