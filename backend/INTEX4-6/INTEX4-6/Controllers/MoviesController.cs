@@ -107,9 +107,9 @@ namespace INTEX4_6.Controllers
             return genres;
         }
 
-        public MoviesController(MovieDbContext temp)
+        public MoviesController(MovieDbContext context)
         {
-            _context = temp;
+            _context = context;
         }
 
 
