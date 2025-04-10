@@ -1,12 +1,52 @@
 import Header from "../components/Header";
 import HomeBackground from "../assets/Home Background.png";
-import InputDesign from "../components/InputDesign";
 import "../styles/HomePage.css";
 import { useNavigate } from "react-router-dom";
+import AutoScrollMovies from "../components/AutoScrollMovies";
 
 function HomePage() {
   // Add navigation
   const navigate = useNavigate();
+
+  // Movie data for the auto-scrolling section
+  const discoverMovies = [
+    {
+      id: "1",
+      title: "Batman The Killing Joke",
+      imageUrl:
+        "https://cdn.builder.io/api/v1/image/assets/TEMP/507989c8bed3f80ef72f624739ad58478ed4cdd5",
+    },
+    {
+      id: "2",
+      title: "At the Dolphin Bay",
+      imageUrl:
+        "https://cdn.builder.io/api/v1/image/assets/TEMP/a9fab35361a88e96ec412e1c4bf010967d629a3b",
+    },
+    {
+      id: "3",
+      title: "Dolly Parton Here I Am",
+      imageUrl:
+        "https://cdn.builder.io/api/v1/image/assets/TEMP/ffed569aafb3fe97be4c2817c66026992bbdec7f",
+    },
+    {
+      id: "10",
+      title: "Everything Sucks",
+      imageUrl:
+        "https://cdn.builder.io/api/v1/image/assets/TEMP/9dcb2a07da01cafa38d53b787e046b83c49079c4",
+    },
+    {
+      id: "11",
+      title: "H2O Just Add Water",
+      imageUrl:
+        "https://cdn.builder.io/api/v1/image/assets/TEMP/c0ef3a983f566af76fa9c88d0b5bfbe7115ea9ba",
+    },
+    {
+      id: "12",
+      title: "Llama Llama",
+      imageUrl:
+        "https://cdn.builder.io/api/v1/image/assets/TEMP/6298506231c78fe64692d09fcfa988eb4480a48c",
+    },
+  ];
 
   return (
     <div className="home-container">
@@ -41,8 +81,13 @@ function HomePage() {
             </div>
           </div>
         </section>
-        <InputDesign />
       </div>
+
+      <div className="pricing-info">
+        <p>Starting at $9.99. No commitments. Cancel anytime.</p>
+      </div>
+
+      <AutoScrollMovies title="Yours To Discover" movies={discoverMovies} />
     </div>
   );
 }
