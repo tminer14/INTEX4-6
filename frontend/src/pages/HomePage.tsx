@@ -3,6 +3,7 @@ import HomeBackground from "../assets/Home Background.png";
 import "../styles/HomePage.css";
 import { useNavigate } from "react-router-dom";
 import AutoScrollMovies from "../components/AutoScrollMovies";
+import CookiesPopup from "../components/CookiesPopup";
 
 function HomePage() {
   // Add navigation
@@ -88,6 +89,7 @@ function HomePage() {
       </div>
 
       <AutoScrollMovies title="Yours To Discover" movies={discoverMovies} />
+      <CookiesPopup />
     </div>
   );
 }
