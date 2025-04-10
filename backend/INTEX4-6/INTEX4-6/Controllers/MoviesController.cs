@@ -132,7 +132,28 @@ namespace INTEX4_6.Controllers
 
             return Ok(pageResult);
         }
+        
+        [HttpGet("GetUserId")]
+        public async Task<IActionResult> GetUserId()
+        {
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrEmpty(email))
+            {
+                return Unauthorized();
+            }
 
+            var user = await _context.MovieUsers
+                .Where(u => u.Email == email)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            return Ok(new { userId = user.UserId }); // ✅ Return just the ID
+        }
+        
         // Return 20 movies based on the genre passed in 
         [HttpGet("basedOnGenre")]
 public async Task<IActionResult> GetMoviesBasedOnGenre([FromQuery] string genre)
@@ -168,8 +189,6 @@ public async Task<IActionResult> GetMoviesBasedOnGenre([FromQuery] string genre)
 
     return Ok(filteredMovies);
 }
-
-       
         private List<string> GetGenresFromBooleans(Movie movie)
         {
             var genres = new List<string>();
@@ -457,6 +476,46 @@ public IActionResult GetMovieBasedRecommendations(string source_show_id)
             return Ok();
         }
 
+       [HttpGet("userBasedRecommendationsByGenre/{id}")]
+public async Task<IActionResult> GetUserRecommendationsByGenre(int id, [FromQuery] string genre)
+{
+    if (string.IsNullOrWhiteSpace(genre))
+    {
+        return BadRequest("Genre is required.");
     }
+
+    // Join using show_id instead of Title
+    var recommendedMovies = await _context.UserBasedRecs
+        .Where(r => r.UserId == id && r.RecommendationType == genre)
+        .Join(
+            _context.Movies,
+            r => r.ShowId,        
+            movie => movie.ShowId,    
+            (r, movie) => movie
+        )
+        .Take(10)
+        .ToListAsync();
+
+    // Package with genre list for the frontend
+    var result = recommendedMovies.Select(m => new
+    {
+        m.ShowId,
+        m.Type,
+        m.Title,
+        m.Director,
+        m.Cast,
+        m.Country,
+        m.ReleaseYear,
+        m.Rating,
+        m.Duration,
+        m.Description,
+        Genre = BuildGenreListFromInts(m)
+    }).ToList();
+
+    return Ok(result);
 }
+
+
+
+}}
 
