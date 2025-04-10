@@ -1,6 +1,5 @@
 import Header from "../components/Header";
 import HomeBackground from "../assets/Home Background.png";
-import FeaturedMovies from "../components/FeaturedMovies";
 import InputDesign from "../components/InputDesign";
 import "../styles/HomePage.css";
 import { useNavigate } from "react-router-dom";
