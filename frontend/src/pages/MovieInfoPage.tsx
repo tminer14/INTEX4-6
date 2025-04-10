@@ -6,6 +6,8 @@ import logo from "../assets/Logo.png";
 import { Movie } from "../types/Movie";
 import axios from "axios";
 import toast from "react-hot-toast";
+import MovieSection from "../components/MovieSection";
+import PosterNotFound from "../assets/PosterNotFound.webp";
 
 function MovieInfoPage() {
   const { title } = useParams<{ title: string }>();
@@ -14,6 +16,8 @@ function MovieInfoPage() {
   const [userRating, setUserRating] = useState<number>(0);
   const [hoveredRating, setHoveredRating] = useState<number>(0);
   const [imageUrl, setImageUrl] = useState<string>("");
+
+  const [recommendedMovies, setRecommendedMovies] = useState([]);
 
   // Function to add points
   const addPoints = () => {
@@ -37,6 +41,8 @@ function MovieInfoPage() {
         setMovie(movieData);
         addPoints();
 
+        console.log("Genres", movieData);
+
         // Clean and generate the image URL like in MovieSection
         const cleaned = movieData.title.replace(/[:'"?&]/g, "");
         const encoded = encodeURIComponent(cleaned);
@@ -48,6 +54,36 @@ function MovieInfoPage() {
         console.error("Failed to fetch movie details", err);
       });
   }, [title]);
+
+  // Recommend movies based on this movie
+  useEffect(() => {
+    const source_show_id = "s12";
+    axios
+      .get(
+        `https://localhost:5130/Movies/movieBasedRecommendations/${source_show_id}`,
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        const formatted = res.data.map(
+          (movie: { title: string }, index: number) => {
+            const cleanTitle = movie.title.replace(/[:'&!-]/g, "");
+            return {
+              id: index,
+              title: movie.title,
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
+                cleanTitle
+              )}.jpg`,
+            };
+          }
+        );
+        setRecommendedMovies(formatted);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch recent movies", err);
+      });
+  }, []);
 
   const handleBack = () => {
     navigate(-1);
@@ -105,7 +141,16 @@ function MovieInfoPage() {
               </svg>
             </div>
             <div className="movie-poster">
-              <img src={imageUrl} alt={movie.title} className="poster-image" />
+
+              <img
+                src={imageUrl}
+                alt={movie.title}
+                className="poster-image"
+                onError={(e) => {
+                  e.currentTarget.onerror = null; // 🛡 prevent infinite loop
+                  e.currentTarget.src = PosterNotFound;
+                }}
+              />
             </div>
 
             <div className="play-button">
@@ -145,7 +190,7 @@ function MovieInfoPage() {
 
               <div className="info-row">
                 <span className="info-label">Genre:</span>
-                <span className="info-value">{movie.genre}</span>
+                <span className="info-value">{movie.genres?.join(", ")}</span>
               </div>
 
               <div className="info-row">
@@ -180,7 +225,7 @@ function MovieInfoPage() {
 
               <div className="info-row">
                 <span className="info-label">Rating:</span>
-                <span className="info-value">{movie.rating}/5</span>
+                <span className="info-value">{movie.rating}</span>
               </div>
 
               <div className="rating-label">Seen it? Rate this movie:</div>
@@ -222,7 +267,7 @@ function MovieInfoPage() {
           </div>
         </div>
       </div>
-      {/* <MovieSection title="More like this" movies={}/> */}
+      <MovieSection title="More like this" movies={recommendedMovies} />
     </div>
   );
 }

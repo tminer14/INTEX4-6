@@ -4,8 +4,10 @@ import axios from "axios";
 import FilterOptions from "../components/FilterOptions";
 import MovieSection from "../components/MovieSection";
 import SearchPanel from "../components/SearchPanel";
+import MovieSectionLoader from "../components/MovieSectionLoader";
 import "../styles/UserDashboard.css";
 import logo from "../assets/Logo.png";
+import MoviesByGenreSection from "../components/MoviesByGenre";
 
 function UserDashboardPage() {
   const [highlyRatedMovies, setHighlyRatedMovies] = useState([]);
@@ -13,8 +15,13 @@ function UserDashboardPage() {
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+  // 🕐 Loading states
+  const [isLoadingRecommended, setIsLoadingRecommended] = useState(true);
+  const [isLoadingHighlyRated, setIsLoadingHighlyRated] = useState(true);
+  const [isLoadingRecent, setIsLoadingRecent] = useState(true);
   const API_URL =
     "https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies";
+
 
   useEffect(() => {
     const userId = 73;
@@ -26,7 +33,7 @@ function UserDashboardPage() {
       .then((res) => {
         const formatted = res.data.map(
           (movie: { title: string; showId: string }, index: number) => {
-            const cleanTitle = movie.title.replace(/[:']/g, "");
+            const cleanTitle = movie.title.replace(/[:'&-]/g, "");
             return {
               id: index,
               title: movie.title,
@@ -40,6 +47,9 @@ function UserDashboardPage() {
       })
       .catch((err) => {
         console.error("Failed to fetch recommended movies", err);
+      })
+      .finally(() => {
+        setIsLoadingRecommended(false);
       });
   }, []);
 
@@ -66,9 +76,13 @@ function UserDashboardPage() {
       })
       .catch((err) => {
         console.error("Failed to fetch recent movies", err);
+      })
+      .finally(() => {
+        setIsLoadingRecent(false);
       });
   }, []);
 
+  // Highly rated movies
   useEffect(() => {
     axios
       .get(`${API_URL}/top-rated`, {
@@ -87,15 +101,16 @@ function UserDashboardPage() {
             };
           }
         );
-
         setHighlyRatedMovies(formatted);
       })
       .catch((err) => {
         console.error("Failed to fetch top-rated movies", err);
+      })
+      .finally(() => {
+        setIsLoadingHighlyRated(false);
       });
   }, []);
 
-  // Toggle function
   const toggleSearch = () => {
     setIsSearchOpen((prev) => !prev);
   };
@@ -142,12 +157,62 @@ function UserDashboardPage() {
         <FilterOptions />
 
         <div className="movie-sections">
-          <MovieSection
-            title="Recommended For You"
-            movies={recommendedMovies}
-          />
-          <MovieSection title="Highly Rated" movies={highlyRatedMovies} />
-          <MovieSection title="Recent Additions" movies={recentlyAddedMovies} />
+          {isLoadingRecommended ? (
+            <MovieSectionLoader />
+          ) : (
+            <MovieSection
+              title="Recommended For You"
+              movies={recommendedMovies}
+            />
+          )}
+
+          {isLoadingHighlyRated ? (
+            <MovieSectionLoader />
+          ) : (
+            <MovieSection title="Highly Rated" movies={highlyRatedMovies} />
+          )}
+
+          {isLoadingRecent ? (
+            <MovieSectionLoader />
+          ) : (
+            <MovieSection
+              title="Recent Additions"
+              movies={recentlyAddedMovies}
+            />
+          )}
+
+          {/* Genre-based sections */}
+          <MoviesByGenreSection genre="Comedy" />
+          <MoviesByGenreSection genre="Action" />
+          <MoviesByGenreSection genre="Adventure" />
+          <MoviesByGenreSection genre="Anime Series International TV Shows" />
+          <MoviesByGenreSection genre="British TV Shows Docuseries International TV Shows" />
+          <MoviesByGenreSection genre="Children" />
+          <MoviesByGenreSection genre="Comedies" />
+          <MoviesByGenreSection genre="Comedies Dramas International Movies" />
+          <MoviesByGenreSection genre="Comedies Romantic Movies" />
+          <MoviesByGenreSection genre="Crime TV Shows Docuseries" />
+          <MoviesByGenreSection genre="Documentaries" />
+          <MoviesByGenreSection genre="Documentaries International Movies" />
+          <MoviesByGenreSection genre="Docuseries" />
+          <MoviesByGenreSection genre="Dramas" />
+          <MoviesByGenreSection genre="Dramas International Movies" />
+          <MoviesByGenreSection genre="Dramas Romantic Movie" />
+          <MoviesByGenreSection genre="Family Movies" />
+          <MoviesByGenreSection genre="Fantasy" />
+          <MoviesByGenreSection genre="Horror Movies" />
+          <MoviesByGenreSection genre="International Movies Thrillers" />
+          <MoviesByGenreSection genre="International TV Shows Romantic TV Shows TV Dramas" />
+          <MoviesByGenreSection genre="Kids' TV" />
+          <MoviesByGenreSection genre="Language TV Shows" />
+          <MoviesByGenreSection genre="Musicals" />
+          <MoviesByGenreSection genre="Nature TV" />
+          <MoviesByGenreSection genre="Reality TV" />
+          <MoviesByGenreSection genre="Spirituality" />
+          <MoviesByGenreSection genre="TV Action" />
+          <MoviesByGenreSection genre="TV Comedies" />
+          <MoviesByGenreSection genre="Talk Shows TV Comedies" />
+          <MoviesByGenreSection genre="Thrillers" />
         </div>
       </div>
 

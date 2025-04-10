@@ -51,7 +51,7 @@ builder.Services.AddDbContext<MovieDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MovieConnection")));
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
 
 // Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
@@ -108,7 +108,6 @@ builder.Services.AddCors(options =>
         });
 });
 
-
 // Email Sender (NoOp version)
 builder.Services.AddSingleton(typeof(IEmailSender<>), typeof(NoOpEmailSender<>));
 
@@ -117,6 +116,41 @@ builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, CustomUser
 
 
 var app = builder.Build();
+// SEED ROLES AND DEFAULT ADMIN USER
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+    string[] roles = { "User", "Administrator" };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+
+    // Optional: Seed a default Admin user
+    var adminEmail = "admin@admin.com";
+    var adminPassword = "Admin123!";
+
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+    if (adminUser == null)
+    {
+        var newAdmin = new IdentityUser
+        {
+            UserName = adminEmail,
+            Email = adminEmail
+        };
+        var createAdminResult = await userManager.CreateAsync(newAdmin, adminPassword);
+        if (createAdminResult.Succeeded)
+        {
+            await userManager.AddToRoleAsync(newAdmin, "Administrator");
+        }
+    }
+}
 
 // Configure HTTP request pipeline
 if (app.Environment.IsDevelopment())
@@ -125,9 +159,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 
-app.UseHttpsRedirection();
+
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["Content-Security-Policy"] =
+        "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; img-src 'self' data:; font-src 'self' fonts.gstatic.com data:; connect-src 'self' https://localhost:5130 https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';";
+
+    await next();
+});
 
 app.UseAuthentication(); // <-- VERY IMPORTANT: Authentication FIRST
 app.UseAuthorization();

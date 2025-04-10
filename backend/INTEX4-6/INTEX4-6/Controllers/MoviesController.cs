@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using INTEX4_6.Data;
+using INTEX4_6.Dtos;
+using INTEX4_6.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
@@ -129,6 +132,43 @@ namespace INTEX4_6.Controllers
 
             return Ok(pageResult);
         }
+
+        // Return 20 movies based on the genre passed in 
+        [HttpGet("basedOnGenre")]
+public async Task<IActionResult> GetMoviesBasedOnGenre([FromQuery] string genre)
+{
+    if (string.IsNullOrWhiteSpace(genre))
+    {
+        return BadRequest("Genre is required.");
+    }
+
+    // Pull all movies
+    var allMovies = await _context.Movies.ToListAsync();
+
+    // Filter by genre
+    var filteredMovies = allMovies
+        .Where(m => BuildGenreListFromInts(m)
+            .Any(g => g.Equals(genre, StringComparison.OrdinalIgnoreCase)))
+        .Take(20)
+        .Select(m => new
+        {
+            m.ShowId,
+            m.Type,
+            m.Title,
+            m.Director,
+            m.Cast,
+            m.Country,
+            m.ReleaseYear,
+            m.Rating,
+            m.Duration,
+            m.Description,
+            Genre = BuildGenreListFromInts(m)
+        })
+        .ToList();
+
+    return Ok(filteredMovies);
+}
+
        
         private List<string> GetGenresFromBooleans(Movie movie)
         {
@@ -168,49 +208,71 @@ namespace INTEX4_6.Controllers
         }
 
         [HttpGet("details/{title}")]
-        public IActionResult GetMovieDetails(string title)
+public IActionResult GetMovieDetails(string title)
+{
+    var movie = _context.Movies.FirstOrDefault(m => m.Title == title);
+
+    if (movie == null)
+    {
+        return NotFound(new { message = $"Movie with title '{title}' not found." });
+    }
+
+    var result = new
+    {
+        movie.ShowId,
+        movie.Type,
+        movie.Title,
+        movie.Director,
+        movie.Cast,
+        movie.Country,
+        movie.ReleaseYear,
+        movie.Rating,
+        movie.Duration,
+        movie.Description,
+        genres = BuildGenreListFromInts(movie) // ✅ lowercase and sent as a list
+    };
+
+    return Ok(result);
+}
+
+       [HttpGet("userBasedRecommendations/{id}")]
+public IActionResult GetUserBasedRecommendations(int id)
+{
+    // Step 1: Materialize the join into memory
+    var joinedData = _context.UserBasedRecs
+        .Where(r => r.UserId == id && r.RecommendationType == "top_picks")
+        .Join(
+            _context.Movies,
+            rec => rec.Title,
+            movie => movie.Title,
+            (rec, movie) => new { rec, movie }
+        )
+        .ToList();  // Needed so we can safely use C# methods
+
+    // Step 2: Now map genres using your method
+    var recommendations = joinedData
+        .Select(x => new
         {
-            var movie = _context.Movies.FirstOrDefault(m => m.Title == title);
+            x.movie.ShowId,
+            x.movie.Title,
+            x.movie.Director,
+            x.movie.Cast,
+            x.movie.Country,
+            x.movie.ReleaseYear,
+            x.movie.Rating,
+            x.movie.Duration,
+            x.movie.Description,
+            Genres = BuildGenreListFromInts(x.movie),  // ✅ Include genres
+            x.rec.Rank,
+            x.rec.RecommendationType
+        })
+        .OrderBy(x => x.Rank)
+        .ToList();
 
-            if (movie == null)
-            {
-                return NotFound(new { message = $"Movie with title '{title}' not found." });
-            }
+    Console.WriteLine($"🎯 Returning {recommendations.Count} matched movies");
 
-            return Ok(movie);
-        }
-
-        [HttpGet("userBasedRecommendations/{id}")]
-        public IActionResult GetUserBasedRecommendations(int id)
-        {
-            var recommendations = _context.UserBasedRecs
-                .Where(r => r.UserId == id && r.RecommendationType == "top_picks")
-                .Join(
-                    _context.Movies,
-                    rec => rec.Title,
-                    movie => movie.Title,
-                    (rec, movie) => new
-                    {
-                        movie.ShowId,
-                        movie.Title,
-                        movie.Director,
-                        movie.Cast,
-                        movie.Country,
-                        movie.ReleaseYear,
-                        movie.Rating,
-                        movie.Duration,
-                        movie.Description,
-                        rec.Rank,
-                        rec.RecommendationType
-                    }
-                )
-                .OrderBy(r => r.Rank)
-                .ToList();
-
-            Console.WriteLine($"🎯 Returning {recommendations.Count} matched movies");
-
-            return Ok(recommendations);
-        }
+    return Ok(recommendations);
+}
 
 
 
@@ -245,61 +307,111 @@ namespace INTEX4_6.Controllers
             return Ok(matchedMovies);
         }
 
-        [HttpGet("movieBasedRecommendations/{title}")]
-        public IActionResult GetMovieBasedRecommendations(string title)
-        {
-
-            var recommendations = _context.MovieBasedRecs
-                .Where(rec => rec.title == title)
-                .Join(
-                    _context.Movies,
-                    rec => rec.title,
-                    movie => movie.Title,
-                    (rec, movie) => new
-                    {
-                        movie.ShowId,
-                        movie.Title,
-                        movie.Director,
-                        movie.Cast,
-                        movie.Country,
-                        movie.ReleaseYear,
-                        movie.Rating,
-                        movie.Duration,
-                        movie.Description,
-                 
-                    }
-                )
-       
-                .ToList();
-
-            return Ok(recommendations);
-        }
-
-        [HttpGet("genres")]
-public IActionResult GetGenres()
+        [HttpGet("movieBasedRecommendations/{source_show_id}")]
+public IActionResult GetMovieBasedRecommendations(string source_show_id)
 {
-    var genreProperties = typeof(Movie)
-        .GetProperties()
-        .Where(p => p.PropertyType == typeof(bool?) || p.PropertyType == typeof(bool))
-        .Select(p => p.GetCustomAttributes(typeof(ColumnAttribute), false)
-                     .FirstOrDefault() is ColumnAttribute attr ? attr.Name : p.Name)
+    var recommendations = _context.MovieBasedRecs
+        .Where(rec => rec.source_show_id == source_show_id)
+        .Join(
+            _context.Movies,
+            rec => rec.show_id, // <- recommended movie's ID
+            movie => movie.ShowId,
+            (rec, movie) => new
+            {
+                movie.ShowId,
+                movie.Title,
+                movie.Director,
+                movie.Cast,
+                movie.Country,
+                movie.ReleaseYear,
+                movie.Rating,
+                movie.Duration,
+                movie.Description,
+            }
+        )
         .ToList();
 
-    return Ok(genreProperties);
+    return Ok(recommendations);
 }
 
-        [HttpPost]
-        public IActionResult CreateMovie([FromBody] Movie movie)
+
+        [HttpPost("create")]
+        [AllowAnonymous]
+        public IActionResult CreateMovie([FromBody] MovieCreateDto movieDto)
         {
-            if (movie == null)
+            var conn = _context.Database.GetDbConnection();
+            Console.WriteLine("🔵 DB CONNECTION STRING AT RUNTIME: " + conn.ConnectionString);
+
+            if (movieDto == null)
             {
-                return BadRequest();
+                Console.WriteLine("❌ Incoming movie DTO payload could not be bound (null).");
+                return BadRequest("Movie payload is null or badly formatted.");
             }
 
+            Console.WriteLine("✅ Movie DTO received: " + movieDto.Title);
+
+            // Manually map DTO to Entity
+            var movie = new Movie
+            {
+                ShowId = movieDto.ShowId,
+                Type = movieDto.Type,
+                Title = movieDto.Title,
+                Director = movieDto.Director,
+                Cast = movieDto.Cast,
+                Country = movieDto.Country,
+                ReleaseYear = movieDto.ReleaseYear,
+                Rating = movieDto.Rating,
+                Duration = movieDto.Duration,
+                Description = movieDto.Description,
+
+                // Genres
+                Action = movieDto.Action,
+                Adventure = movieDto.Adventure,
+                AnimeSeriesInternationalTvShows = movieDto.AnimeSeriesInternationalTvShows,
+                BritishTvShowsDocuseriesInternationalTvShows = movieDto.BritishTvShowsDocuseriesInternationalTvShows,
+                Children = movieDto.Children,
+                Comedies = movieDto.Comedies,
+                ComediesDramasInternationalMovies = movieDto.ComediesDramasInternationalMovies,
+                ComediesInternationalMovies = movieDto.ComediesInternationalMovies,
+                ComediesRomanticMovies = movieDto.ComediesRomanticMovies,
+                CrimeTvShowsDocuseries = movieDto.CrimeTvShowsDocuseries,
+                Documentaries = movieDto.Documentaries,
+                DocumentariesInternationalMovies = movieDto.DocumentariesInternationalMovies,
+                Docuseries = movieDto.Docuseries,
+                Dramas = movieDto.Dramas,
+                DramasInternationalMovies = movieDto.DramasInternationalMovies,
+                DramasRomanticMovies = movieDto.DramasRomanticMovies,
+                FamilyMovies = movieDto.FamilyMovies,
+                Fantasy = movieDto.Fantasy,
+                HorrorMovies = movieDto.HorrorMovies,
+                InternationalMoviesThrillers = movieDto.InternationalMoviesThrillers,
+                InternationalTvShowsRomanticTvShowsTvDramas = movieDto.InternationalTvShowsRomanticTvShowsTvDramas,
+                KidsTv = movieDto.KidsTv,
+                LanguageTvShows = movieDto.LanguageTvShows,
+                Musicals = movieDto.Musicals,
+                NatureTv = movieDto.NatureTv,
+                RealityTv = movieDto.RealityTv,
+                Spirituality = movieDto.Spirituality,
+                TalkShowsTvComedies = movieDto.TalkShowsTvComedies,
+                Thrillers = movieDto.Thrillers,
+                TvAction = movieDto.TvAction,
+                TvComedies = movieDto.TvComedies,
+                TvDramas = movieDto.TvDramas
+            };
+
             _context.Movies.Add(movie);
-            _context.SaveChanges();
-            return Ok(movie);
+            var result = _context.SaveChanges();
+
+            if (result > 0)
+            {
+                return Ok(movie);
+            }
+            else
+            {
+                return StatusCode(500, "Failed to save movie to database.");
+            }
         }
+
 
         [HttpPut("{showId}")]
         public IActionResult UpdateMovie(string showId, [FromBody] Movie updatedMovie)
@@ -344,5 +456,7 @@ public IActionResult GetGenres()
             _context.SaveChanges();
             return Ok();
         }
+
     }
 }
+

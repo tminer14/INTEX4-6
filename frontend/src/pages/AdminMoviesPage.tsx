@@ -14,7 +14,7 @@ const AdminMoviesPage: React.FC = () => {
   const [editingMovie, setEditingMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(500);
+  const [pageSize, setPageSize] = useState(500);
   const [totalPages, setTotalPages] = useState(1);
 
   const API_URL =
@@ -24,6 +24,11 @@ const AdminMoviesPage: React.FC = () => {
     localStorage.removeItem("authToken");
     console.log("Sign out clicked");
     navigate("/");
+  };
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+    setCurrentPage(1); // Reset to page 1 when changing page size
+    fetchMoviesList(1, newPageSize);
   };
 
   const handleNextPage = () => {
@@ -42,22 +47,26 @@ const AdminMoviesPage: React.FC = () => {
     }
   };
 
-  const fetchMoviesList = async (page = 1) => {
-    try {
-      setLoading(true);
-      const response = await axios.get(`${API_URL}/withGenres`, {
-        params: { pageNum: page, pageSize },
-      });
+const fetchMoviesList = async (page = 1, customPageSize = pageSize) => {
+  try {
+    setLoading(true);
+    const response = await axios.get(
+      "https://localhost:5130/Movies/withGenres",
+      {
+        params: { pageNum: page, pageSize: customPageSize },
+      }
+    );
 
-      setMovies(response.data.movies);
-      setTotalPages(Math.ceil(response.data.totalMovies / pageSize));
-    } catch (error) {
-      console.error("Failed to fetch movies:", error);
-      toast.error("Failed to load movies.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    setMovies(response.data.movies);
+    setTotalMovies(response.data.totalMovies);
+    setTotalPages(Math.ceil(response.data.totalMovies / customPageSize));
+  } catch (error) {
+    console.error("Failed to fetch movies:", error);
+    toast.error("Failed to load movies.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchMoviesList();
@@ -142,21 +151,24 @@ const AdminMoviesPage: React.FC = () => {
 
   const handleSaveMovie = async (movie: Movie) => {
     try {
-      console.log("Saving movie object:", movie);
+      let completeMovie = prepareMovieForSaving(movie);
 
-      const completeMovie = prepareMovieForSaving(movie);
-
-      if (editingMovie) {
-        if (!completeMovie.showId) {
-          completeMovie.showId = editingMovie.showId;
-        }
-        await axios.put(`${API_URL}/${completeMovie.showId}`, completeMovie);
-        toast.success("Movie updated successfully!");
-      } else {
+      if (!completeMovie.showId || completeMovie.showId.trim() === "") {
         completeMovie.showId = Math.floor(
           Math.random() * 1000000000
         ).toString();
-        await axios.post(`${API_URL}`, completeMovie);
+      }
+
+      console.log("Saving movie object (prepared):", completeMovie);
+
+      if (editingMovie) {
+        await axios.put(
+          `https://localhost:5130/Movies/${completeMovie.showId}`,
+          completeMovie
+        );
+        toast.success("Movie updated successfully!");
+      } else {
+        await axios.post("https://localhost:5130/Movies/create", completeMovie);
         toast.success("Movie created successfully!");
       }
 
@@ -168,6 +180,7 @@ const AdminMoviesPage: React.FC = () => {
       toast.error("Failed to save movie.");
     }
   };
+
 
   return (
     <div className="admin-panel admin-movies-page">
@@ -197,16 +210,53 @@ const AdminMoviesPage: React.FC = () => {
         </button>
       </div>
 
-      <div className="pagination-controls">
+      <div
+        className="pagination-controls"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          justifyContent: "center",
+          marginTop: "10px",
+        }}
+      >
         <button disabled={currentPage === 1} onClick={handlePreviousPage}>
           Previous
         </button>
+
         <span>
           Page {currentPage} of {totalPages}
         </span>
+
         <button disabled={currentPage === totalPages} onClick={handleNextPage}>
           Next
         </button>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+          <label htmlFor="pageSizeSelect" style={{ fontWeight: "bold" }}>
+            Movies per page:
+          </label>
+          <select
+            id="pageSizeSelect"
+            value={pageSize}
+            onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+            style={{
+              padding: "5px 10px",
+              borderRadius: "8px",
+              border: "1px solid #ccc",
+              backgroundColor: "#1A1A1A", // DARK background
+              color: "#F7F7FF", // LIGHT text color
+              fontSize: "14px",
+              cursor: "pointer",
+            }}
+          >
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+            <option value={500}>500</option>
+          </select>
+        </div>
       </div>
 
       {loading ? (
