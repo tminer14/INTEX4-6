@@ -37,6 +37,8 @@ function MovieInfoPage() {
         setMovie(movieData);
         addPoints();
 
+        console.log("Genres", movieData);
+
         // Clean and generate the image URL like in MovieSection
         const cleaned = movieData.title.replace(/[:'"?&]/g, "");
         const encoded = encodeURIComponent(cleaned);
@@ -145,7 +147,20 @@ function MovieInfoPage() {
 
               <div className="info-row">
                 <span className="info-label">Genre:</span>
-                <span className="info-value">{movie.genre}</span>
+                <span className="info-value">
+                  {Object.entries(movie)
+                    .filter(
+                      ([key, value]) => typeof value === "number" && value === 1
+                    )
+                    .map(
+                      ([key]) =>
+                        key
+                          .replace(/([A-Z])/g, " $1") // add spaces before capital letters
+                          .replace(/([a-z])([A-Z])/g, "$1 $2") // handle camelCase spacing
+                          .replace(/\b\w/g, (l) => l.toUpperCase()) // capitalize first letters
+                    )
+                    .join(", ")}
+                </span>
               </div>
 
               <div className="info-row">
@@ -180,7 +195,7 @@ function MovieInfoPage() {
 
               <div className="info-row">
                 <span className="info-label">Rating:</span>
-                <span className="info-value">{movie.rating}/5</span>
+                <span className="info-value">{movie.rating}</span>
               </div>
 
               <div className="rating-label">Seen it? Rate this movie:</div>

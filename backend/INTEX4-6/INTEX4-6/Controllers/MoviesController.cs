@@ -168,49 +168,65 @@ namespace INTEX4_6.Controllers
         }
 
         [HttpGet("details/{title}")]
-        public IActionResult GetMovieDetails(string title)
-        {
-            var movie = _context.Movies.FirstOrDefault(m => m.Title == title);
+public IActionResult GetMovieDetails(string title)
+{
+    var movie = _context.Movies.FirstOrDefault(m => m.Title == title);
 
-            if (movie == null)
-            {
-                return NotFound(new { message = $"Movie with title '{title}' not found." });
-            }
+    if (movie == null)
+    {
+        return NotFound(new { message = $"Movie with title '{title}' not found." });
+    }
 
-            return Ok(movie);
-        }
+    var result = new
+    {
+        movie.ShowId,
+        movie.Type,
+        movie.Title,
+        movie.Director,
+        movie.Cast,
+        movie.Country,
+        movie.ReleaseYear,
+        movie.Rating,
+        movie.Duration,
+        movie.Description,
+        genres = BuildGenreListFromInts(movie) // ✅ lowercase and sent as a list
+    };
+
+    return Ok(result);
+}
 
         [HttpGet("userBasedRecommendations/{id}")]
-        public IActionResult GetUserBasedRecommendations(int id)
-        {
-            var recommendations = _context.UserBasedRecs
-                .Where(r => r.UserId == id && r.RecommendationType == "top_picks")
-                .Join(
-                    _context.Movies,
-                    rec => rec.Title,
-                    movie => movie.Title,
-                    (rec, movie) => new
-                    {
-                        movie.ShowId,
-                        movie.Title,
-                        movie.Director,
-                        movie.Cast,
-                        movie.Country,
-                        movie.ReleaseYear,
-                        movie.Rating,
-                        movie.Duration,
-                        movie.Description,
-                        rec.Rank,
-                        rec.RecommendationType
-                    }
-                )
-                .OrderBy(r => r.Rank)
-                .ToList();
+public IActionResult GetUserBasedRecommendations(int id)
+{
+    var recommendations = _context.UserBasedRecs
+        .Where(r => r.UserId == id && r.RecommendationType == "top_picks")
+        .Join(
+            _context.Movies,
+            rec => rec.Title,
+            movie => movie.Title,
+            (rec, movie) => new
+            {
+                movie.ShowId,
+                movie.Title,
+                movie.Director,
+                movie.Cast,
+                movie.Country,
+                movie.ReleaseYear,
+                movie.Rating,
+                movie.Duration,
+                movie.Description,
+                Genres = BuildGenreListFromInts(movie),
+                rec.Rank,
+                rec.RecommendationType
+            }
+        )
+        .OrderBy(r => r.Rank)
+        .ToList();
 
-            Console.WriteLine($"🎯 Returning {recommendations.Count} matched movies");
+    Console.WriteLine($"🎯 Returning {recommendations.Count} matched movies");
 
-            return Ok(recommendations);
-        }
+    return Ok(recommendations);
+}
 
 
 
