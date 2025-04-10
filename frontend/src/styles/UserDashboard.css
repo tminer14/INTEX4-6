@@ -10,6 +10,7 @@
   width: 100%;
   background-color: #022b3b;
   box-sizing: border-box;
+  border-bottom: 2px solid rgba(252, 120, 83, 1);
 }
 
 .header-container {
@@ -102,7 +103,7 @@
   justify-content: center; /* centers horizontally */
   margin-left: 0; /* removes left alignment */
   margin-top: 2rem; /* adds spacing from top */
-  font-size: 2rem;
+  font-size: 5rem;
   font-weight: 500;
   color: #f7f7ff; /* keep your soft white */
   display: flex;

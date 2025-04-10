@@ -4,6 +4,9 @@
   width: 100%;
   background-color: #022b3b;
   box-sizing: border-box;
+
+  /* 🔥 Add this for a bottom divider line */
+  border-bottom: 2px solid rgba(252, 120, 83, 1);
 }
 
 .header-container {
