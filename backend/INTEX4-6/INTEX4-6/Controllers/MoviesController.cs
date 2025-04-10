@@ -476,12 +476,54 @@ public IActionResult GetMovieBasedRecommendations(string source_show_id)
             return Ok();
         }
 
+<<<<<<< HEAD
+        [HttpPost("rate")]
+        public IActionResult RateMovie([FromBody] MovieRating rating)
+        {
+            if (rating == null || string.IsNullOrEmpty(rating.ShowId))
+            {
+                return BadRequest("Invalid rating data.");
+            }
+
+            var existingRating = _context.MovieRatings
+                .FirstOrDefault(r => r.UserId == rating.UserId && r.ShowId == rating.ShowId);
+
+            if (existingRating != null)
+            {
+                existingRating.Rating = rating.Rating;
+                _context.MovieRatings.Update(existingRating);
+            }
+            else
+            {
+                _context.MovieRatings.Add(rating);
+            }
+
+            _context.SaveChanges();
+
+            return Ok(new { message = "Rating submitted successfully." });
+        }
+
+        [HttpGet("rating")]
+        public IActionResult GetUserRating([FromQuery] int userId, [FromQuery] string showId)
+        {
+            var rating = _context.MovieRatings
+                .FirstOrDefault(r => r.UserId == userId && r.ShowId == showId);
+
+            if (rating == null)
+                return NotFound();
+
+            return Ok(new { rating = rating.Rating });
+        }
+
+
+=======
        [HttpGet("userBasedRecommendationsByGenre/{id}")]
 public async Task<IActionResult> GetUserRecommendationsByGenre(int id, [FromQuery] string genre)
 {
     if (string.IsNullOrWhiteSpace(genre))
     {
         return BadRequest("Genre is required.");
+>>>>>>> 4cdfd3bf9386a0719a823a25872b1ec3424f76c6
     }
 
     // Join using show_id instead of Title
