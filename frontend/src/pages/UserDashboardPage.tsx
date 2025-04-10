@@ -79,30 +79,13 @@ function UserDashboardPage() {
           (
             movie: { title: string; recommendationType: string },
             index: number
-          ) => ({
-            id: index,
-            title: movie.title,
-            recommendationType: movie.recommendationType,
-            imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-              movie.title.replace(/[:']/g, "")
-            )}.jpg`,
-          })
-            movie: {
-              title: string;
-              showId: string;
-              recommendationType: string;
-            },
-            index: number
           ) => {
             const cleanTitle = movie.title.replace(/[:']/g, "");
             return {
               id: index,
               title: movie.title,
-
               recommendationType: movie.recommendationType,
-              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-                cleanTitle
-              )}.jpg`,
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(cleanTitle)}.jpg`,
             };
           }
         );
