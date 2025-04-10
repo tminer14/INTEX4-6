@@ -6,12 +6,14 @@ import MovieSection from "../components/MovieSection";
 import SearchPanel from "../components/SearchPanel";
 import "../styles/UserDashboard.css";
 import logo from "../assets/Logo.png";
+import { recTypeToGenre } from "../assets/genreMap";
 
 function UserDashboardPage() {
   const [highlyRatedMovies, setHighlyRatedMovies] = useState([]);
   const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
 
   useEffect(() => {
     const userId = 73;
@@ -22,11 +24,19 @@ function UserDashboardPage() {
       })
       .then((res) => {
         const formatted = res.data.map(
-          (movie: { title: string; showId: string }, index: number) => {
+          (
+            movie: {
+              title: string;
+              showId: string;
+              recommendationType: string;
+            },
+            index: number
+          ) => {
             const cleanTitle = movie.title.replace(/[:']/g, "");
             return {
               id: index,
               title: movie.title,
+              recommendationType: movie.recommendationType,
               imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
                 cleanTitle
               )}.jpg`,
@@ -97,6 +107,13 @@ function UserDashboardPage() {
     setIsSearchOpen((prev) => !prev);
   };
 
+  const filteredRecommended = selectedGenre
+    ? recommendedMovies.filter(
+        (movie: any) =>
+          recTypeToGenre[movie.recommendationType] === selectedGenre
+      )
+    : recommendedMovies;
+
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
@@ -136,12 +153,15 @@ function UserDashboardPage() {
       <div className="dashboard-content">
         <h1 className="dashboard-title">Discover Your Next Favorite.</h1>
 
-        <FilterOptions />
+        <FilterOptions
+          selectedGenre={selectedGenre}
+          setSelectedGenre={setSelectedGenre}
+        />
 
         <div className="movie-sections">
           <MovieSection
             title="Recommended For You"
-            movies={recommendedMovies}
+            movies={filteredRecommended}
           />
           <MovieSection title="Highly Rated" movies={highlyRatedMovies} />
           <MovieSection title="Recent Additions" movies={recentlyAddedMovies} />

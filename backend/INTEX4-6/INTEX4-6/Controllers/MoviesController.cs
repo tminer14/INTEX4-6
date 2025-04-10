@@ -186,32 +186,32 @@ namespace INTEX4_6.Controllers
         public IActionResult GetUserBasedRecommendations(int id)
         {
             var recommendations = _context.UserBasedRecs
-                .Where(r => r.UserId == id && r.RecommendationType == "top_picks")
+                .Where(r => r.UserId == id )
                 .Join(
                     _context.Movies,
                     rec => rec.Title,
                     movie => movie.Title,
-                    (rec, movie) => new
-                    {
-                        movie.ShowId,
-                        movie.Title,
-                        movie.Director,
-                        movie.Cast,
-                        movie.Country,
-                        movie.ReleaseYear,
-                        movie.Rating,
-                        movie.Duration,
-                        movie.Description,
-                        rec.Rank,
-                        rec.RecommendationType
-                        
-                    }
-                )
-                .OrderBy(r => r.Rank)
+                    (rec, movie) => new {rec, movie}
+                ).ToList()
+                .Select(x => new {
+                        x.movie.ShowId,
+                        x.movie.Title,
+                        x.movie.Director,
+                        x.movie.Cast,
+                        x.movie.Country,
+                        x.movie.ReleaseYear,
+                        x.movie.Rating,
+                        x.movie.Duration,
+                        x.movie.Description,
+                        x.rec.Rank,
+                        x.rec.RecommendationType
+                        }) .OrderBy(r => r.Rank)
                 .ToList();
+                    
+                    
+                    Console.WriteLine($"🎯 Returning {recommendations.Count} matched movies");
 
-            Console.WriteLine($"🎯 Returning {recommendations.Count} matched movies");
-
+        
             return Ok(recommendations);
         }
 
