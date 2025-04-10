@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using INTEX4_6.Models; // <-- Make sure this is included so it knows what MovieRating is
 
 namespace INTEX4_6.Data
 {
@@ -11,18 +12,20 @@ namespace INTEX4_6.Data
         public DbSet<Movie> Movies { get; set; }
         public DbSet<MovieUserInfo> MovieUsers { get; set; }
         public DbSet<TopOverallRecs> TopOverallRecs { get; set; }
-
+        public DbSet<MovieRating> MovieRatings { get; set; }
         public DbSet<UserBasedRecs> UserBasedRecs { get; set; }
         public DbSet<MovieBasedRecs> MovieBasedRecs { get; set; }
 
-        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // 👇 Declare UserBasedRecs as keyless (no primary key in table)
+            // Declare UserBasedRecs as keyless (no primary key in table)
             modelBuilder.Entity<UserBasedRecs>().HasNoKey();
 
-            // Optional: if you have other keyless entities or config
-            // modelBuilder.Entity<OtherThing>().HasNoKey();
+            // 👇 Add this line to define the composite key for MovieRating
+            modelBuilder.Entity<MovieRating>()
+                .HasKey(r => new { r.UserId, r.ShowId });
+
+            // Add other keyless/table-specific configs here if needed
         }
-        }
+    }
 }

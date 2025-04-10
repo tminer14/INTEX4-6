@@ -4,6 +4,7 @@ import axios from "axios";
 import FilterOptions from "../components/FilterOptions";
 import MovieSection from "../components/MovieSection";
 import SearchPanel from "../components/SearchPanel";
+import MovieSectionLoader from "../components/MovieSectionLoader";
 import "../styles/UserDashboard.css";
 import logo from "../assets/Logo.png";
 import MoviesByGenreSection from "../components/MoviesByGenre";
@@ -13,6 +14,11 @@ function UserDashboardPage() {
   const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  // 🕐 Loading states
+  const [isLoadingRecommended, setIsLoadingRecommended] = useState(true);
+  const [isLoadingHighlyRated, setIsLoadingHighlyRated] = useState(true);
+  const [isLoadingRecent, setIsLoadingRecent] = useState(true);
 
   // Recommended for you movies
   useEffect(() => {
@@ -39,6 +45,9 @@ function UserDashboardPage() {
       })
       .catch((err) => {
         console.error("Failed to fetch recommended movies", err);
+      })
+      .finally(() => {
+        setIsLoadingRecommended(false);
       });
   }, []);
 
@@ -65,9 +74,13 @@ function UserDashboardPage() {
       })
       .catch((err) => {
         console.error("Failed to fetch recent movies", err);
+      })
+      .finally(() => {
+        setIsLoadingRecent(false);
       });
   }, []);
 
+  // Highly rated movies
   useEffect(() => {
     axios
       .get("https://localhost:5130/Movies/top-rated", {
@@ -86,15 +99,16 @@ function UserDashboardPage() {
             };
           }
         );
-
         setHighlyRatedMovies(formatted);
       })
       .catch((err) => {
         console.error("Failed to fetch top-rated movies", err);
+      })
+      .finally(() => {
+        setIsLoadingHighlyRated(false);
       });
   }, []);
 
-  // Toggle function
   const toggleSearch = () => {
     setIsSearchOpen((prev) => !prev);
   };
@@ -141,12 +155,31 @@ function UserDashboardPage() {
         <FilterOptions />
 
         <div className="movie-sections">
-          <MovieSection
-            title="Recommended For You"
-            movies={recommendedMovies}
-          />
-          <MovieSection title="Highly Rated" movies={highlyRatedMovies} />
-          <MovieSection title="Recent Additions" movies={recentlyAddedMovies} />
+          {isLoadingRecommended ? (
+            <MovieSectionLoader />
+          ) : (
+            <MovieSection
+              title="Recommended For You"
+              movies={recommendedMovies}
+            />
+          )}
+
+          {isLoadingHighlyRated ? (
+            <MovieSectionLoader />
+          ) : (
+            <MovieSection title="Highly Rated" movies={highlyRatedMovies} />
+          )}
+
+          {isLoadingRecent ? (
+            <MovieSectionLoader />
+          ) : (
+            <MovieSection
+              title="Recent Additions"
+              movies={recentlyAddedMovies}
+            />
+          )}
+
+          {/* Genre-based sections */}
           <MoviesByGenreSection genre="Comedy" />
           <MoviesByGenreSection genre="Action" />
           <MoviesByGenreSection genre="Adventure" />
