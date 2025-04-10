@@ -144,24 +144,24 @@ const AdminMoviesPage: React.FC = () => {
 
   const handleSaveMovie = async (movie: Movie) => {
     try {
-      console.log("Saving movie object:", movie);
+      let completeMovie = prepareMovieForSaving(movie);
 
-      const completeMovie = prepareMovieForSaving(movie);
+      if (!completeMovie.showId || completeMovie.showId.trim() === "") {
+        completeMovie.showId = Math.floor(
+          Math.random() * 1000000000
+        ).toString();
+      }
+
+      console.log("Saving movie object (prepared):", completeMovie);
 
       if (editingMovie) {
-        if (!completeMovie.showId) {
-          completeMovie.showId = editingMovie.showId;
-        }
         await axios.put(
           `https://localhost:5130/Movies/${completeMovie.showId}`,
           completeMovie
         );
         toast.success("Movie updated successfully!");
       } else {
-        completeMovie.showId = Math.floor(
-          Math.random() * 1000000000
-        ).toString();
-        await axios.post("https://localhost:5130/Movies", completeMovie);
+        await axios.post("https://localhost:5130/Movies/create", completeMovie);
         toast.success("Movie created successfully!");
       }
 
@@ -173,6 +173,7 @@ const AdminMoviesPage: React.FC = () => {
       toast.error("Failed to save movie.");
     }
   };
+
 
   return (
     <div className="admin-panel admin-movies-page">
