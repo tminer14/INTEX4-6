@@ -1,0 +1,112 @@
+.auto-scroll-container {
+  width: 100%;
+  background-color: #022b3b;
+  padding-bottom: 40px;
+}
+
+.auto-scroll-content {
+  padding-top: 40px;
+  padding-right: 20px;
+  padding-bottom: 40px;
+  padding-left: 20px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.auto-scroll-title {
+  color: #f5f5f5;
+  font-family:
+    "Inter",
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 35px;
+  margin-left: 64px;
+}
+
+.movie-posters-scroll {
+  display: flex;
+  gap: 34px;
+  padding-right: 64px;
+  padding-left: 64px;
+  overflow-x: auto;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+}
+
+.movie-posters-scroll::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+.movie-poster-link {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.movie-poster-link:hover {
+  transform: scale(1.05);
+}
+
+.auto-scroll-movie-poster {
+  width: 220px;
+  height: 338px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+  .auto-scroll-content {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .auto-scroll-title {
+    margin-left: 40px;
+    font-size: 28px;
+  }
+
+  .movie-posters-scroll {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .auto-scroll-movie-poster {
+    width: 180px;
+    height: 277px;
+  }
+}
+
+@media (max-width: 768px) {
+  .auto-scroll-title {
+    margin-left: 20px;
+    font-size: 24px;
+  }
+
+  .movie-posters-scroll {
+    padding-left: 20px;
+    padding-right: 20px;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .auto-scroll-title {
+    margin-left: 10px;
+    font-size: 22px;
+  }
+
+  .movie-posters-scroll {
+    padding-left: 10px;
+    padding-right: 10px;
+    gap: 15px;
+  }
+
+  .auto-scroll-movie-poster {
+    width: 140px;
+    height: 215px;
+  }
+}

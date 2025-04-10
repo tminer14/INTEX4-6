@@ -176,7 +176,7 @@ function CreateAccountStep2({
                     Zip
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="zip"
                     className="form-input"
                     maxLength={5} // 🔥 Limit user to typing only 5 characters

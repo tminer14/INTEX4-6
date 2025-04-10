@@ -1,11 +1,15 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import FilterOptions from "../components/FilterOptions";
 import MovieSection from "../components/MovieSection";
 import SearchPanel from "../components/SearchPanel";
+import MovieSectionLoader from "../components/MovieSectionLoader";
+import ScrollLoader from "../components/ScrollLoader"; // ✅ NEW IMPORT
 import "../styles/UserDashboard.css";
 import logo from "../assets/Logo.png";
+import MoviesByGenreSection from "../components/MoviesByGenre";
+import { recTypeToGenre } from "../assets/genreMap";
+import RecommendedGenreFilter from "../components/RecommendedGenreFilter";
 
 function UserDashboardPage() {
   const [highlyRatedMovies, setHighlyRatedMovies] = useState([]);
@@ -35,6 +39,15 @@ function UserDashboardPage() {
     fetchUserFullName();
   }, []);
 
+  const [isLoadingRecommended, setIsLoadingRecommended] = useState(true);
+  const [isLoadingHighlyRated, setIsLoadingHighlyRated] = useState(true);
+  const [isLoadingRecent, setIsLoadingRecent] = useState(true);
+  const API_URL =
+    "https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies";
+
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+
+  // Display User Recommendations
   useEffect(() => {
     const fetchUserId = async () => {
       try {
@@ -57,9 +70,8 @@ function UserDashboardPage() {
 
   useEffect(() => {
     if (!userId) return;
-
     axios
-      .get(`https://localhost:5130/Movies/userBasedRecommendations/${userId}`, {
+      .get(`${API_URL}/userBasedRecommendations/${userId}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -75,19 +87,39 @@ function UserDashboardPage() {
               movie.title.replace(/[:']/g, "")
             )}.jpg`,
           })
+            movie: {
+              title: string;
+              showId: string;
+              recommendationType: string;
+            },
+            index: number
+          ) => {
+            const cleanTitle = movie.title.replace(/[:']/g, "");
+            return {
+              id: index,
+              title: movie.title,
+
+              recommendationType: movie.recommendationType,
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
+                cleanTitle
+              )}.jpg`,
+            };
+          }
         );
         setRecommendedMovies(formatted);
       })
 
       .catch((err) => {
         console.error("Failed to fetch recommended movies", err);
+      })
+      .finally(() => {
+        setIsLoadingRecommended(false);
       });
   }, [userId]);
 
-  // Recent movies
   useEffect(() => {
     axios
-      .get("https://localhost:5130/Movies/recentMovies", {
+      .get(`${API_URL}/recentMovies`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -97,9 +129,7 @@ function UserDashboardPage() {
             return {
               id: index,
               title: movie.title,
-              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-                cleanTitle
-              )}.jpg`,
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(cleanTitle)}.jpg`,
             };
           }
         );
@@ -107,12 +137,15 @@ function UserDashboardPage() {
       })
       .catch((err) => {
         console.error("Failed to fetch recent movies", err);
+      })
+      .finally(() => {
+        setIsLoadingRecent(false);
       });
   }, []);
 
   useEffect(() => {
     axios
-      .get("https://localhost:5130/Movies/top-rated", {
+      .get(`${API_URL}/top-rated`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -122,24 +155,30 @@ function UserDashboardPage() {
             return {
               id: index,
               title: movie.title,
-              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
-                cleanTitle
-              )}.jpg`,
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(cleanTitle)}.jpg`,
             };
           }
         );
-
         setHighlyRatedMovies(formatted);
       })
       .catch((err) => {
         console.error("Failed to fetch top-rated movies", err);
+      })
+      .finally(() => {
+        setIsLoadingHighlyRated(false);
       });
   }, []);
 
-  // Toggle function
   const toggleSearch = () => {
     setIsSearchOpen((prev) => !prev);
   };
+
+  const filteredRecommended = selectedGenre
+    ? recommendedMovies.filter(
+        (movie: any) =>
+          recTypeToGenre[movie.recommendationType] === selectedGenre
+      )
+    : recommendedMovies;
 
   return (
     <div className="dashboard-container">
@@ -150,9 +189,7 @@ function UserDashboardPage() {
           </Link>
 
           <div className="header-actions">
-            <div className="language-selector">
-              <span>Language</span>
-            </div>
+            <div className="language-selector"></div>
             <button
               className="search-button"
               onClick={toggleSearch}
@@ -184,15 +221,59 @@ function UserDashboardPage() {
       <div className="dashboard-content">
         <h1 className="dashboard-title">Discover Your Next Favorite.</h1>
 
-        <FilterOptions />
-
         <div className="movie-sections">
-          <MovieSection
-            title="Recommended For You"
-            movies={recommendedMovies}
-          />
-          <MovieSection title="Highly Rated" movies={highlyRatedMovies} />
-          <MovieSection title="Recent Additions" movies={recentlyAddedMovies} />
+          <RecommendedGenreFilter userId={73} />
+
+          {isLoadingHighlyRated ? (
+            <MovieSectionLoader />
+          ) : (
+            <MovieSection title="Highly Rated" movies={highlyRatedMovies} />
+          )}
+
+          {isLoadingRecent ? (
+            <MovieSectionLoader />
+          ) : (
+            <MovieSection
+              title="Recent Additions"
+              movies={recentlyAddedMovies}
+            />
+          )}
+
+          {/* Genre-based sections */}
+          <MoviesByGenreSection genre="Comedy" />
+          <MoviesByGenreSection genre="Action" />
+          <MoviesByGenreSection genre="Adventure" />
+          <MoviesByGenreSection genre="Anime Series International TV Shows" />
+          <MoviesByGenreSection genre="British TV Shows Docuseries International TV Shows" />
+          <MoviesByGenreSection genre="Children" />
+          <MoviesByGenreSection genre="Comedies" />
+          <MoviesByGenreSection genre="Comedies Dramas International Movies" />
+          <MoviesByGenreSection genre="Comedies Romantic Movies" />
+          <MoviesByGenreSection genre="Crime TV Shows Docuseries" />
+          <MoviesByGenreSection genre="Documentaries" />
+          <MoviesByGenreSection genre="Documentaries International Movies" />
+          <MoviesByGenreSection genre="Docuseries" />
+          <MoviesByGenreSection genre="Dramas" />
+          <MoviesByGenreSection genre="Dramas International Movies" />
+          <MoviesByGenreSection genre="Dramas Romantic Movie" />
+          <MoviesByGenreSection genre="Family Movies" />
+          <MoviesByGenreSection genre="Fantasy" />
+          <MoviesByGenreSection genre="Horror Movies" />
+          <MoviesByGenreSection genre="International Movies Thrillers" />
+          <MoviesByGenreSection genre="International TV Shows Romantic TV Shows TV Dramas" />
+          <MoviesByGenreSection genre="Kids' TV" />
+          <MoviesByGenreSection genre="Language TV Shows" />
+          <MoviesByGenreSection genre="Musicals" />
+          <MoviesByGenreSection genre="Nature TV" />
+          <MoviesByGenreSection genre="Reality TV" />
+          <MoviesByGenreSection genre="Spirituality" />
+          <MoviesByGenreSection genre="TV Action" />
+          <MoviesByGenreSection genre="TV Comedies" />
+          <MoviesByGenreSection genre="Talk Shows TV Comedies" />
+          <MoviesByGenreSection genre="Thrillers" />
+
+          {/* 🌀 Scroll loader at the bottom */}
+          <ScrollLoader />
         </div>
       </div>
 
