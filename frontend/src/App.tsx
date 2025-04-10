@@ -23,7 +23,6 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    console.log(token);
     const handleLogout = () => {
       localStorage.removeItem("authToken");
       navigate("/"); // 👈 send user to homepage
