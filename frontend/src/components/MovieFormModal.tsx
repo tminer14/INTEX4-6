@@ -47,7 +47,7 @@ const MovieFormModal: React.FC<MovieFormModalProps> = ({
     rating: "",
     duration: "",
     description: "",
-    genre: [],
+    genres: [],
   });
 
   useEffect(() => {
@@ -65,7 +65,7 @@ const MovieFormModal: React.FC<MovieFormModalProps> = ({
 
   const handleGenreChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
-    setFormMovie({ ...formMovie, genre: selected });
+    setFormMovie({ ...formMovie, genres: selected });
   };
 
   const handleSubmit = () => {
@@ -143,7 +143,7 @@ const MovieFormModal: React.FC<MovieFormModalProps> = ({
         />
 
         <label>Genres (multi-select):</label>
-        <select multiple value={formMovie.genre} onChange={handleGenreChange}>
+        <select multiple value={formMovie.genres} onChange={handleGenreChange}>
           {allGenres.map((genre) => (
             <option key={genre} value={genre}>
               {genre}

@@ -47,7 +47,7 @@ const AdminMovieTable: React.FC<AdminMovieTableProps> = ({
                   <td>{movie.rating}</td>
                   <td>{movie.duration}</td>
                   <td>{movie.description}</td>
-                  <td>{movie.genre?.length ? movie.genre.join(", ") : "—"}</td>
+                  <td>{movie.genres?.length ? movie.genres.join(", ") : "—"}</td>
                   <td className="action-buttons">
                     <button
                       className="edit-btn"
