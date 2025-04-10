@@ -458,6 +458,45 @@ public IActionResult GetMovieBasedRecommendations(string source_show_id)
             return Ok();
         }
 
+        [HttpPost("rate")]
+        public IActionResult RateMovie([FromBody] MovieRating rating)
+        {
+            if (rating == null || string.IsNullOrEmpty(rating.ShowId))
+            {
+                return BadRequest("Invalid rating data.");
+            }
+
+            var existingRating = _context.MovieRatings
+                .FirstOrDefault(r => r.UserId == rating.UserId && r.ShowId == rating.ShowId);
+
+            if (existingRating != null)
+            {
+                existingRating.Rating = rating.Rating;
+                _context.MovieRatings.Update(existingRating);
+            }
+            else
+            {
+                _context.MovieRatings.Add(rating);
+            }
+
+            _context.SaveChanges();
+
+            return Ok(new { message = "Rating submitted successfully." });
+        }
+
+        [HttpGet("rating")]
+        public IActionResult GetUserRating([FromQuery] int userId, [FromQuery] string showId)
+        {
+            var rating = _context.MovieRatings
+                .FirstOrDefault(r => r.UserId == userId && r.ShowId == showId);
+
+            if (rating == null)
+                return NotFound();
+
+            return Ok(new { rating = rating.Rating });
+        }
+
+
     }
 }
 

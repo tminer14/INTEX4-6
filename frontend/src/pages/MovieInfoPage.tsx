@@ -18,13 +18,13 @@ function MovieInfoPage() {
   const [imageUrl, setImageUrl] = useState<string>("");
   const [recommendedMovies, setRecommendedMovies] = useState([]);
 
-  // Function to add points
+  const userId = 73; // TODO: Replace with actual logged-in user ID
+
   const addPoints = () => {
     const currentPoints = parseInt(Cookies.get("userPoints") || "0");
     const newPoints = currentPoints + 10;
     Cookies.set("userPoints", newPoints.toString(), { expires: 7 });
-
-    toast.success(`You've earned 10 points! Total: ${newPoints}`); // ✅
+    toast.success(`You've earned 10 points! Total: ${newPoints}`);
   };
 
   useEffect(() => {
@@ -37,9 +37,6 @@ function MovieInfoPage() {
         setMovie(movieData);
         addPoints();
 
-        console.log("Genres", movieData);
-
-        // Clean and generate the image URL like in MovieSection
         const cleaned = movieData.title.replace(/[:'"?&]/g, "");
         const encoded = encodeURIComponent(cleaned);
         const url = `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encoded}.jpg`;
@@ -51,15 +48,12 @@ function MovieInfoPage() {
       });
   }, [title]);
 
-  // Recommend movies based on this movie
   useEffect(() => {
-    const source_show_id = "s12";
+    const source_show_id = "s12"; // optional: make dynamic
     axios
       .get(
         `https://localhost:5130/Movies/movieBasedRecommendations/${source_show_id}`,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       )
       .then((res) => {
         const formatted = res.data.map(
@@ -81,20 +75,64 @@ function MovieInfoPage() {
       });
   }, []);
 
-  const handleBack = () => {
-    navigate(-1);
-  };
+  // 🟡 Load user's existing rating from backend
+  useEffect(() => {
+    if (!movie?.showId) return;
 
-  const handleSignOut = () => {
-    // Implementation for signing out
-    navigate("/");
-  };
+    const fetchUserRating = async () => {
+      try {
+        const response = await axios.get(
+          `https://localhost:5130/Movies/rating?userId=${userId}&showId=${movie.showId}`,
+          { withCredentials: true }
+        );
+        setUserRating(response.data.rating);
+        console.log("⭐ Loaded user rating:", response.data.rating);
+      } catch (err) {
+        console.log("No existing rating found.");
+      }
+    };
 
-  const handleRatingClick = (rating: number) => {
+    fetchUserRating();
+  }, [movie?.showId]);
+
+  // 🟡 Send rating to backend on click
+  const handleRatingClick = async (rating: number) => {
     setUserRating(rating);
-    // In a real app, you would send this rating to your backend
-    alert(`You rated this movie ${rating} stars!`);
+
+    if (!movie?.showId) {
+      console.error("No ShowId available.");
+      return;
+    }
+
+    const payload = {
+      userId: userId,
+      showId: movie.showId,
+      rating: rating,
+    };
+
+    try {
+      const response = await axios.post(
+        "https://localhost:5130/Movies/rate",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      console.log("✅ Rating submitted:", response.data);
+      toast.success(`You rated this movie ${rating} stars!`);
+    } catch (error) {
+      console.error("❌ Error submitting rating:", error);
+      toast.error("Failed to submit rating.");
+    }
   };
+
+  const handleBack = () => navigate(-1);
+
+  const handleSignOut = () => navigate("/");
 
   if (!movie) {
     return (
@@ -120,13 +158,8 @@ function MovieInfoPage() {
         <div className="movie-content-container">
           <div className="movie-media-column">
             <div className="back-button" onClick={handleBack}>
-              <svg
-                width="35"
-                height="35"
-                viewBox="0 0 35 35"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              {/* back icon */}
+              <svg width="35" height="35" viewBox="0 0 35 35" fill="none">
                 <path
                   d="M27.7082 17.5H7.2915M7.2915 17.5L17.4998 27.7083M7.2915 17.5L17.4998 7.29167"
                   stroke="#f7f7ff"
@@ -142,89 +175,54 @@ function MovieInfoPage() {
                 alt={movie.title}
                 className="poster-image"
                 onError={(e) => {
-                  e.currentTarget.onerror = null; // 🛡 prevent infinite loop
+                  e.currentTarget.onerror = null;
                   e.currentTarget.src = PosterNotFound;
                 }}
               />
-            </div>
-
-            <div className="play-button">
-              <svg
-                width="48"
-                height="48"
-                viewBox="0 0 48 48"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z"
-                  stroke="#1E1E1E"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                ></path>
-                <path
-                  d="M20 16L32 24L20 32V16Z"
-                  stroke="#1E1E1E"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                ></path>
-              </svg>
             </div>
           </div>
 
           <div className="movie-info-column">
             <div className="movie-info-content">
               <h1 className="movie-title">{movie.title}</h1>
-
               <div className="info-row">
                 <span className="info-label">Type:</span>
                 <span className="info-value">{movie.type}</span>
               </div>
-
               <div className="info-row">
                 <span className="info-label">Genre:</span>
                 <span className="info-value">{movie.genres?.join(", ")}</span>
               </div>
-
               <div className="info-row">
                 <span className="info-label">Description:</span>
                 <span className="info-value">{movie.description}</span>
               </div>
-
               <div className="info-row">
                 <span className="info-label">Director:</span>
                 <span className="info-value">{movie.director}</span>
               </div>
-
               <div className="info-row">
                 <span className="info-label">Cast:</span>
                 <span className="info-value">{movie.cast}</span>
               </div>
-
               <div className="info-row">
                 <span className="info-label">Year:</span>
                 <span className="info-value">{movie.releaseYear}</span>
               </div>
-
               <div className="info-row">
                 <span className="info-label">Duration:</span>
                 <span className="info-value">{movie.duration}</span>
               </div>
-
               <div className="info-row">
                 <span className="info-label">Country:</span>
                 <span className="info-value">{movie.country}</span>
               </div>
-
               <div className="info-row">
                 <span className="info-label">Rating:</span>
                 <span className="info-value">{movie.rating}</span>
               </div>
 
               <div className="rating-label">Seen it? Rate this movie:</div>
-
               <div className="star-rating">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <div
@@ -262,6 +260,7 @@ function MovieInfoPage() {
           </div>
         </div>
       </div>
+
       <MovieSection title="More like this" movies={recommendedMovies} />
     </div>
   );
