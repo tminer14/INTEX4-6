@@ -231,5 +231,18 @@ namespace INTEX4_6.Controllers
             return Ok(recommendations);
         }
 
+        [HttpGet("genres")]
+public IActionResult GetGenres()
+{
+    var genreProperties = typeof(Movie)
+        .GetProperties()
+        .Where(p => p.PropertyType == typeof(bool?) || p.PropertyType == typeof(bool))
+        .Select(p => p.GetCustomAttributes(typeof(ColumnAttribute), false)
+                     .FirstOrDefault() is ColumnAttribute attr ? attr.Name : p.Name)
+        .ToList();
+
+    return Ok(genreProperties);
+}
+
     }
 }
