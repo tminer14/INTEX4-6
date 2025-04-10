@@ -9,31 +9,68 @@ import ScrollLoader from "../components/ScrollLoader"; // ✅ NEW IMPORT
 import "../styles/UserDashboard.css";
 import logo from "../assets/Logo.png";
 import MoviesByGenreSection from "../components/MoviesByGenre";
+import { recTypeToGenre } from "../assets/genreMap";
 
 function UserDashboardPage() {
   const [highlyRatedMovies, setHighlyRatedMovies] = useState([]);
   const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [recentlyAddedMovies, setRecentlyAddedMovies] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [userFullName, setUserFullName] = useState<string>("");
+  useEffect(() => {
+    const fetchUserFullName = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:5130/Movies/GetUserFullName",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setUserFullName(response.data.fullName);
+      } catch (error) {
+        console.error("Failed to fetch user full name", error);
+      }
+    };
+
+    fetchUserFullName();
+  }, []);
 
   const [isLoadingRecommended, setIsLoadingRecommended] = useState(true);
   const [isLoadingHighlyRated, setIsLoadingHighlyRated] = useState(true);
   const [isLoadingRecent, setIsLoadingRecent] = useState(true);
+  const API_URL =
+    "https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies";
+
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
 
   useEffect(() => {
     const userId = 73;
     axios
-      .get(`https://localhost:5130/Movies/userBasedRecommendations/${userId}`, {
+      .get(`${API_URL}/userBasedRecommendations/${userId}`, {
         withCredentials: true,
       })
       .then((res) => {
         const formatted = res.data.map(
-          (movie: { title: string; showId: string }, index: number) => {
-            const cleanTitle = movie.title.replace(/[:'&-]/g, "");
+          (
+            movie: {
+              title: string;
+              showId: string;
+              recommendationType: string;
+            },
+            index: number
+          ) => {
+            const cleanTitle = movie.title.replace(/[:']/g, "");
             return {
               id: index,
               title: movie.title,
-              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(cleanTitle)}.jpg`,
+
+              recommendationType: movie.recommendationType,
+              imageUrl: `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encodeURIComponent(
+                cleanTitle
+              )}.jpg`,
+
             };
           }
         );
@@ -49,7 +86,7 @@ function UserDashboardPage() {
 
   useEffect(() => {
     axios
-      .get("https://localhost:5130/Movies/recentMovies", {
+      .get(`${API_URL}/recentMovies`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -75,7 +112,7 @@ function UserDashboardPage() {
 
   useEffect(() => {
     axios
-      .get("https://localhost:5130/Movies/top-rated", {
+      .get(`${API_URL}/top-rated`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -103,6 +140,13 @@ function UserDashboardPage() {
     setIsSearchOpen((prev) => !prev);
   };
 
+  const filteredRecommended = selectedGenre
+    ? recommendedMovies.filter(
+        (movie: any) =>
+          recTypeToGenre[movie.recommendationType] === selectedGenre
+      )
+    : recommendedMovies;
+
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
@@ -110,6 +154,7 @@ function UserDashboardPage() {
           <Link to="/" className="logo-link">
             <img src={logo} alt="Logo" className="logo" />
           </Link>
+
           <div className="header-actions">
             <div className="language-selector">
               <span>Language</span>
@@ -138,11 +183,17 @@ function UserDashboardPage() {
           </div>
         </div>
       </header>
-
+      {/* New User Welcome Text */}
+      <div className="user-welcome">
+        <span>Welcome, {userFullName || "Guest"}!</span>
+      </div>
       <div className="dashboard-content">
         <h1 className="dashboard-title">Discover Your Next Favorite.</h1>
 
-        <FilterOptions />
+        <FilterOptions
+          selectedGenre={selectedGenre}
+          setSelectedGenre={setSelectedGenre}
+        />
 
         <div className="movie-sections">
           {isLoadingRecommended ? (
@@ -150,7 +201,7 @@ function UserDashboardPage() {
           ) : (
             <MovieSection
               title="Recommended For You"
-              movies={recommendedMovies}
+              movies={filteredRecommended}
             />
           )}
 

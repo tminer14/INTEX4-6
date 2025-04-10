@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Claims;
 using INTEX4_6.Data;
 using INTEX4_6.Dtos;
 using INTEX4_6.Models;
@@ -12,6 +13,7 @@ namespace INTEX4_6.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class MoviesController : ControllerBase
     {
         private readonly MovieDbContext _context;
@@ -71,6 +73,26 @@ namespace INTEX4_6.Controllers
                     genreMap[genre](true);
                 }
             }
+        }
+        [HttpGet("GetUserFullName")]
+        public async Task<IActionResult> GetUserFullName()
+        {
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrEmpty(email))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _context.MovieUsers
+                .Where(u => u.Email == email)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            return Ok(new { fullName = user.Name });
         }
 
         private List<string> BuildGenreListFromInts(Movie movie)
@@ -207,7 +229,7 @@ public async Task<IActionResult> GetMoviesBasedOnGenre([FromQuery] string genre)
             return Ok(topMovies);
         }
 
-       [HttpGet("details/{title}")]
+        [HttpGet("details/{title}")]
 public IActionResult GetMovieDetails(string title)
 {
     var movie = _context.Movies.FirstOrDefault(m => m.Title == title);
@@ -229,12 +251,11 @@ public IActionResult GetMovieDetails(string title)
         movie.Rating,
         movie.Duration,
         movie.Description,
-        Genres = BuildGenreListFromInts(movie)
+        genres = BuildGenreListFromInts(movie) // ✅ lowercase and sent as a list
     };
 
     return Ok(result);
 }
-
 
        [HttpGet("userBasedRecommendations/{id}")]
 public IActionResult GetUserBasedRecommendations(int id)

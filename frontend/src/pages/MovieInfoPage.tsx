@@ -16,6 +16,7 @@ function MovieInfoPage() {
   const [userRating, setUserRating] = useState<number>(0);
   const [hoveredRating, setHoveredRating] = useState<number>(0);
   const [imageUrl, setImageUrl] = useState<string>("");
+
   const [recommendedMovies, setRecommendedMovies] = useState([]);
 
   const userId = 73; // TODO: Replace with actual logged-in user ID
@@ -29,9 +30,12 @@ function MovieInfoPage() {
 
   useEffect(() => {
     axios
-      .get(`https://localhost:5130/Movies/details/${title}`, {
-        withCredentials: true,
-      })
+      .get(
+        `https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies/details/${title}`,
+        {
+          withCredentials: true,
+        }
+      )
       .then((res) => {
         const movieData = res.data;
         setMovie(movieData);
@@ -170,6 +174,7 @@ function MovieInfoPage() {
               </svg>
             </div>
             <div className="movie-poster">
+
               <img
                 src={imageUrl}
                 alt={movie.title}
