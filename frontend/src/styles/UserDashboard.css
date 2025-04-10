@@ -99,13 +99,16 @@
 }
 
 .user-welcome {
-  margin-left: 20px;
+  justify-content: center; /* centers horizontally */
+  margin-left: 0; /* removes left alignment */
+  margin-top: 2rem; /* adds spacing from top */
   font-size: 2rem;
   font-weight: 500;
-  color: #f7f7ff; /* soft white to match your header */
+  color: #f7f7ff; /* keep your soft white */
   display: flex;
   align-items: center;
-  height: 100%;
+  width: 100%; /* ensures full-width flex container */
+  text-align: center; /* just in case it's needed for wrapping */
 }
 
 @media (max-width: 1024px) {
