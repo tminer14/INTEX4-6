@@ -14,14 +14,13 @@ namespace INTEX4_6.Data
         public string Title { get; set; }
 
         [Column("avg_rating")]
-        public double AvgRating { get; set; }
+        public double? AvgRating { get; set; }
 
         [Column("num_ratings")]
-        public int NumRatings { get; set; }
+        public long? NumRatings { get; set; }
 
-        // 🔗 Navigation property (many-to-one)
         [ForeignKey("ShowId")]
-        
         public Movie Movie { get; set; }
     }
+
 }
