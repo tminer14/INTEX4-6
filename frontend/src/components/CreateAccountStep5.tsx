@@ -29,7 +29,7 @@ function CreateAccountStep5({ formData }: CreateAccountStep5Props) {
         Gender: formData.gender,
         City: formData.address.city || "Unknown",
         State: formData.address.state || "Unknown",
-        Zip: formData.address.zip ? parseInt(formData.address.zip) : 0,
+        Zip: formData.address?.zip ? parseInt(formData.address.zip, 10) : 0,
         Netflix: formData.streamingServices?.includes("Netflix") ? 1 : 0,
         AmazonPrime: formData.streamingServices?.includes("Amazon Prime")
           ? 1

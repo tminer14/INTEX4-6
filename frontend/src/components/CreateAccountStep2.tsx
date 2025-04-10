@@ -179,14 +179,28 @@ function CreateAccountStep2({
                     type="text"
                     id="zip"
                     className="form-input"
-                    value={formData.address?.zip || ""}
-                    onChange={(e) =>
+                    maxLength={5} // 🔥 Limit user to typing only 5 characters
+                    value={
+                      formData.address?.zip !== undefined
+                        ? formData.address.zip.toString()
+                        : ""
+                    }
+                    onChange={(e) => {
+                      let zipInput = e.target.value.replace(/\D/g, ""); // 🔥 Remove non-digits
+                      if (zipInput.length > 5) {
+                        zipInput = zipInput.slice(0, 5); // 🔥 Force max 5 digits
+                      }
                       setFormData({
                         ...formData,
-                        address: { ...formData.address, zip: e.target.value },
-                      })
-                    }
+                        address: {
+                          ...formData.address,
+                          zip: zipInput, // keep as a string for now (5 digits)
+                        },
+                      });
+                    }}
                     required
+                    pattern="\d{5}" // 🔥 HTML5 Validation: exactly 5 digits
+                    title="Please enter a valid 5-digit ZIP code"
                   />
                 </div>
               </div>
