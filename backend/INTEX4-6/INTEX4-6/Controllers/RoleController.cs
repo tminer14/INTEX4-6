@@ -77,6 +77,43 @@ public class RoleController : Controller
         return StatusCode(500, "An error occurred while assigning the role.");
     }
 
+    [HttpPost("UpdateUserRoles")]
+    public async Task<IActionResult> UpdateUserRoles([FromBody] UpdateRolesRequest model)
+    {
+        if (string.IsNullOrWhiteSpace(model.UserId) || model.Roles == null)
+        {
+            return BadRequest("User ID and roles are required.");
+        }
+
+        var user = await _userManager.FindByIdAsync(model.UserId);
+        if (user == null)
+        {
+            return NotFound("User not found.");
+        }
+
+        var currentRoles = await _userManager.GetRolesAsync(user);
+
+        var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+        if (!removeResult.Succeeded)
+        {
+            return StatusCode(500, "Failed to remove existing roles.");
+        }
+
+        var addResult = await _userManager.AddToRolesAsync(user, model.Roles);
+        if (!addResult.Succeeded)
+        {
+            return StatusCode(500, "Failed to add new roles.");
+        }
+
+        return Ok("User roles updated successfully.");
+    }
+
+    public class UpdateRolesRequest
+    {
+        public string UserId { get; set; }
+        public List<string> Roles { get; set; }
+    }
+
     public class AssignRoleRequest
     {
         public string UserEmail { get; set; }

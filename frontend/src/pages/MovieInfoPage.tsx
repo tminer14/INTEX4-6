@@ -7,27 +7,14 @@ import { Movie } from "../types/Movie";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-// Mock data for a single movie - in a real app, this would come from an API
-const mockMovie: Movie = {
-  title: "Name of Movie",
-  type: "Movie",
-  genre: ["Action"],
-  description: "Intex is real y'all",
-  director: "Kermit the Frog",
-  cast: "Emma Helquist, Payton Hatch, Addison Smith, Tessa Miner",
-  releaseYear: 2025,
-  duration: "128 minutes",
-  country: "United States",
-  rating: "4.5",
-  showId: "",
-};
-
 function MovieInfoPage() {
   const { title } = useParams<{ title: string }>();
   const navigate = useNavigate();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [userRating, setUserRating] = useState<number>(0);
   const [hoveredRating, setHoveredRating] = useState<number>(0);
+  const [imageUrl, setImageUrl] = useState<string>("");
+
 
   // Function to add points
   const addPoints = () => {
@@ -44,8 +31,16 @@ function MovieInfoPage() {
         withCredentials: true,
       })
       .then((res) => {
-        setMovie(res.data);
+        const movieData = res.data;
+        setMovie(movieData);
         addPoints();
+
+        // Clean and generate the image URL like in MovieSection
+        const cleaned = movieData.title.replace(/[:'"?&]/g, "");
+        const encoded = encodeURIComponent(cleaned);
+        const url = `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encoded}.jpg`;
+        setImageUrl(url);
+        console.log("📸 Poster image URL:", url);
       })
       .catch((err) => {
         console.error("Failed to fetch movie details", err);
@@ -100,7 +95,8 @@ function MovieInfoPage() {
               >
                 <path
                   d="M27.7082 17.5H7.2915M7.2915 17.5L17.4998 27.7083M7.2915 17.5L17.4998 7.29167"
-                  stroke="#1E1E1E"
+                  stroke="#f7f7ff"
+
                   strokeWidth="4"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -108,8 +104,10 @@ function MovieInfoPage() {
               </svg>
             </div>
             <div className="movie-poster">
-              <img alt={movie.title} className="poster-image" />
+              <img src={imageUrl} alt={movie.title} className="poster-image" />
+
             </div>
+
             <div className="play-button">
               <svg
                 width="48"
@@ -224,6 +222,7 @@ function MovieInfoPage() {
           </div>
         </div>
       </div>
+      {/* <MovieSection title="More like this" movies={}/> */}
     </div>
   );
 }

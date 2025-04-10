@@ -47,7 +47,6 @@ function UserDashboardPage() {
   // Recent movies
   useEffect(() => {
     axios
-      .get("https://localhost:5130/Movies/recentMovies", {
         withCredentials: true,
       })
       .then((res) => {
@@ -78,7 +77,7 @@ function UserDashboardPage() {
       .then((res) => {
         const formatted = res.data.map(
           (movie: { title: string }, index: number) => {
-            const cleanTitle = movie.title.replace(/[:']/g, "");
+            const cleanTitle = movie.title.replace(/[:'&]/g, "");
             return {
               id: index,
               title: movie.title,
@@ -95,6 +94,11 @@ function UserDashboardPage() {
         console.error("Failed to fetch top-rated movies", err);
       });
   }, []);
+
+  // Toggle function
+  const toggleSearch = () => {
+    setIsSearchOpen((prev) => !prev);
+  };
 
   return (
     <div className="dashboard-container">
@@ -138,12 +142,12 @@ function UserDashboardPage() {
         <FilterOptions />
 
         <div className="movie-sections">
-          <MovieSection title="Recent Additions" movies={recentlyAddedMovies} />
           <MovieSection
             title="Recommended For You"
             movies={recommendedMovies}
           />
           <MovieSection title="Highly Rated" movies={highlyRatedMovies} />
+          <MovieSection title="Recent Additions" movies={recentlyAddedMovies} />
         </div>
       </div>
 

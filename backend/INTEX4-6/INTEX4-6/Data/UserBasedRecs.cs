@@ -22,4 +22,10 @@ namespace INTEX4_6.Data
         [Column("rank")]
         public int? Rank { get; set; }  // nullable, since SQL says "null"
     }
+    [Key]
+    public string show_id { get; set; }
+    public int user_id { get; set; }
+    public string recommendation_type { get; set; }
+    public string title { get; set; }
+    public int rank { get; set; }
 }

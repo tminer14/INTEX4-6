@@ -94,14 +94,17 @@
   cursor: pointer;
   width: 35px;
   height: 35px;
+  margin-top: 75px;
+  margin-left: 10px;
 }
 
 .movie-poster {
   border-radius: 10px;
   display: flex;
   margin-top: 15px;
-  width: 270px;
-  height: 340px;
+  width: 220px !important;
+  height: 400px !important;
+
   background-color: #d9d9d9;
   overflow: hidden;
 }
@@ -161,6 +164,7 @@
 
 .info-value {
   font-weight: 400;
+  text-align: left;
 }
 
 .rating-label {

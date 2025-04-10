@@ -132,9 +132,10 @@ namespace INTEX4_6.Data
         public int? TalkShowsTvComedies { get; set; }
 
         [Column("Thrillers")]
+
         public int? Thrillers { get; set; }
 
-        // Navigation property
-        public ICollection<TopOverallRecs> TopOverallRecs { get; set; }
+        // Link to TopOverallRecs table
+        public ICollection<TopOverallRecs>? TopOverallRecs { get; set; }
     }
 }

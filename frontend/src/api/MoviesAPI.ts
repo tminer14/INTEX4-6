@@ -1,24 +1,26 @@
+import axios from "axios";
 import { Movie } from "../types/Movie";
 
-interface fetchMoviesResponse {
-  movies: Movie[];
-  totalMovies: number;
-}
+const BASE_URL = "https://localhost:5130/Movies"; // Adjust your base URL if needed
 
-const API_URL = "https://localhost:5130";
+export const fetchMovies = async (pageNum: number, pageSize: number) => {
+  const response = await axios.get(`${BASE_URL}/withGenres`, {
+    params: { pageNum, pageSize },
+  });
+  return response.data;
+};
 
-export async function fetchMovies(
-  pageNum: number,
-  pageSize: number
-): Promise<fetchMoviesResponse> {
-  const response = await fetch(
-    `${API_URL}/Movies/withGenres?pageNum=${pageNum}&pageSize=${pageSize}`
-  );
+export const addMovie = async (movie: Movie) => {
+  const response = await axios.post(`${BASE_URL}`, movie);
+  return response.data;
+};
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch movies");
-  }
+export const updateMovie = async (movie: Movie) => {
+  const response = await axios.put(`${BASE_URL}/${movie.showId}`, movie);
+  return response.data;
+};
 
-  const data: fetchMoviesResponse = await response.json();
-  return data;
-}
+export const deleteMovie = async (showId: string) => {
+  const response = await axios.delete(`${BASE_URL}/${showId}`);
+  return response.data;
+};
