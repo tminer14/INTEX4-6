@@ -65,11 +65,13 @@
 .hero-title {
   font-size: 48px;
   align-self: stretch;
+  color: #f7f7ff;
 }
 
 .hero-subtitle {
   font-size: 15px;
   margin-top: 39px;
+  color: #f7f7ff;
 }
 
 .cta-container {
