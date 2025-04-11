@@ -14,30 +14,31 @@ const Pagination = ({
   onPageSizeChange,
 }: PaginationProps) => {
   return (
-    <div>
-      <button
-        disabled={currentPage === 1}
-        onClick={() => onPageChange(currentPage - 1)}
-      >
-        Previous
-      </button>
-      {/* builds array out of size of total pages */}
-      {[...Array(totalPages)].map((_, index) => (
+    <div className="pagination-container">
+      <div className="pagination-buttons">
         <button
-          key={index + 1}
-          onClick={() => onPageChange(index + 1)}
-          disabled={currentPage === index + 1}
+          disabled={currentPage === 1}
+          onClick={() => onPageChange(currentPage - 1)}
         >
-          {index + 1}
+          Previous
         </button>
-      ))}
-      <button
-        disabled={currentPage === totalPages}
-        onClick={() => onPageChange(currentPage + 1)}
-      >
-        Next
-      </button>
-      <br />
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => onPageChange(index + 1)}
+            disabled={currentPage === index + 1}
+          >
+            {index + 1}
+          </button>
+        ))}
+        <button
+          disabled={currentPage === totalPages}
+          onClick={() => onPageChange(currentPage + 1)}
+        >
+          Next
+        </button>
+      </div>
+
       <label>
         Results per page:
         <select
@@ -52,8 +53,6 @@ const Pagination = ({
           <option value="300">300</option>
         </select>
       </label>
-      <br />
-      <br />
     </div>
   );
 };

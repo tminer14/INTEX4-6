@@ -89,9 +89,6 @@ const SearchPanel: React.FC<SearchPanelProps> = ({ isOpen, onClose }) => {
             <div className="search-title">Endless Possibilities...</div>
             <div className="search-panel">
               <div className="search-input-container">
-                <button className="icon-button back-button" onClick={onClose}>
-                  ←
-                </button>
                 <input
                   ref={inputRef}
                   type="text"
