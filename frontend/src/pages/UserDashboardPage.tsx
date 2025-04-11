@@ -115,7 +115,7 @@ function UserDashboardPage() {
     <div className="dashboard-container">
       <header className="dashboard-header">
         <div className="header-container">
-          <a href="/" className="logo-link">
+          <a href="/dashboard" className="logo-link">
             <img src={logo} alt="Logo" className="logo" />
           </a>
 
