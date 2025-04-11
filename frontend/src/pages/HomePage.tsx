@@ -49,6 +49,7 @@ function HomePage() {
     },
   ];
 
+  // HTML returned
   return (
     <div className="home-container">
       <Header />
@@ -68,11 +69,6 @@ function HomePage() {
               membership.
             </p>
             <div className="cta-container">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="email-input"
-              />
               <button
                 onClick={() => navigate("/signup/step1")}
                 className="get-started-button"
