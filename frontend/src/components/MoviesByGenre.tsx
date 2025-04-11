@@ -57,7 +57,7 @@ function MoviesByGenreSection({ genre }: MoviesByGenreSectionProps) {
 
   return (
     <div className="movie-section">
-      <h2 className="section-title">More {genre} Movies</h2>
+      <h2 className="section-title">{genre}</h2>
       <div className="movie-cards-container">
         {movies.map((movie) => (
           <Link

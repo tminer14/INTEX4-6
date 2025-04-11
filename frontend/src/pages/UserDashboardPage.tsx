@@ -177,7 +177,6 @@ function UserDashboardPage() {
             "Action",
             "Anime Series International TV Shows",
             "British TV Shows Docuseries International TV Shows",
-            "Children",
             "Comedies",
             "Comedies Dramas International Movies",
             "Comedies Romantic Movies",
