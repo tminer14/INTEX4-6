@@ -167,7 +167,9 @@ function MovieInfoPage() {
   return (
     <div className="movie-view-page">
       <div className="header-background">
-        <img src={logo} alt="Cinema Logo" className="logo-image" />
+        <a href="/dashboard" className="logo-link">
+          <img src={logo} alt="Logo" className="logo" />
+        </a>
         <div className="header-actions">
           <div className="language-selector">Language</div>
           <button className="sign-out-button" onClick={handleSignOut}>
