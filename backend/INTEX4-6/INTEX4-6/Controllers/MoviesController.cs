@@ -143,7 +143,7 @@ namespace INTEX4_6.Controllers
                 m.Rating,
                 m.Duration,
                 m.Description,
-                Genre = BuildGenreListFromInts(m)
+                Genres = BuildGenreListFromInts(m)
             }).ToList();
 
             var pageResult = new
