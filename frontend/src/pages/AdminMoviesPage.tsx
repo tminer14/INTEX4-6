@@ -6,6 +6,7 @@ import MovieFormModal from "../components/MovieFormModal";
 import { toast } from "react-hot-toast";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import "../styles/Pagination.css";
 
 const AdminMoviesPage: React.FC = () => {
   const navigate = useNavigate();
@@ -22,12 +23,13 @@ const AdminMoviesPage: React.FC = () => {
 
   const handleSignOut = () => {
     localStorage.removeItem("authToken");
-    console.log("Sign out clicked");
     navigate("/");
   };
+
+  // Pagination
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
-    setCurrentPage(1); // Reset to page 1 when changing page size
+    setCurrentPage(1);
     fetchMoviesList(1, newPageSize);
   };
 
@@ -50,18 +52,12 @@ const AdminMoviesPage: React.FC = () => {
   const fetchMoviesList = async (page = 1, customPageSize = pageSize) => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        "https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net/Movies/withGenres",
-        {
-          params: { pageNum: page, pageSize: customPageSize },
-        }
-      );
-      console.log("Data:", response.data.movies);
-
+      const response = await axios.get(`${API_URL}/withGenres`, {
+        params: { pageNum: page, pageSize: customPageSize },
+      });
       setMovies(response.data.movies);
       setTotalPages(Math.ceil(response.data.totalMovies / customPageSize));
     } catch (error) {
-      console.error("Failed to fetch movies:", error);
       toast.error("Failed to load movies.");
     } finally {
       setLoading(false);
@@ -79,10 +75,7 @@ const AdminMoviesPage: React.FC = () => {
 
   const handleEditMovie = (showId: string) => {
     const movieToEdit = movies.find((m) => m.showId === showId);
-    if (!movieToEdit) {
-      console.error("Movie not found!");
-      return;
-    }
+    if (!movieToEdit) return;
     setEditingMovie(movieToEdit);
     setIsModalOpen(true);
   };
@@ -94,7 +87,6 @@ const AdminMoviesPage: React.FC = () => {
       toast.success("Movie deleted successfully!");
       fetchMoviesList();
     } catch (error) {
-      console.error("Failed to delete movie:", error);
       toast.error("Failed to delete movie.");
     }
   };
@@ -142,36 +134,23 @@ const AdminMoviesPage: React.FC = () => {
     });
 
     const { genres, ...restOfMovie } = movie;
-
-    return {
-      ...restOfMovie,
-      ...genreFlags,
-    };
+    return { ...restOfMovie, ...genreFlags };
   };
 
   const handleSaveMovie = async (movie: Movie) => {
     try {
       let completeMovie = prepareMovieForSaving(movie);
-
       if (!completeMovie.showId || completeMovie.showId.trim() === "") {
         completeMovie.showId = Math.floor(
           Math.random() * 1000000000
         ).toString();
       }
 
-      console.log("Saving movie object (prepared):", completeMovie);
-
       if (editingMovie) {
-        await axios.put(
-          `https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net/Movies/${completeMovie.showId}`,
-          completeMovie
-        );
+        await axios.put(`${API_URL}/${completeMovie.showId}`, completeMovie);
         toast.success("Movie updated successfully!");
       } else {
-        await axios.post(
-          "https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net/Movies/create",
-          completeMovie
-        );
+        await axios.post(`${API_URL}/create`, completeMovie);
         toast.success("Movie created successfully!");
       }
 
@@ -179,7 +158,6 @@ const AdminMoviesPage: React.FC = () => {
       setEditingMovie(null);
       fetchMoviesList();
     } catch (error) {
-      console.error("Failed to save movie:", error);
       toast.error("Failed to save movie.");
     }
   };
@@ -212,45 +190,37 @@ const AdminMoviesPage: React.FC = () => {
         </button>
       </div>
 
-      <div
-        className="pagination-controls"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-          justifyContent: "center",
-          marginTop: "10px",
-        }}
-      >
-        <button disabled={currentPage === 1} onClick={handlePreviousPage}>
-          Previous
-        </button>
-
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-
-        <button disabled={currentPage === totalPages} onClick={handleNextPage}>
-          Next
-        </button>
-
-        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-          <label htmlFor="pageSizeSelect" style={{ fontWeight: "bold" }}>
-            Movies per page:
-          </label>
+      {/* PAGINATION (Top) */}
+      <div className="pagination-container">
+        <div className="pagination-buttons">
+          <button disabled={currentPage === 1} onClick={handlePreviousPage}>
+            Previous
+          </button>
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => {
+                setCurrentPage(index + 1);
+                fetchMoviesList(index + 1);
+              }}
+              disabled={currentPage === index + 1}
+            >
+              {index + 1}
+            </button>
+          ))}
+          <button
+            disabled={currentPage === totalPages}
+            onClick={handleNextPage}
+          >
+            Next
+          </button>
+        </div>
+        <label htmlFor="pageSizeSelect">
+          Results per page:
           <select
             id="pageSizeSelect"
             value={pageSize}
             onChange={(e) => handlePageSizeChange(Number(e.target.value))}
-            style={{
-              padding: "5px 10px",
-              borderRadius: "8px",
-              border: "1px solid #ccc",
-              backgroundColor: "#1A1A1A", // DARK background
-              color: "#F7F7FF", // LIGHT text color
-              fontSize: "14px",
-              cursor: "pointer",
-            }}
           >
             <option value={10}>10</option>
             <option value={25}>25</option>
@@ -258,7 +228,7 @@ const AdminMoviesPage: React.FC = () => {
             <option value={100}>100</option>
             <option value={500}>500</option>
           </select>
-        </div>
+        </label>
       </div>
 
       {loading ? (
@@ -271,16 +241,45 @@ const AdminMoviesPage: React.FC = () => {
         />
       )}
 
-      <div className="pagination-controls">
-        <button disabled={currentPage === 1} onClick={handlePreviousPage}>
-          Previous
-        </button>
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button disabled={currentPage === totalPages} onClick={handleNextPage}>
-          Next
-        </button>
+      {/* PAGINATION (Bottom) */}
+      <div className="pagination-container">
+        <div className="pagination-buttons">
+          <button disabled={currentPage === 1} onClick={handlePreviousPage}>
+            Previous
+          </button>
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => {
+                setCurrentPage(index + 1);
+                fetchMoviesList(index + 1);
+              }}
+              disabled={currentPage === index + 1}
+            >
+              {index + 1}
+            </button>
+          ))}
+          <button
+            disabled={currentPage === totalPages}
+            onClick={handleNextPage}
+          >
+            Next
+          </button>
+        </div>
+        <label htmlFor="pageSizeSelectBottom">
+          Results per page:
+          <select
+            id="pageSizeSelectBottom"
+            value={pageSize}
+            onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+          >
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+            <option value={500}>500</option>
+          </select>
+        </label>
       </div>
 
       <MovieFormModal
