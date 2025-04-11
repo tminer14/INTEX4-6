@@ -18,6 +18,9 @@ interface MoviesByGenreSectionProps {
 
 function MoviesByGenreSection({ genre }: MoviesByGenreSectionProps) {
   const [movies, setMovies] = useState<MovieWithImageUrl[]>([]);
+  const [imageErrorMap, setImageErrorMap] = useState<Record<string, boolean>>(
+    {}
+  );
 
   useEffect(() => {
     if (!genre) return;
@@ -46,6 +49,10 @@ function MoviesByGenreSection({ genre }: MoviesByGenreSectionProps) {
       });
   }, [genre]);
 
+  const handleImageError = (title: string) => {
+    setImageErrorMap((prev) => ({ ...prev, [title]: true }));
+  };
+
   if (movies.length === 0) return null;
 
   return (
@@ -59,14 +66,14 @@ function MoviesByGenreSection({ genre }: MoviesByGenreSectionProps) {
             className="movie-card-link"
           >
             <img
-              src={movie.imageUrl}
+              src={imageErrorMap[movie.title] ? PosterNotFound : movie.imageUrl}
               alt={movie.title}
               className="movie-card"
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.src = PosterNotFound;
-              }}
+              onError={() => handleImageError(movie.title)}
             />
+            {imageErrorMap[movie.title] && (
+              <p className="backup-movie-files">{movie.title}</p>
+            )}
           </Link>
         ))}
       </div>
