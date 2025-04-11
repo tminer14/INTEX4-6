@@ -17,7 +17,7 @@ function MovieInfoPage() {
   const [hoveredRating, setHoveredRating] = useState<number>(0);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [recommendedMovies, setRecommendedMovies] = useState([]);
-  const [userId, setUserId] = useState<number | null>(null);
+  const [userId, setUserId] = useState<number | null>(73);
 
   const addPoints = () => {
     const currentPoints = parseInt(Cookies.get("userPoints") || "0");
