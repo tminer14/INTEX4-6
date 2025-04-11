@@ -4,6 +4,12 @@ import PosterNotFound from "../assets/PosterNotFound.webp";
 import "../styles/MovieSection.css";
 import "../styles/RecommendedGenreFilter.css";
 
+// This component fetches and displays movie recommendations based on the selected genre.
+// It allows the user to select a genre from a dropdown menu and displays the recommended movies with their images.
+// If the image fails to load, it shows a placeholder image and the movie title.
+// The component uses the `useEffect` hook to fetch data from an API when the selected genre changes.
+// It also handles image loading errors by maintaining a state to track which images have failed to load.
+
 interface Movie {
   title: string;
   showId: string;
@@ -83,12 +89,17 @@ const genres = [
 function RecommendedGenreFilter({ userId }: RecommendedGenreFilterProps) {
   const [selectedGenre, setSelectedGenre] = useState("top_picks");
   const [movies, setMovies] = useState<MovieWithImageUrl[]>([]);
+  const [imageErrorMap, setImageErrorMap] = useState<Record<string, boolean>>(
+    {}
+  );
 
   useEffect(() => {
     if (!selectedGenre) return;
 
     fetch(
-      `https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net/Movies/userBasedRecommendationsByGenre/${userId}?genre=${encodeURIComponent(selectedGenre)}`,
+      `https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net/Movies/userBasedRecommendationsByGenre/${userId}?genre=${encodeURIComponent(
+        selectedGenre
+      )}`,
       {
         credentials: "include",
       }
@@ -111,9 +122,13 @@ function RecommendedGenreFilter({ userId }: RecommendedGenreFilterProps) {
       });
   }, [selectedGenre, userId]);
 
+  const handleImageError = (title: string) => {
+    setImageErrorMap((prev) => ({ ...prev, [title]: true }));
+  };
+
   return (
     <div className="genre-filter-container">
-      <h2>Recommended For You </h2>
+      <h2>Recommended For You</h2>
       <label htmlFor="genre-select">Select a genre:</label>
       <select
         id="genre-select"
@@ -138,15 +153,16 @@ function RecommendedGenreFilter({ userId }: RecommendedGenreFilterProps) {
               className="movie-card-link"
             >
               <img
-                src={movie.imageUrl}
+                src={
+                  imageErrorMap[movie.title] ? PosterNotFound : movie.imageUrl
+                }
                 alt={movie.title}
                 className="movie-card"
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = PosterNotFound;
-                  <p className="backup-movie-files">{movie.title}</p>;
-                }}
+                onError={() => handleImageError(movie.title)}
               />
+              {imageErrorMap[movie.title] && (
+                <p className="backup-movie-files">{movie.title}</p>
+              )}
             </Link>
           ))}
         </div>
