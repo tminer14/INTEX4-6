@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import "../styles/MovieSection.css";
+import { useState } from "react";
 import { Movie } from "../types/Movie";
 import PosterNotFound from "../assets/PosterNotFound.webp";
 
@@ -9,11 +10,18 @@ interface MovieWithImageUrl extends Movie {
 
 interface MovieSectionProps {
   title: string;
-
   movies: MovieWithImageUrl[];
 }
 
 function MovieSection({ title, movies }: MovieSectionProps) {
+  const [imageErrorMap, setImageErrorMap] = useState<Record<string, boolean>>(
+    {}
+  );
+
+  const handleImageError = (title: string) => {
+    setImageErrorMap((prev) => ({ ...prev, [title]: true }));
+  };
+
   return (
     <div className="movie-section">
       <h2 className="section-title">{title}</h2>
@@ -25,15 +33,14 @@ function MovieSection({ title, movies }: MovieSectionProps) {
             className="movie-card-link"
           >
             <img
-              src={movie.imageUrl}
+              src={imageErrorMap[movie.title] ? PosterNotFound : movie.imageUrl}
               alt={movie.title}
               className="movie-card"
-              onError={(e) => {
-                e.currentTarget.onerror = null; // 🛡 prevent infinite loop
-                e.currentTarget.src = PosterNotFound;
-                <p className="backup-movie-files">{movie.title}</p>;
-              }}
+              onError={() => handleImageError(movie.title)}
             />
+            {imageErrorMap[movie.title] && (
+              <p className="backup-movie-files">{movie.title}</p>
+            )}
           </Link>
         ))}
       </div>
