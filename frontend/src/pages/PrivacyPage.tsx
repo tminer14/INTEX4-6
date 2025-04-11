@@ -69,8 +69,7 @@ function PrivacyPage() {
         <p>
           We use cookies to enhance your experience and tailor recommendations.
           When you visit our site, a cookie banner allows you to accept or
-          manage your preferences. For more information, please see our{" "}
-          <a href="/cookie-policy">Cookie Policy</a>.
+          manage your preferences.
         </p>
 
         <h2>8. Your Rights Under GDPR</h2>
@@ -82,10 +81,6 @@ function PrivacyPage() {
           <li>Object to or restrict certain types of processing.</li>
           <li>File a complaint with a supervisory authority.</li>
         </ul>
-        <p>
-          To make a request, please contact us at{" "}
-          <a href="mailto:privacy@cineniche.com">privacy@cineniche.com</a>.
-        </p>
 
         <h2>9. Data Retention</h2>
         <p>
@@ -112,14 +107,6 @@ function PrivacyPage() {
           We may update this Privacy Policy from time to time. We encourage you
           to review it periodically. Changes are effective once posted on this
           page.
-        </p>
-
-        <h2>13. Contact Us</h2>
-        <p>
-          If you have questions or concerns about this policy or your data,
-          please contact us at:
-          <br />
-          📧 <a href="mailto:privacy@cineniche.com">privacy@cineniche.com</a>
         </p>
       </div>
     </>

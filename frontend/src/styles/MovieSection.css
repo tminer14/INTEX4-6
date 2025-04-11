@@ -114,3 +114,8 @@
     transform: translateX(0);
   }
 }
+
+.backup-movie-files {
+  font-size: 0.6rem; /* small text (same as 'text-sm' in Tailwind) */
+  color: #f7f7ff;
+}

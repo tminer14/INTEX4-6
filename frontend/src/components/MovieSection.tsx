@@ -31,6 +31,7 @@ function MovieSection({ title, movies }: MovieSectionProps) {
               onError={(e) => {
                 e.currentTarget.onerror = null; // 🛡 prevent infinite loop
                 e.currentTarget.src = PosterNotFound;
+                <p className="backup-movie-files">{movie.title}</p>;
               }}
             />
           </Link>

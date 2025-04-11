@@ -107,12 +107,6 @@ function LoginPage() {
                 />
               </div>
 
-              <div className="login-help">
-                <a href="#" className="help-link">
-                  Need help logging in?
-                </a>
-              </div>
-
               <button
                 type="submit"
                 className="sign-in-btn"

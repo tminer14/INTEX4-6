@@ -144,6 +144,7 @@ function RecommendedGenreFilter({ userId }: RecommendedGenreFilterProps) {
                 onError={(e) => {
                   e.currentTarget.onerror = null;
                   e.currentTarget.src = PosterNotFound;
+                  <p className="backup-movie-files">{movie.title}</p>;
                 }}
               />
             </Link>
