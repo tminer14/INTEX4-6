@@ -43,9 +43,9 @@ function HomePage() {
     },
     {
       id: "12",
-      title: "Llama Llama",
+      title: "Crime Stories: India Detectives",
       imageUrl:
-        "https://cdn.builder.io/api/v1/image/assets/TEMP/6298506231c78fe64692d09fcfa988eb4480a48c",
+        "https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/Crime%20Stories%20India%20Detectives.jpg",
     },
   ];
 
