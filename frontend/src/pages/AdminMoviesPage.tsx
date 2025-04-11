@@ -18,7 +18,7 @@ const AdminMoviesPage: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const API_URL =
-    "https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies";
+    "https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net/Movies";
 
   const handleSignOut = () => {
     localStorage.removeItem("authToken");
@@ -51,11 +51,12 @@ const AdminMoviesPage: React.FC = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "https://localhost:5130/Movies/withGenres",
+        "https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net/Movies/withGenres",
         {
           params: { pageNum: page, pageSize: customPageSize },
         }
       );
+      console.log("Data:", response.data.movies);
 
       setMovies(response.data.movies);
       setTotalPages(Math.ceil(response.data.totalMovies / customPageSize));
@@ -162,12 +163,15 @@ const AdminMoviesPage: React.FC = () => {
 
       if (editingMovie) {
         await axios.put(
-          `https://localhost:5130/Movies/${completeMovie.showId}`,
+          `https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net/Movies/${completeMovie.showId}`,
           completeMovie
         );
         toast.success("Movie updated successfully!");
       } else {
-        await axios.post("https://localhost:5130/Movies/create", completeMovie);
+        await axios.post(
+          "https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net/Movies/create",
+          completeMovie
+        );
         toast.success("Movie created successfully!");
       }
 

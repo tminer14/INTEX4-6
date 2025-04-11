@@ -23,7 +23,7 @@ function MoviesByGenreSection({ genre }: MoviesByGenreSectionProps) {
     if (!genre) return;
 
     fetch(
-      `https://localhost:5130/Movies/basedOnGenre?genre=${encodeURIComponent(genre)}`,
+      `https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net/Movies/basedOnGenre?genre=${encodeURIComponent(genre)}`,
       {
         credentials: "include",
       }

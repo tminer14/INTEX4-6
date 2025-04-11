@@ -88,7 +88,7 @@ function RecommendedGenreFilter({ userId }: RecommendedGenreFilterProps) {
     if (!selectedGenre) return;
 
     fetch(
-      `https://localhost:5130/Movies/userBasedRecommendationsByGenre/${userId}?genre=${encodeURIComponent(selectedGenre)}`,
+      `https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net/Movies/userBasedRecommendationsByGenre/${userId}?genre=${encodeURIComponent(selectedGenre)}`,
       {
         credentials: "include",
       }

@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
 axios.defaults.baseURL =
-  "https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net";
+  "https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net";
 axios.defaults.withCredentials = true;
 
 function CreateAccountWizard() {

@@ -16,10 +16,8 @@ function MovieInfoPage() {
   const [userRating, setUserRating] = useState<number>(0);
   const [hoveredRating, setHoveredRating] = useState<number>(0);
   const [imageUrl, setImageUrl] = useState<string>("");
-
   const [recommendedMovies, setRecommendedMovies] = useState([]);
-
-  const userId = 73; // TODO: Replace with actual logged-in user ID
+  const [userId, setUserId] = useState<number | null>(null);
 
   const addPoints = () => {
     const currentPoints = parseInt(Cookies.get("userPoints") || "0");
@@ -31,7 +29,7 @@ function MovieInfoPage() {
   useEffect(() => {
     axios
       .get(
-        `https://cineniche4-6-apa5hjhbcbe8axg8.westcentralus-01.azurewebsites.net/Movies/details/${title}`,
+        `https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net/Movies/details/${title}`,
         {
           withCredentials: true,
         }
@@ -41,7 +39,7 @@ function MovieInfoPage() {
         setMovie(movieData);
         addPoints();
 
-        const cleaned = movieData.title.replace(/[:'"?&]/g, "");
+        const cleaned = movieData.title.replace(/[:'"?&-]/g, "");
         const encoded = encodeURIComponent(cleaned);
         const url = `https://intexmovies.blob.core.windows.net/posters/Movie%20Posters/${encoded}.jpg`;
         setImageUrl(url);
@@ -53,10 +51,30 @@ function MovieInfoPage() {
   }, [title]);
 
   useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get(
+          "https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net/Movies/GetUserId", // 🚨 Adjust to your actual backend route
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setUserId(response.data.userId); // 🚀 store userId from response
+      } catch (error) {
+        console.error("Failed to fetch user ID", error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
+
+  useEffect(() => {
     const source_show_id = "s12"; // optional: make dynamic
     axios
       .get(
-        `https://localhost:5130/Movies/movieBasedRecommendations/${source_show_id}`,
+        `https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net/Movies/movieBasedRecommendations/${source_show_id}`,
         { withCredentials: true }
       )
       .then((res) => {
@@ -86,7 +104,7 @@ function MovieInfoPage() {
     const fetchUserRating = async () => {
       try {
         const response = await axios.get(
-          `https://localhost:5130/Movies/rating?userId=${userId}&showId=${movie.showId}`,
+          `https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net/Movies/rating?userId=${userId}&showId=${movie.showId}`,
           { withCredentials: true }
         );
         setUserRating(response.data.rating);
@@ -116,7 +134,7 @@ function MovieInfoPage() {
 
     try {
       const response = await axios.post(
-        "https://localhost:5130/Movies/rate",
+        "https://cineniche4-6swag-ebcmanakcbdxfkgz.eastus-01.azurewebsites.net/Movies/rate",
         payload,
         {
           headers: {
@@ -174,7 +192,6 @@ function MovieInfoPage() {
               </svg>
             </div>
             <div className="movie-poster">
-
               <img
                 src={imageUrl}
                 alt={movie.title}

@@ -2,7 +2,6 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import "./App.css";
 import HomePage from "./pages/HomePage";
-import MovieListPage from "./pages/MovieListPage";
 import MovieInfoPage from "./pages/MovieInfoPage";
 import LoginPage from "./pages/LoginPage";
 import UserDashboardPage from "./pages/UserDashboardPage";
@@ -52,14 +51,6 @@ function App() {
           element={
             <UserRoute>
               <UserDashboardPage />
-            </UserRoute>
-          }
-        />
-        <Route
-          path="/movies"
-          element={
-            <UserRoute>
-              <MovieListPage />
             </UserRoute>
           }
         />
