@@ -21,7 +21,7 @@ const UserRoute = ({ children }: UserRouteProps) => {
       ];
     const rolesArray = Array.isArray(roles) ? roles : [roles];
 
-    if (rolesArray.includes("User")) {
+  if (rolesArray.includes("User") || rolesArray.includes("Administrator")) {
       return children;
     } else {
       return <Navigate to="/forbidden" replace />; // 🆕
