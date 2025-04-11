@@ -109,7 +109,9 @@ const AdminUsersPage: React.FC = () => {
       setEditingUser(null);
       setNewEmail("");
       setEditRoles([]);
-      setTimeout(() => window.location.reload(), 500);
+      setTimeout(() => {
+        window.location.href = "/admin/users";
+      }, 500);
     } catch (error) {
       console.error("Error updating user:", error);
       toast.error("Failed to update user.");
