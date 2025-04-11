@@ -272,5 +272,6 @@
 
   .movie-table {
     min-width: 800px;
+    margin-top: 20px !important;
   }
 }
