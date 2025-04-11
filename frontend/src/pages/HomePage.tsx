@@ -65,8 +65,7 @@ function HomePage() {
               Be the first to discover these films. Anytime, anywhere.
             </h1>
             <p className="hero-subtitle">
-              Ready to watch? Enter your email to create or restart your
-              membership.
+              Ready to watch? Click the button create your membership.
             </p>
             <div className="cta-container">
               <button
